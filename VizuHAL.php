@@ -4689,5 +4689,8 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
 }
 ?>
+<?php
+include('./bas.php');
+?>
 </body>
 </html>
