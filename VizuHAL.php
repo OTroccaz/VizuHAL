@@ -471,32 +471,32 @@ if (isset($reqt) && $reqt == "req23") {$irq23 = " selected";}else{$irq23 = "";}
 <!--Extraction-->
 <p class="form-inline"><label for="reqt">Extraction souhaitée :&nbsp;</label>
 <select id="reqt" class="form-control" style="margin:0px;" size="1" name="reqt" onChange="freqt();">
-<option value="tabg"<?php echo($itab);?>>Tableau de bord général</option>
-<option value="req1"<?php echo($irq1);?>>Production scientifique par secteurs et unités</option>
-<option value="req2"<?php echo($irq2);?>>Secteur ou laboratoire : évolution sur une période</option>
-<option value="req3"<?php echo($irq3);?>>Comparaison portails</option>
-<option value="req4"<?php echo($irq4);?>>Portail : ESGBU (stocks et flux)</option>
-<option value="req5"<?php echo($irq5);?>>Nombre de publications de type articles par éditeur</option>
-<option value="req6"<?php echo($irq6);?>>Nombre de publications de type communications par éditeur</option>
-<option value="req7"<?php echo($irq7);?>>Nombre de publications (articles de revue) par revue</option>
+<!--<option value="tabg"<?php echo($itab);?>>Tableau de bord général</option>-->
+<option value="req1"<?php echo($irq1);?>>1. Portail : production scientifique par secteur et par unité</option>
+<option value="req2"<?php echo($irq2);?>>2. Portail ou collection : évolution sur une période</option>
+<option value="req3"<?php echo($irq3);?>>3. Portail : Comparaison portails</option>
+<option value="req4"<?php echo($irq4);?>>4. Portail : ESGBU (stocks et flux)</option>
+<option value="req5"<?php echo($irq5);?>>5. Portail ou Collection : Nombre de publications de type articles par éditeur</option>
+<option value="req6"<?php echo($irq6);?>>6. Portail ou Collection : Nombre de publications de type communications par éditeur</option>
+<option value="req7"<?php echo($irq7);?>>7. Portail ou Collection : Nombre de publications (articles de revue) par revue</option>
 <!--
-<option value="req8"<?php echo($irq8);?>>Portail : Pourcentage par secteur des articles de tel éditeur</option>
-<option value="req9"<?php echo($irq9);?>>Portail : Pourcentage par éditeur des articles de tel secteur</option>
+<option value="req8"<?php echo($irq8);?>>8. Portail : Pourcentage par secteur des articles de tel éditeur</option>
+<option value="req9"<?php echo($irq9);?>>9. Portail : Pourcentage par éditeur des articles de tel secteur</option>
 -->
-<option value="req10"<?php echo($irq10);?>>Collection : Nombre d'articles sans texte intégral déposé dans HAL par éditeur</option>
-<option value="req11"<?php echo($irq11);?>>Collection : Nombre d'articles avec texte intégral déposé dans HAL par éditeur</option>
-<option value="req12"<?php echo($irq12);?>>Collection : Nombre d'articles avec texte intégral déposé dans HAL OU lien externe vers PDF en open access par éditeur</option>
-<option value="req13"<?php echo($irq13);?>>Secteur ou laboratoire : évolution sur une et trois années</option>
-<option value="req14"<?php echo($irq14);?>>Collection : Nombre de projets ANR</option>
-<option value="req15"<?php echo($irq15);?>>Collection : Nombre de projets européens</option>
-<option value="req16"<?php echo($irq16);?>>Collection : Profil des contributeurs HAL</option>
-<option value="req17"<?php echo($irq17);?>>Collection : Collaborations nationales</option>
-<option value="req18"<?php echo($irq18);?>>Collection : Collaborations nationales (laboratoires)</option>
-<option value="req19"<?php echo($irq19);?>>Collection : Collaborations nationales (établissements)</option>
-<option value="req20"<?php echo($irq20);?>>Collection : Collaborations nationales (autres)</option>
-<option value="req21"<?php echo($irq21);?>>Collection : Collaborations internationales (toutes structures)</option>
-<option value="req23"<?php echo($irq23);?>>Collection : Collaborations internationales (institutions)</option>
-<option value="req22"<?php echo($irq22);?>>Collection : Collaborations internationales (pays)</option>
+<option value="req10"<?php echo($irq10);?>>10. Collection : Nombre d'articles sans texte intégral déposé dans HAL par éditeur</option>
+<option value="req11"<?php echo($irq11);?>>11. Collection : Nombre d'articles avec texte intégral déposé dans HAL par éditeur</option>
+<option value="req12"<?php echo($irq12);?>>12. Collection : Nombre d'articles avec texte intégral déposé dans HAL OU lien externe vers PDF en open access par éditeur</option>
+<option value="req13"<?php echo($irq13);?>>13. Portail ou collection : évolution sur une et trois années</option>
+<option value="req14"<?php echo($irq14);?>>14. Collection : Nombre de projets ANR</option>
+<option value="req15"<?php echo($irq15);?>>15. Collection : Nombre de projets européens</option>
+<option value="req16"<?php echo($irq16);?>>16. Collection : Profil des contributeurs HAL</option>
+<option value="req17"<?php echo($irq17);?>>17. Collection : Collaborations nationales</option>
+<option value="req18"<?php echo($irq18);?>>18. Collection : Collaborations nationales (laboratoires)</option>
+<option value="req19"<?php echo($irq19);?>>19. Collection : Collaborations nationales (établissements)</option>
+<option value="req20"<?php echo($irq20);?>>20. Collection : Collaborations nationales (autres)</option>
+<option value="req21"<?php echo($irq21);?>>21. Collection : Collaborations internationales (toutes structures)</option>
+<option value="req22"<?php echo($irq22);?>>22. Collection : Collaborations internationales (institutions)</option>
+<option value="req23"<?php echo($irq23);?>>23. Collection : Collaborations internationales (pays)</option>
 </select>
 
 <!--Tableau général-->
@@ -1169,7 +1169,13 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     fseek($inF, 0);
     $chaine = "\xEF\xBB\xBF";
     fwrite($inF,$chaine);
-
+		
+		//Intitulé
+		echo('<br><b>1. Portail : production scientifique par secteur et par unité</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête présente, pour une année donnée, le nombre de publications référencées dans le portail HAL institutionnel, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Les résultats sont déclinés par secteurs (le cas échéant), et par unités ou structures de recherche. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		
     for($year = $anneedeb; $year <= $anneefin; $year++) {
       //Export CSV
       //Colonnes
@@ -1428,6 +1434,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   
   //Tableau de résultats requête 2
   if ($reqt == "req2") {
+		//Intitulé
+		echo('<br><b>2. Portail ou collection : évolution sur une période</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête présente, sur une période donnée, le nombre de publications référencées dans le portail HAL institutionnel (secteurs disciplinaires, le cas échéant) ou une collection, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Pour le portail, les résultats sont déclinés par secteurs (le cas échéant). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		
     //Export CSV
     $Fnm = "./csv/req2.csv";
     $inF = fopen($Fnm,"w+");
@@ -1600,6 +1612,11 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   
   //Tableau de résultats requête 3
   if ($reqt == "req3") {
+		//Intitulé
+		echo('<br><b>3. Portail : comparaison portailsComparaison portails</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête permet de situer les données d’un portail institutionnel par rapport aux données d’autres portails (d’universités). Il indique, pour une année donnée, le nombre de publications (articles de revue) référencées dans le portail, avec ou sans texte intégral, incluant ou non un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
   
     //Export CSV
     $Fnm = "./csv/req3.csv";
@@ -1822,6 +1839,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   
   //Tableau de résultats requête 4
   if ($reqt == "req4") {
+		//Intitulé
+		echo('<br><b>4. Portail : ESGBU (stocks et flux)</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête fournit les 4 premiers indicateurs (stocks et flux) demandés dans l’enquête annuelle ESGBU pour l’archive ouverte. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		
     //Export CSV
     $Fnm = "./csv/req4.csv";
     $inF = fopen($Fnm,"w+");
@@ -1915,6 +1938,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   
   //Tableau de résultats requête 5
   if ($reqt == "req5") {
+		//Intitulé
+		echo('<br><b>5. Portail ou Collection : Nombre de publications de type articles par éditeur</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles de revues par éditeur pour une année donnée. Ne sont représentés que les principaux éditeurs et les articles HAL ayant un DOI (à l’exception des éditeurs Dalloz et Lextenso). Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ». <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		
 		//Export CSV
     $Fnm = "./csv/req5.csv";
     $inF = fopen($Fnm,"w+");
@@ -1973,6 +2002,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	
 	//Tableau de résultats requête 6
   if ($reqt == "req6") {
+		//Intitulé
+		echo('<br><b>6. Portail ou Collection : Nombre de publications de type communications par éditeur</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre de communications par éditeur pour une année donnée. Ne sont représentés que les principaux éditeurs et les dépôts HAL ayant un DOI. Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ». <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		
 		//Export CSV
     $Fnm = "./csv/req6.csv";
     $inF = fopen($Fnm,"w+");
@@ -2032,6 +2067,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	
 	//Tableau de résultats requête 7
   if ($reqt == "req7") {
+		//Intitulé
+		echo('<br><b>7. Portail ou Collection : Nombre de publications (articles de revue) par revue</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles présents dans le portail ou la collection, avec ou sans texte intégral, par revue. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		
 		//Export CSV
     $Fnm = "./csv/req7.csv";
     $inF = fopen($Fnm,"w+");
@@ -2115,6 +2156,19 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 
 	//Tableau de résultats requêtes 8 et 9 > seuls les pourcentages finaux représentent des indices différents
   if ($reqt == "req8" || $reqt == "req9") {
+		if ($reqt == "req8") {
+			//Intitulé
+			echo('<br><b>8. Portail : Pourcentage par secteur des articles de tel éditeur</b><br>');
+			
+			//Descriptif
+			echo('<div style="background-color:#f5f5f5">Requête masquée : abandon car on dépasse les limites d’exécution du script.</div><br>');
+		}else{
+			//Intitulé
+			echo('<br><b>9. Portail : Pourcentage par éditeur des articles de tel secteur</b><br>');
+			
+			//Descriptif
+			echo('<div style="background-color:#f5f5f5">Requête masquée : abandon car on dépasse les limites d’exécution du script.</div><br>');
+		}
 		
     //Export CSV
     ($reqt == "req8") ? $Fnm = "./csv/req8.csv" : $Fnm = "./csv/req9.csv";
@@ -2312,6 +2366,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	
 	//Tableau de résultats requête 10
   if ($reqt == "req10") {
+		//Intitulé
+		echo('<br><b>10. Collection : Nombre d\'articles sans texte intégral déposé dans HAL par éditeur</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles de revue, sans texte intégral, par éditeur et pour une année donnée. Ne sont représentés que les principaux éditeurs et les articles HAL ayant un DOI (à l’exception des éditeurs Dalloz et Lextenso). Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ».  <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		
 		//Export CSV
     $Fnm = "./csv/req10.csv";
     $inF = fopen($Fnm,"w+");
@@ -2363,6 +2423,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	
 	//Tableau de résultats requête 11
   if ($reqt == "req11") {
+		//Intitulé
+		echo('<br><b>11. Collection : Nombre d\'articles avec texte intégral déposé dans HAL par éditeur</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles de revue, avec texte intégral, par éditeur et pour une année donnée. Ne sont représentés que les principaux éditeurs et les articles HAL ayant un DOI (à l’exception des éditeurs Dalloz et Lextenso). Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ».  <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		
 		//Export CSV
     $Fnm = "./csv/req11.csv";
     $inF = fopen($Fnm,"w+");
@@ -2414,6 +2480,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	
 	//Tableau de résultats requête 12
   if ($reqt == "req12") {
+		//Intitulé
+		echo('<br><b>12. Collection : Nombre d\'articles avec texte intégral déposé dans HAL OU lien externe vers PDF en open access par éditeur</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles de revue, avec texte intégral ou avec un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>), par éditeur et pour une année donnée. Ne sont représentés que les principaux éditeurs et les articles HAL ayant un DOI (à l’exception des éditeurs Dalloz et Lextenso). Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ».  <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		
 		//Export CSV
     $Fnm = "./csv/req12.csv";
     $inF = fopen($Fnm,"w+");
@@ -2465,6 +2537,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	
 	//Tableau de résultats requête 13
   if ($reqt == "req13") {
+		//Intitulé
+		echo('<br><b>13. Portail ou collection : évolution sur une et trois années</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête mesure la progression du nombre de dépôts, avec ou sans texte intégral ou avec un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>), sur 1 et 3 années, à partir de l’année de référence saisie par l’utilisateur. La comparaison 1 / 3 ans permet le cas échéant de relativiser une baisse ou une augmentation sur 1 an, afin de vérifier s’il s’agit d’une tendance de fond, ou au contraire d’un changement circonstanciel. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		
 		function signe($int)
 		{
 			 if( $int > 0 )
@@ -2552,7 +2630,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		
 		$chaine = "Publications avec ou sans texte intégral déposé dans HAL;";
 		echo ('<tr>');
-    echo ('<th scope="row">Publications avec ou sans texte intégral déposé dans HAL</th>');
+    echo ('<th scope="row">Publications avec ou sans texte intégral déposé dans HAL <a class=info onclick=\'return false\' href="#"><img src="./img/pdi.jpg"><span>Nombre total de publications référencées dans HAL. Une baisse peut signaler soit une baisse de la production, soit une baisse du référencement (dépôt par les auteurs et/ou des intermédiaires), soit le cas échéant un problème de <b>visibilité</b> de la production dans les bases bibliographiques (WoS, Pubmed, Scopus…), qui peut aussi être lié à un problème de <b>signature</b> (affiliation insuffisante ou erronée).</span></a></th>');
 		($pct1noavTI > 0) ? $img = './img/hausse.png' : (($pct1noavTI < 0) ? $img = './img/baisse.png' : $img = './img/zero.png');
 		echo ('<th scope="row" style="text-align:center"><img src='.$img.'></th>');
 		echo ('<th scope="row" style="text-align:center">'.signe($pct1noavTI).' %</th>');
@@ -2582,7 +2660,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		
 		$chaine = "Publications avec texte intégral déposé dans HAL + lien externe vers PDF en open access;";
 		echo ('<tr>');
-    echo ('<th scope="row">Publications avec texte intégral déposé dans HAL + lien externe vers PDF en open access</th>');
+    echo ('<th scope="row">Publications avec texte intégral déposé dans HAL + lien externe vers PDF en open access <a class=info onclick=\'return false\' href="#"><img src="./img/pdi.jpg"><span>Taux global d’open access : texte intégral déposé dans HAL ou référence HAL avec un lien vers un PDF librement disponible hors de HAL (via Unpaywall > https://unpaywall.org/). </span></a></th>');
 		($pct1avTIavOA > 0) ? $img = './img/hausse.png' : (($pct1avTIavOA < 0) ? $img = './img/baisse.png' : $img = './img/zero.png');
 		echo ('<th scope="row" style="text-align:center"><img src='.$img.'></th>');
 		echo ('<th scope="row" style="text-align:center">'.signe($pct1avTIavOA).' %</th>');
@@ -2597,7 +2675,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		
 		$chaine = "Publications sans texte intégral déposé dans HAL + lien externe vers PDF en open access;";
 		echo ('<tr>');
-    echo ('<th scope="row">Publications sans texte intégral déposé dans HAL + lien externe vers PDF en open access</th>');
+    echo ('<th scope="row">Publications sans texte intégral déposé dans HAL + lien externe vers PDF en open access <a class=info onclick=\'return false\' href="#"><img src="./img/pdi.jpg"><span>Références HAL sans texte intégral, mais avec un lien vers l’article en open access sur le site de la revue. Une baisse peut simplement signifier que les auteurs ont ajouté massivement dans HAL le PDF de ces articles. Une hausse peut également signifier un recours accru à la publication dans des revues en open access, et/ou au paiement de frais de mise en open access des articles.</span></a></th>');
 		($pct1noTIavOA > 0) ? $img = './img/hausse.png' : (($pct1noTIavOA < 0) ? $img = './img/baisse.png' : $img = './img/zero.png');
 		echo ('<th scope="row" style="text-align:center"><img src='.$img.'></th>');
 		echo ('<th scope="row" style="text-align:center">'.signe($pct1noTIavOA).' %</th>');
@@ -2714,6 +2792,11 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	
 	//Tableau de résultats requête 14
   if ($reqt == "req14") {
+		//Intitulé
+		echo('<br><b>14. Collection : Nombre de projets ANR</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête présente la liste des projets ANR d’une collection, avec pour chaque projet le nombre et la liste des publications HAL. En fin de tableau figurent sous la mention « à compléter » les projets mentionnés dans le champ « financement » des dépôts HAL mais pour lesquels il manque la forme validée du référentiel*. Cette requête ne prend en effet en compte que les projets référencés dans le champ ANR des dépôts HAL. <a href="#DT">Voir détails techniques en bas de page</a>.<br><br><i>(*) : Vous pouvez ainsi rechercher dans la collection HAL les notices concernées (recherche avancée dans le champ « financement »), et compléter les projets manquants dans le champ ANR.</i></div><br>');
 		
 		//Export CSV
     $Fnm = "./csv/req14.csv";
@@ -2872,6 +2955,11 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	
 	//Tableau de résultats requête 15
   if ($reqt == "req15") {
+		//Intitulé
+		echo('<br><b>15. Collection : Nombre de projets européens</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête présente la liste des projets européens d’une collection, avec pour chaque projet le nombre et la liste des publications HAL. En fin de tableau figurent sous la mention « à compléter » les projets mentionnés dans le champ « financement » des dépôts HAL mais pour lesquels il manque la forme validée du référentiel*. Cette requête ne prend en effet en compte que les projets référencés dans le champ projet européen des dépôts HAL. <a href="#DT">Voir détails techniques en bas de page</a>.<br><br><i>(*) : Vous pouvez ainsi rechercher dans la collection HAL les notices concernées (recherche avancée dans le champ « financement »), et compléter les projets manquants dans le champ ANR.</i></div><br>');
 		
 		//Export CSV
     $Fnm = "./csv/req15.csv";
@@ -3010,7 +3098,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	
 	//Tableau de résultats requête 16
   if ($reqt == "req16") {
-			
+		//Intitulé
+		echo('<br><b>16. Collection : Profil des contributeurs HAL</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des contributeurs classée par nombre de dépôts (références, texte intégral, données de recherche), ainsi que le portail de dépôt. A noter que les contributions secondaires (ajout d’un fichier) ne sont pas créditées par HAL : c’est toujours le nom du premier contributeur qui est remonté. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		
 		include("./Portails-SID.php");
 		
 		//Tri par défaut
@@ -3192,6 +3285,11 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	
 	//Tableau de résultats requête 17
   if ($reqt == "req17") {
+		//Intitulé
+		echo('<br><b>17. Collection : Collaborations nationales</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des structures françaises auxquelles sont affiliés des co-auteurs. Cette liste mêle les 3 niveaux (laboratoires, établissements, autres) mais il est possible de les distinguer (voir les 3 requêtes suivantes). La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
 		
 		//Tri par défaut
 		$nomTri = "";
@@ -3338,6 +3436,11 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	
 	//Tableau de résultats requête 18
   if ($reqt == "req18") {
+		//Intitulé
+		echo('<br><b>18. Collection : Collaborations nationales (laboratoires)</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des unités de recherche françaises auxquelles sont affiliés des co-auteurs. La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
 		
 		//Tri par défaut
 		$nomTri = "";
@@ -3484,6 +3587,11 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	
 	//Tableau de résultats requête 19
   if ($reqt == "req19") {
+		//Intitulé
+		echo('<br><b>19. Collection : Collaborations nationales (établissements)</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des institutions françaises auxquelles sont affiliés des co-auteurs. La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
 		
 		//Tri par défaut
 		$nomTri = "";
@@ -3630,6 +3738,11 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	
 	//Tableau de résultats requête 20
   if ($reqt == "req20") {
+		//Intitulé
+		echo('<br><b>20. Collection : Collaborations nationales (autres)</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des structures françaises (autres que laboratoires et institutions) auxquelles sont affiliés des co-auteurs. La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
 		
 		//Tri par défaut
 		$nomTri = "";
@@ -3776,6 +3889,11 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	
 	//Tableau de résultats requête 21
   if ($reqt == "req21") {
+		//Intitulé
+		echo('<br><b>21. Collection : Collaborations internationales (toutes structures)</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des structures étrangères auxquelles sont affiliés des co-auteurs. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées.  Les structures dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> sont classés sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
 		
 		include('./VizuHAL_codes_pays.php');
 		$typTab = array(
@@ -4044,6 +4162,11 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	
 	//Tableau de résultats requête 22
   if ($reqt == "req22") {
+		//Intitulé
+		echo('<br><b>22. Collection : Collaborations internationales (institutions)</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des institutions étrangères auxquelles sont affiliés des co-auteurs. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées. Les institutions dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> sont classés sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
 		
 		include('./VizuHAL_codes_pays.php');
 		
@@ -4362,6 +4485,11 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	
 	//Tableau de résultats requête 23
   if ($reqt == "req23") {
+		//Intitulé
+		echo('<br><b>23. Collection : Collaborations internationales (pays)</b><br>');
+		
+		//Descriptif
+		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des pays (ie. affiliation des co-auteurs) représentée sous forme de carte interactive. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées.  Les structures dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a>L (<a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/browse?critere=-country_s%3A%5B%22%22+TO+*%5D&category=*">elles sont nombreuses</a>) sont classées sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
 		
 		include('./VizuHAL_codes_pays.php');
 		$typTab = array(
@@ -4688,6 +4816,409 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     }
   }
 }
+
+//Détails techniques
+echo('<a name="DT"></a>');
+
+//Requête 1
+echo('<div id="DTreq1" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+<b>Pour les utilisateurs hors Rennes 1</b> : pour exploiter cette requête, il faut au préalable compléter la liste des codes collections des secteurs et unités dans un tableau PortHAL-UNIV-XXXXX.php, sur le modèle du fichier PortHAL-RENNES1.php. En l’absence de secteurs, il suffit de reporter le code collection (ex : UNIV-RENNES1) comme valeur des champs « secteurs » du tableau PHP.<br>
+<br>
+# dépôts HAL-UR1 par année de publication (= colonne « <b>Productions 2017</b> ») :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111</a><br>
+<br>
+# notices HAL-UR1 par année de publication (= colonne « <b>Productions 2017 sans texte intégral déposé dans HAL</b> ») :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111</a><br>
+<br>
+# manuscrits HAL-UR1 par année de publication (= colonne « <b>Productions 2017 avec texte intégral déposé dans HAL</b> ») :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:file&fq=-status_i=111</a><br>
+<br>
+# notices HAL-UR1 avec lien open access par année de publication (= colonne « <b>Productions 2017 sans texte intégral déposé dans HAL mais avec texte intégral librement accessible hors HAL</b> ») :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
+<br>
+# manuscrits et lien open access HAL-UR1 par année de publication (= colonne « <b>Productions 2017 avec texte intégral déposé dans HAL ou librement accessible hors HAL</b> ») :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
+<br>
+<b>Notes :</b><br>
+<ul>
+<li>Les données obtenues pour les secteurs ne sont pas la somme des données collections : certains dépôts sont en effet des co-publications et peuvent apparaître dans plusieurs collections à la fois au sein d’un même secteur. En les additionnant, on fausserait les résultats.</li>
+<li>Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).</li>
+<li>Dans les requêtes API portant sur le lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>), il faut exclure les liens ISTEX (uniquement accessibles aux membres ESR) : fq=-linkExtId_s:istex</li>
+</ul>
+');
+echo('<br></div></div>');
+
+//Requête 2
+echo('<div id="DTreq2" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+<b>Pour les utilisateurs hors Rennes 1</b> : pour exploiter la requête portail, il faut au préalable compléter la liste des codes collections des secteurs et unités dans un tableau PortHAL-UNIV-XXXXX.php, sur le modèle du fichier PortHAL-RENNES1.php. En l’absence de secteurs, il suffit de reporter le code collection (ex : UNIV-RENNES1) comme valeur des champs « secteurs «  du tableau PHP.<br>
+<br>
+# notices et texte intégral HAL-UR1 (toutes les années de publication) :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*:*&wt=xml&rows=0&facet=true&facet.pivot=producedDateY_i,submitType_s">https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*:*&wt=xml&rows=0&facet=true&facet.pivot=producedDateY_i,submitType_s</a><br>
+<br>
+# manuscrits HAL-UR1 par année de publication (= colonne « <b>Productions avec texte intégral déposé dans HAL</b> ») :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:file&fq=-status_i=111</a><br> 
+<br>
+# notices HAL-UR1 (= colonne « <b>Productions sans texte intégral déposé dans HAL</b> ») :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111</a><br>
+<br>
+# notices HAL-UR1 avec lien open access par année de publication  (= colonne « <b>Productions sans texte intégral déposé dans HAL mais avec texte intégral librement accessible hors HAL</b> ») :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
+<br>
+<b>Notes :</b><br>
+<ul>
+<li>Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).</li>
+<li>Dans les requêtes API portant sur le lien vers un PDF librement disponible hors de HAL (via Unpaywall), il faut exclure les liens ISTEX (uniquement accessibles aux membres ESR) : fq=-linkExtId_s:istex</li>
+</ul>
+');
+echo('<br></div></div>');
+
+//Requête 3
+echo('<div id="DTreq3" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+Liste des portails : <a target="_blank" href="https://api.archives-ouvertes.fr/ref/instance/?wt=xml">https://api.archives-ouvertes.fr/ref/instance/?wt=xml</a><br> (un filtre interne au programme est appliqué pour n’extraire que les portails université : « université » doit figurer dans le champ « name »).<br>
+<br>
+# articles HAL-UR1 par année de publication (= colonne « <b>Articles</b> ») :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111</a><br>
+<br>
+# articles HAL-UR1 sans texte intégral par année de publication (= colonne « <b>Articles 2017 sans texte intégral déposé dans HAL</b> ») :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=submitType_s:notice&fq=-status_i=111</a><br>
+<br>
+# articles HAL-UR1 avec texte intégral par année de publication (= colonne « <b>Articles 2017 avec texte intégral déposé dans HAL</b> ») :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=submitType_s:file&fq=-status_i=111</a><br>
+<br>
+# articles HAL-UR1 sans texte intégral déposé dans HAL mais avec texte intégral librement accessible hors HAL :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
+<br>
+# articles HAL-UR1 avec texte intégral ou texte intégral accessible hors HAL par année de publication (= colonne « <b>Articles 2017 avec texte intégral déposé dans HAL ou librement accessible hors HAL</b> ») :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
+<br>
+<b>Notes :</b><br>
+<ul>
+<li>Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).</li>
+<li>Dans les requêtes API portant sur le lien vers un PDF librement disponible hors de HAL (via Unpaywall), il faut exclure les liens ISTEX (uniquement accessibles aux membres ESR) : fq=-linkExtId_s:istex</li>
+</ul>
+');
+echo('<br></div></div>');
+
+//Requête 4
+echo('<div id="DTreq4" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+<b>Stocks :</b><br>
+AO1 = nombre de notices au 31/12/XXXX (remplacer par année renseignée par l’utilisateur)<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:notice&fq=-status_i=111&fq=submittedDate_s:[1600-01-01-%20TO%202017-12-31/HOUR]">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:notice&fq=-status_i=111&fq=submittedDate_s:[1600-01-01-%20TO%202017-12-31/HOUR]</a><br>
+AO2 = nombre de fichiers au 31/12/XXXX (remplacer par année renseignée par l’utilisateur)<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:file&fq=-status_i=111&fq=submittedDate_s:[1600-01-01-%20TO%202017-12-31/HOUR]">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:file&fq=-status_i=111&fq=submittedDate_s:[1600-01-01-%20TO%202017-12-31/HOUR]</a><br>
+<br>
+<b>Flux :</b><br>
+AO3 = nombre de notices ajoutées en XXXX (remplacer par année renseignée par l’utilisateur)<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:notice&fq=-status_i=111&fq=submittedDate_s:[2017-01-01-%20TO%202017-12-31/HOUR]">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:notice&fq=-status_i=111&fq=submittedDate_s:[2017-01-01-%20TO%202017-12-31/HOUR]</a><br>
+AO4 = nombre de fichiers ajoutés en XXXX (remplacer par année renseignée par l’utilisateur)<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:file&fq=-status_i=111&fq=submittedDate_s:[2017-01-01-%20TO%202017-12-31/HOUR]">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:file&fq=-status_i=111&fq=submittedDate_s:[2017-01-01-%20TO%202017-12-31/HOUR]</a><br>
+<br>
+<b>Note :</b> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
+');
+echo('<br></div></div>');
+
+//Requête 5
+echo('<div id="DTreq5" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+Ce chiffre n’est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n’est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d’une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l’appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs Dalloz et Lextenso qui n’ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
+<br>
+Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
+<br>
+Requêtes API :<br>
+Articles 2017 (exemple pour préfixe 10.1016) : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:ART</a><br>
+La ligne "Hors regroupement éditorial" est calculée en retranchant le nombre total d\'articles recensés chez les éditeurs principaux (liste abrégée) du nombre total d\'articles du portail pour 2017 : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:ART&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:ART&fq=-status_i=111</a><br>
+Lextenso : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:lextenso&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:lextenso&fq=docType_s:ART</a><br>
+Dalloz : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:dalloz&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:dalloz&fq=docType_s:ART</a><br>
+<br>
+<b>Note :</b> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
+');
+echo('<br></div></div>');
+
+//Requête 6
+echo('<div id="DTreq6" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+Ce chiffre n’est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n’est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d’une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l’appellation « Hors regroupement éditorial ».<br>
+<br>
+Requêtes API :<br>
+Communications 2017 (exemple pour préfixe 10.1016) : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:COMM">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:COMM</a><br>
+La ligne "Hors regroupement éditorial" est calculée en retranchant le nombre total d\'articles recensés chez les éditeurs principaux (liste abrégée) du nombre total d\'articles du portail pour 2017 : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:COMM&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:COMM&fq=-status_i=111</a><br>
+<br>
+<b>Note :</b> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
+');
+echo('<br></div></div>');
+
+//Requête 7
+echo('<div id="DTreq7" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+Requête API (on additionne les valeurs des balises « count » du 1er niveau) :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*%3A*&rows=0&wt=xml&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=producedDateY_i:2017&facet.limit=10000">https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*%3A*&rows=0&wt=xml&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=producedDateY_i:2017&facet.limit=10000</a><br>
+La requête n’est pas basée sur l’ISSN car certaines revues du référentiel AuréHAL n’ont pas d’ISSN. C’est donc le titre de la revue (journalTitle_s) qui est pris en compte.<br>
+<br>
+<b>Note :</b> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
+');
+echo('<br></div></div>');
+
+//Requête 8
+echo('<div id="DTreq8" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+');
+echo('<br></div></div>');
+
+//Requête 9
+echo('<div id="DTreq9" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+');
+echo('<br></div></div>');
+
+//Requête 10
+echo('<div id="DTreq10" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+Ce chiffre n’est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n’est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d’une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l’appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs Dalloz et Lextenso qui n’ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
+<br>
+Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
+<br>
+Requête API :<br>
+Nombre de notices sans texte intégral :<br>
+ <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111</a><br>
+<br>
+<b>Note :</b> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
+');
+echo('<br></div></div>');
+
+//Requête 11
+echo('<div id="DTreq11" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+Ce chiffre n’est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n’est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d’une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l’appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs Dalloz et Lextenso qui n’ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
+Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
+<br>
+Requête API :<br>
+Nombre de notices avec texte intégral : <br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:file&fq=-status_i=111</a><br>
+<br>
+<b>Note :</b> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
+');
+echo('<br></div></div>');
+
+//Requête 12
+echo('<div id="DTreq12" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+Ce chiffre n’est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n’est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d’une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l’appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs Dalloz et Lextenso qui n’ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
+Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
+<br>
+Requête API :<br>
+Nombre de notices avec texte intégral OU lien externe : <br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
+<br>
+<b>Notes :</b><br>
+<ul>
+<li>Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).</li>
+<li>Dans les requêtes API portant sur le lien vers un PDF librement disponible hors de HAL (via Unpaywall), il faut exclure les liens ISTEX (uniquement accessibles aux membres ESR) : fq=-linkExtId_s:istex</li>
+</ul>
+');
+echo('<br></div></div>');
+
+//Requête 13
+echo('<div id="DTreq13" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+Requêtes API :<br>
+Nombre de notices sans texte intégral :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111</a><br>
+Nombre de notices avec texte intégral :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:file&fq=-status_i=111</a><br>
+Nombre de notices avec texte intégral OU lien externe :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
+<br>
+<b>Notes :</b><br>
+<ul>
+<li>Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).</li>
+<li>Dans les requêtes API portant sur le lien vers un PDF librement disponible hors de HAL (via Unpaywall), il faut exclure les liens ISTEX (uniquement accessibles aux membres ESR) : fq=-linkExtId_s:istex</li>
+</ul>
+');
+echo('<br></div></div>');
+
+//Requête 14
+echo('<div id="DTreq14" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+Nombre de références HAL dans la collection LTSI pour 2019 ayant un projet ANR (incluant le champ « financement ») :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fl=anrProjectId_i,anrProjectAcronym_s,funding_s,anrProjectId_i,anrProjectReference_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fl=anrProjectId_i,anrProjectAcronym_s,funding_s,anrProjectId_i,anrProjectReference_s&rows=10000</a><br>
+');
+echo('<br></div></div>');
+
+//Requête 15
+echo('<div id="DTreq15" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+Nombre de références HAL dans la collection LTSI pour 2019 ayant un projet européen (incluant le champ « financement ») :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fl= europeanProjectId_i,europeanProjectAcronym_s,funding_s,europeanProjectId_i,europeanProjectReference_s &rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fl= europeanProjectId_i,europeanProjectAcronym_s,funding_s,europeanProjectId_i,europeanProjectReference_s &rows=10000</a><br>
+');
+echo('<br></div></div>');
+
+//Requête 16
+echo('<div id="DTreq16" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/UNIV-RENNES1/?fq=producedDateY_i:2019&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s&rows=10000&sort=contributorFullName_s%20desc">https://api.archives-ouvertes.fr/search/UNIV-RENNES1/?fq=producedDateY_i:2019&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s&rows=10000&sort=contributorFullName_s%20desc</a><br>
+<br>
+Champs exploités :<br>
+<ul>
+<li>contributorFullName_s</li>
+<li>submittedDate_s pour la date de dépôt (année)</li>
+<li>submitType_s pour le type de dépôt (notice, file)</li>
+<li>sid_i : identifiant du portail de dépôt (avec <a target="_blank" href="https://api.archives-ouvertes.fr/search/?q=*%3A*&rows=0&wt=xml&indent=true&facet=true&facet.field=sid_i">une liste</a>, mais non documentée selon ticket <a target="_blank" href="https://support.ccsd.cnrs.fr/SelfService/Display.html?id=87256">HAL#87256</a> : on n’en a traduit que quelques-uns)</li>
+</ul>
+');
+echo('<br></div></div>');
+
+//Requête 17
+echo('<div id="DTreq17" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s">https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s</a><br>
+Les 3 niveaux (collCategory_s):<br>
+Laboratoires = uniquement les tampons LABO et THEME<br>
+Etablissements = uniquement les tampons INSTITUTION, UNIV et ECOLE<br>
+Autres = uniquement les tampons AUTRE<br>
+');
+echo('<br></div></div>');
+
+//Requête 18
+echo('<div id="DTreq18" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s">https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s</a><br>
+collCategory_s / Laboratoires = uniquement les tampons LABO et THEME<br>
+');
+echo('<br></div></div>');
+
+//Requête 19
+echo('<div id="DTreq19" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s">https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s</a><br>
+collCategory_s / Etablissements = uniquement les tampons INSTITUTION, UNIV et ECOLE<br>
+');
+echo('<br></div></div>');
+
+//Requête 20
+echo('<div id="DTreq20" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s">https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s</a><br>
+collCategory_s / Autres = uniquement les tampons AUTRE<br>
+');
+echo('<br></div></div>');
+
+//Requête 21
+echo('<div id="DTreq21" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=structName_s,structType_s,halId_s,structCountry_s&fq=-country_s:[%22%22%20TO%20*]&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=structName_s,structType_s,halId_s,structCountry_s&fq=-country_s:[%22%22%20TO%20*]&rows=10000</a><br> 
+Liens XML/JSON : l’export des références en csv n’est malheureusement pas possible (même si théoriquement proposé par le CCSD).<br>
+Sont exclus des résultats les territoires français d’outre-mer de la <a target="_blank" href="http://documentation.abes.fr/sudoc/formats/CodesPays.htm">liste ISO 3166</a> : "Martinique" MQ,"Guadeloupe" GP, etc.<br>
+<br>
+<b>Note :</b> ces résultats sont à relativiser car beaucoup de structures étrangères non valides du référentiel AuréHAL ont un code pays = France. Par ailleurs, les co-auteurs étrangers ne sont pas systématiquement affiliés dans HAL, voire ont une affiliation erronée (attribuée automatiquement par HAL).<br>
+');
+echo('<br></div></div>');
+
+//Requête 22
+echo('<div id="DTreq22" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=structName_s,structType_s,halId_s,structCountry_s&fq=-country_s:[%22%22%20TO%20*]&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=structName_s,structType_s,halId_s,structCountry_s&fq=-country_s:[%22%22%20TO%20*]&rows=10000</a><br> 
+Liens XML/JSON : l’export des références en csv n’est malheureusement pas possible (même si théoriquement proposé par le CCSD).<br>
+Données utilisées pour le label « institution » :<br>
+structType_s = "institution", "regroupinstitution", "regrouplaboratory", "department"<br>
+Sont exclus des résultats les territoires français d’outre-mer de la <a target="_blank" href="http://documentation.abes.fr/sudoc/formats/CodesPays.htm">liste ISO 3166</a> : "Martinique" MQ,"Guadeloupe" GP, etc.<br>
+<br>
+<b>Note :</b> ces résultats sont à relativiser car beaucoup de structures étrangères non valides du référentiel AuréHAL ont un code pays = France. Par ailleurs, les co-auteurs étrangers ne sont pas systématiquement affiliés dans HAL, voire ont une affiliation erronée (attribuée automatiquement par HAL).<br>
+');
+echo('<br></div></div>');
+
+//Requête 23
+echo('<div id="DTreq23" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
+echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
+echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
+echo('
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=structName_s,structType_s,halId_s,structCountry_s&fq=-country_s:[%22%22%20TO%20*]&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=structName_s,structType_s,halId_s,structCountry_s&fq=-country_s:[%22%22%20TO%20*]&rows=10000</a><br> 
+Liens XML/JSON : l’export des références en csv n’est malheureusement pas possible (même si théoriquement proposé par le CCSD).<br>
+Sont exclus des résultats les territoires français d’outre-mer de la <a target="_blank" href="http://documentation.abes.fr/sudoc/formats/CodesPays.htm">liste ISO 3166</a> : "Martinique" MQ,"Guadeloupe" GP, etc.<br>
+<br>
+<b>Note :</b> ces résultats sont à relativiser car beaucoup de structures étrangères non valides du référentiel AuréHAL ont un code pays = France. Par ailleurs, les co-auteurs étrangers ne sont pas systématiquement affiliés dans HAL, voire ont une affiliation erronée (attribuée automatiquement par HAL).<br>
+');
+echo('<br></div></div>');
+
+echo('<script type="text/javascript" language="Javascript">');
+echo('var acc = document.getElementsByClassName("accordeon");');
+echo('var i;');
+echo('for (i = 0; i < acc.length; i++) {');
+echo('  acc[i].onclick = function() {');
+echo('    this.classList.toggle("active");');
+echo('    var panel = this.nextElementSibling;');
+echo('    if (panel.style.maxHeight){');
+echo('      panel.style.maxHeight = null;');
+echo('    } else {');
+echo('      panel.style.maxHeight = panel.scrollHeight + "px";');
+echo('    }');
+echo('  }');
+echo('}');
+echo('</script>');
+
+if (!isset($_POST["valider"]) && !isset($_GET["reqt"])) {
+	echo('<script type="text/javascript" language="Javascript">
+		for(let i=1; i<=imax; i++) {
+			document.getElementById("DTreq"+i).style.display = "none";
+		}
+	</script>');
+}else{
+	for ($i=1; $i<=23; $i++) { 
+		if ($reqt == "req".$i) {
+			echo('<script type="text/javascript" language="Javascript">document.getElementById("DTreq'.$i.'").style.display = "block";</script>');
+		}else{
+			echo('<script type="text/javascript" language="Javascript">document.getElementById("DTreq'.$i.'").style.display = "none";</script>');
+		}
+	}
+}
+echo('<br>');
 ?>
 <?php
 include('./bas.php');
