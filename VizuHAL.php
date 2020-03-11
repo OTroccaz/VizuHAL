@@ -1171,7 +1171,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     fwrite($inF,$chaine);
 		
 		//Intitulé
-		echo('<br><b>1. Portail : production scientifique par secteur et par unité</b><br>');
+		echo('<br><b>1. Portail : production scientifique par secteur et par unité</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête présente, pour une année donnée, le nombre de publications référencées dans le portail HAL institutionnel, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Les résultats sont déclinés par secteurs (le cas échéant), et par unités ou structures de recherche. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -1435,7 +1435,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   //Tableau de résultats requête 2
   if ($reqt == "req2") {
 		//Intitulé
-		echo('<br><b>2. Portail ou collection : évolution sur une période</b><br>');
+		echo('<br><b>2. Portail ou collection : évolution sur une période</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête présente, sur une période donnée, le nombre de publications référencées dans le portail HAL institutionnel (secteurs disciplinaires, le cas échéant) ou une collection, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Pour le portail, les résultats sont déclinés par secteurs (le cas échéant). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -1613,7 +1613,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   //Tableau de résultats requête 3
   if ($reqt == "req3") {
 		//Intitulé
-		echo('<br><b>3. Portail : comparaison portailsComparaison portails</b><br>');
+		echo('<br><b>3. Portail : comparaison portailsComparaison portails</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête permet de situer les données d’un portail institutionnel par rapport aux données d’autres portails (d’universités). Il indique, pour une année donnée, le nombre de publications (articles de revue) référencées dans le portail, avec ou sans texte intégral, incluant ou non un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -1840,7 +1840,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   //Tableau de résultats requête 4
   if ($reqt == "req4") {
 		//Intitulé
-		echo('<br><b>4. Portail : ESGBU (stocks et flux)</b><br>');
+		echo('<br><b>4. Portail : ESGBU (stocks et flux)</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête fournit les 4 premiers indicateurs (stocks et flux) demandés dans l’enquête annuelle ESGBU pour l’archive ouverte. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -1939,7 +1939,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   //Tableau de résultats requête 5
   if ($reqt == "req5") {
 		//Intitulé
-		echo('<br><b>5. Portail ou Collection : Nombre de publications de type articles par éditeur</b><br>');
+		echo('<br><b>5. Portail ou Collection : Nombre de publications de type articles par éditeur</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles de revues par éditeur pour une année donnée. Ne sont représentés que les principaux éditeurs et les articles HAL ayant un DOI (à l’exception des éditeurs Dalloz et Lextenso). Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ». <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -2003,7 +2003,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	//Tableau de résultats requête 6
   if ($reqt == "req6") {
 		//Intitulé
-		echo('<br><b>6. Portail ou Collection : Nombre de publications de type communications par éditeur</b><br>');
+		echo('<br><b>6. Portail ou Collection : Nombre de publications de type communications par éditeur</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre de communications par éditeur pour une année donnée. Ne sont représentés que les principaux éditeurs et les dépôts HAL ayant un DOI. Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ». <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -2068,7 +2068,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	//Tableau de résultats requête 7
   if ($reqt == "req7") {
 		//Intitulé
-		echo('<br><b>7. Portail ou Collection : Nombre de publications (articles de revue) par revue</b><br>');
+		echo('<br><b>7. Portail ou Collection : Nombre de publications (articles de revue) par revue</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles présents dans le portail ou la collection, avec ou sans texte intégral, par revue. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -2158,13 +2158,13 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   if ($reqt == "req8" || $reqt == "req9") {
 		if ($reqt == "req8") {
 			//Intitulé
-			echo('<br><b>8. Portail : Pourcentage par secteur des articles de tel éditeur</b><br>');
+			echo('<br><b>8. Portail : Pourcentage par secteur des articles de tel éditeur</b><br><br>');
 			
 			//Descriptif
 			echo('<div style="background-color:#f5f5f5">Requête masquée : abandon car on dépasse les limites d’exécution du script.</div><br>');
 		}else{
 			//Intitulé
-			echo('<br><b>9. Portail : Pourcentage par éditeur des articles de tel secteur</b><br>');
+			echo('<br><b>9. Portail : Pourcentage par éditeur des articles de tel secteur</b><br><br>');
 			
 			//Descriptif
 			echo('<div style="background-color:#f5f5f5">Requête masquée : abandon car on dépasse les limites d’exécution du script.</div><br>');
@@ -2367,7 +2367,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	//Tableau de résultats requête 10
   if ($reqt == "req10") {
 		//Intitulé
-		echo('<br><b>10. Collection : Nombre d\'articles sans texte intégral déposé dans HAL par éditeur</b><br>');
+		echo('<br><b>10. Collection : Nombre d\'articles sans texte intégral déposé dans HAL par éditeur</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles de revue, sans texte intégral, par éditeur et pour une année donnée. Ne sont représentés que les principaux éditeurs et les articles HAL ayant un DOI (à l’exception des éditeurs Dalloz et Lextenso). Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ».  <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -2424,7 +2424,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	//Tableau de résultats requête 11
   if ($reqt == "req11") {
 		//Intitulé
-		echo('<br><b>11. Collection : Nombre d\'articles avec texte intégral déposé dans HAL par éditeur</b><br>');
+		echo('<br><b>11. Collection : Nombre d\'articles avec texte intégral déposé dans HAL par éditeur</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles de revue, avec texte intégral, par éditeur et pour une année donnée. Ne sont représentés que les principaux éditeurs et les articles HAL ayant un DOI (à l’exception des éditeurs Dalloz et Lextenso). Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ».  <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -2481,7 +2481,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	//Tableau de résultats requête 12
   if ($reqt == "req12") {
 		//Intitulé
-		echo('<br><b>12. Collection : Nombre d\'articles avec texte intégral déposé dans HAL OU lien externe vers PDF en open access par éditeur</b><br>');
+		echo('<br><b>12. Collection : Nombre d\'articles avec texte intégral déposé dans HAL OU lien externe vers PDF en open access par éditeur</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles de revue, avec texte intégral ou avec un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>), par éditeur et pour une année donnée. Ne sont représentés que les principaux éditeurs et les articles HAL ayant un DOI (à l’exception des éditeurs Dalloz et Lextenso). Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ».  <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -2538,7 +2538,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	//Tableau de résultats requête 13
   if ($reqt == "req13") {
 		//Intitulé
-		echo('<br><b>13. Portail ou collection : évolution sur une et trois années</b><br>');
+		echo('<br><b>13. Portail ou collection : évolution sur une et trois années</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête mesure la progression du nombre de dépôts, avec ou sans texte intégral ou avec un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>), sur 1 et 3 années, à partir de l’année de référence saisie par l’utilisateur. La comparaison 1 / 3 ans permet le cas échéant de relativiser une baisse ou une augmentation sur 1 an, afin de vérifier s’il s’agit d’une tendance de fond, ou au contraire d’un changement circonstanciel. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -2793,7 +2793,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	//Tableau de résultats requête 14
   if ($reqt == "req14") {
 		//Intitulé
-		echo('<br><b>14. Collection : Nombre de projets ANR</b><br>');
+		echo('<br><b>14. Collection : Nombre de projets ANR</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête présente la liste des projets ANR d’une collection, avec pour chaque projet le nombre et la liste des publications HAL. En fin de tableau figurent sous la mention « à compléter » les projets mentionnés dans le champ « financement » des dépôts HAL mais pour lesquels il manque la forme validée du référentiel*. Cette requête ne prend en effet en compte que les projets référencés dans le champ ANR des dépôts HAL. <a href="#DT">Voir détails techniques en bas de page</a>.<br><br><i>(*) : Vous pouvez ainsi rechercher dans la collection HAL les notices concernées (recherche avancée dans le champ « financement »), et compléter les projets manquants dans le champ ANR.</i></div><br>');
@@ -2956,7 +2956,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	//Tableau de résultats requête 15
   if ($reqt == "req15") {
 		//Intitulé
-		echo('<br><b>15. Collection : Nombre de projets européens</b><br>');
+		echo('<br><b>15. Collection : Nombre de projets européens</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête présente la liste des projets européens d’une collection, avec pour chaque projet le nombre et la liste des publications HAL. En fin de tableau figurent sous la mention « à compléter » les projets mentionnés dans le champ « financement » des dépôts HAL mais pour lesquels il manque la forme validée du référentiel*. Cette requête ne prend en effet en compte que les projets référencés dans le champ projet européen des dépôts HAL. <a href="#DT">Voir détails techniques en bas de page</a>.<br><br><i>(*) : Vous pouvez ainsi rechercher dans la collection HAL les notices concernées (recherche avancée dans le champ « financement »), et compléter les projets manquants dans le champ ANR.</i></div><br>');
@@ -3099,7 +3099,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	//Tableau de résultats requête 16
   if ($reqt == "req16") {
 		//Intitulé
-		echo('<br><b>16. Collection : Profil des contributeurs HAL</b><br>');
+		echo('<br><b>16. Collection : Profil des contributeurs HAL</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des contributeurs classée par nombre de dépôts (références, texte intégral, données de recherche), ainsi que le portail de dépôt. A noter que les contributions secondaires (ajout d’un fichier) ne sont pas créditées par HAL : c’est toujours le nom du premier contributeur qui est remonté. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -3286,7 +3286,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	//Tableau de résultats requête 17
   if ($reqt == "req17") {
 		//Intitulé
-		echo('<br><b>17. Collection : Collaborations nationales</b><br>');
+		echo('<br><b>17. Collection : Collaborations nationales</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des structures françaises auxquelles sont affiliés des co-auteurs. Cette liste mêle les 3 niveaux (laboratoires, établissements, autres) mais il est possible de les distinguer (voir les 3 requêtes suivantes). La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -3437,7 +3437,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	//Tableau de résultats requête 18
   if ($reqt == "req18") {
 		//Intitulé
-		echo('<br><b>18. Collection : Collaborations nationales (laboratoires)</b><br>');
+		echo('<br><b>18. Collection : Collaborations nationales (laboratoires)</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des unités de recherche françaises auxquelles sont affiliés des co-auteurs. La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -3588,7 +3588,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	//Tableau de résultats requête 19
   if ($reqt == "req19") {
 		//Intitulé
-		echo('<br><b>19. Collection : Collaborations nationales (établissements)</b><br>');
+		echo('<br><b>19. Collection : Collaborations nationales (établissements)</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des institutions françaises auxquelles sont affiliés des co-auteurs. La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -3739,7 +3739,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	//Tableau de résultats requête 20
   if ($reqt == "req20") {
 		//Intitulé
-		echo('<br><b>20. Collection : Collaborations nationales (autres)</b><br>');
+		echo('<br><b>20. Collection : Collaborations nationales (autres)</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des structures françaises (autres que laboratoires et institutions) auxquelles sont affiliés des co-auteurs. La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -3890,7 +3890,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	//Tableau de résultats requête 21
   if ($reqt == "req21") {
 		//Intitulé
-		echo('<br><b>21. Collection : Collaborations internationales (toutes structures)</b><br>');
+		echo('<br><b>21. Collection : Collaborations internationales (toutes structures)</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des structures étrangères auxquelles sont affiliés des co-auteurs. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées.  Les structures dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> sont classés sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -4163,7 +4163,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	//Tableau de résultats requête 22
   if ($reqt == "req22") {
 		//Intitulé
-		echo('<br><b>22. Collection : Collaborations internationales (institutions)</b><br>');
+		echo('<br><b>22. Collection : Collaborations internationales (institutions)</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des institutions étrangères auxquelles sont affiliés des co-auteurs. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées. Les institutions dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> sont classés sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
@@ -4373,7 +4373,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$nbrUrl.'">Nombre de publications</a></b></th>');
 			echo ('<th scope="col" style="text-align:left"><b>%</b></th>');
 			echo ('<th scope="col" style="text-align:left"><b>Références HAL</b></th>');
-			$chaine = "Pays;Nombre de publications;%;Références HAL;";
+			$chaine = "Pays;Code pays ISO;Nombre de publications;%;Références HAL;";
 			echo ('</tr>');
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
@@ -4394,7 +4394,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			echo ('<td>');
 			echo ('-');
 			echo ('</td>');
-			$chaine = "Publications de la collection sur la période concernée".";".$totColl.";100%;-;";
+			$chaine = "Publications de la collection sur la période concernée".";;".$totColl.";100%;-;";
 			echo ('</tr>');
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
@@ -4414,7 +4414,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			echo ('<td>');
 			echo ('-');
 			echo ('</td>');
-			$chaine = "Publications impliquant au moins un pays étranger".";".$totCollStr.";".$pcentStr.";-;";
+			$chaine = "Publications impliquant au moins un pays étranger".";;".$totCollStr.";".$pcentStr.";-;";
 			echo ('</tr>');
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
@@ -4440,7 +4440,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 					$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
 					echo ($liens);
 					echo ('</td>');
-					$chaine = $resColl["pays"][$i].";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";
+					$chaine = $resColl["pays"][$i].";".array_search($resColl["pays"][$i], $countries).";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";
 					echo ('</tr>');
 					$chaine .= chr(13).chr(10);
 					fwrite($inF,$chaine);
@@ -4469,7 +4469,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
 				echo ($liens);
 				echo ('</td>');
-				$chaine = $resColl["pays"][$key].";".$resColl["nombre"][$key].";".$resColl["pcent"][$key].";".$liens.";";
+				$chaine = $resColl["pays"][$key].";;".$resColl["nombre"][$key].";".$resColl["pcent"][$key].";".$liens.";";
 				echo ('</tr>');
 				$chaine .= chr(13).chr(10);
 				fwrite($inF,$chaine);
@@ -4486,7 +4486,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	//Tableau de résultats requête 23
   if ($reqt == "req23") {
 		//Intitulé
-		echo('<br><b>23. Collection : Collaborations internationales (pays)</b><br>');
+		echo('<br><b>23. Collection : Collaborations internationales (pays)</b><br><br>');
 		
 		//Descriptif
 		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des pays (ie. affiliation des co-auteurs) représentée sous forme de carte interactive. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées.  Les structures dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a>L (<a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/browse?critere=-country_s%3A%5B%22%22+TO+*%5D&category=*">elles sont nombreuses</a>) sont classées sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
