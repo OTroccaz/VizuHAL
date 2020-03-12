@@ -5173,6 +5173,7 @@ Sont exclus des résultats les territoires français d’outre-mer de la <a targ
 <b>Note :</b> ces résultats sont à relativiser car beaucoup de structures étrangères non valides du référentiel AuréHAL ont un code pays = France. Par ailleurs, les co-auteurs étrangers ne sont pas systématiquement affiliés dans HAL, voire ont une affiliation erronée (attribuée automatiquement par HAL).<br>
 ');
 echo('<br></div></div>');
+echo('Vous pouvez générer différents types de cartes en exportant ces données dans l\'outil open source <a target="_blank" href="https://www.sciencespo.fr/cartographie/khartis/">Khartis</a> (voir <a target="_blank" href="https://www.sciencespo.fr/cartographie/khartis/docs/premiers-pas-avec-Khartis-(1)/">documentation</a>)');
 
 //Requête 23
 echo('<div id="DTreq23" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
