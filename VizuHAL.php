@@ -299,9 +299,11 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 </table>
 <hr style="color: #467666; height: 1px; border-width: 1px; border-top-color: #467666; border-style: inset;">
 
-<p>VizuHAL permet de générer des graphes descriptifs pour :<br>
-- Collection / portail > tableau de bord d'un laboratoire : données statistiques de base, mais aussi, % projets ANR/EU, % pre-prints, etc.<br>
-- Requêtes pré-définies : bilan open access des laboratoires et secteurs pour un établissement, évolution, comparaison avec les autres portails HAL, enquête annuelle ESGBU, nombre de publications par éditeur, regroupement éditorial par secteurs, regroupement secteurs par éditeurs, nombre de projets ANR, nombre de projets européens, profil des contributeurs HAL, collaborations nationales et internationales.</p>
+<p>VizuHAL permet de générer des tableaux et graphes statistiques à partir de HAL (collection ou portail).<br>
+<br>
+Entrez un code collection OU sélectionnez un portail dans la liste déroulante, puis sélectionnez votre requête.<br>
+<u>Attention :</u> certaines requêtes ne sont valides que pour une collection ou un portail.<br>
+</p>
 
 <form name="troli" action="VizuHAL.php" method="post"  onsubmit="freqt();">
 <p class="form-inline"><label for="team">Code collection HAL</label> <a class='info' onclick='return false' href="#">(qu'est-ce que c’est ?)<span>Code visible dans l’URL d’une collection.
@@ -421,7 +423,7 @@ if (isset($team) && $team != "") {$team1 = $team; $team2 = $team;}else{$team1 = 
 if (isset($port) && $port != "choix") {$team1 = "";}
 ?>
 <!--Code collection HAL-->
-<input type="text" id="team" class="form-control" style="height: 25px; width: 300px;" name="team" value="<?php echo $team1;?>" onClick="this.value='<?php echo $team2;?>'; document.getElementById('port').value = 'choix';">
+<input type="text" id="team" class="form-control" style="height: 25px; width: 300px;" name="team" value="<?php echo $team1;?>" onClick="this.value='<?php echo $team2;?>'; document.getElementById('port').value = 'choix';">&nbsp;<a target="_blank" href="https://hal-univ-rennes1.archives-ouvertes.fr/page/codes-collections">Trouver le code de mon équipe / labo</a>
 <h2><b><u>ou</u></b></h2>
 <br>
 <!--Portail HAL-->
