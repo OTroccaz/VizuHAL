@@ -438,7 +438,11 @@ $dossier = opendir('./');
 while (false !== ($fichier = readdir($dossier))) {
   if($fichier != '.' && $fichier != '..' && strpos($fichier, 'PortHAL')!== false) {
     $qui = str_replace(array('Port', '.php'), '', $fichier);
-    echo ('<option value='.$qui.' '.$sel[$qui].'>'.$qui.'</option>');
+		if(isset($sel[$qui])) {
+			echo ('<option value='.$qui.' '.$sel[$qui].'>'.$qui.'</option>');
+		}else{
+			echo ('<option value='.$qui.'>'.$qui.'</option>');
+		}
   }
 }
 ?>
@@ -4198,13 +4202,16 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		
 		$resColl = array();
 		$resColl["pays"] = array();
+		$docType = array("ART", "COMM", "POSTER", "COUV", "OUV", "DOUV");
+		$typColl = array();
+		$typCollStr = array();//Nombre de types de publications impliquant au moins un pays étranger
 		$k = 0;
 		$totColl = 0;//Nombre de publications
 		$totCollStr = 0;//Nombre de publications impliquant au moins un pays étranger
 		$tabPaysFR = array('fr','FR','mq','MQ','gp','GP','gf','GF','yt','YT','nc','NC','pf','PF','pm','PM','tf','TF','re','RE');//Territoires français à ne pas considérer dans l'international
 		
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
-			$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s&rows=10000";
+			$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&fq=-country_s:[%22%22%20TO%20*]&rows=10000";
 			//echo $url;
 			askCurl($url, $arrayCurl);
 			//var_dump($arrayCurl);
@@ -4213,9 +4220,16 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			
 			while (isset($arrayCurl["response"]["docs"][$i]["structName_s"])) {
 				$cptStr = 0;
+				//docType
+				if (isset($typColl[$arrayCurl["response"]["docs"][$i]["docType_s"]])) {
+					$typColl[$arrayCurl["response"]["docs"][$i]["docType_s"]] += 1;
+				}else{
+					$typColl[$arrayCurl["response"]["docs"][$i]["docType_s"]] = 1;
+				}
 				if (count($arrayCurl["response"]["docs"][$i]["structCountry_s"]) != count($arrayCurl["response"]["docs"][$i]["structName_s"])) {//Pays non défini pour une structure
 					if (array_search("Structure(s) sans pays défini(s) dans HAL", $resColl["pays"]) === false) {
 						$resColl["nombre"][$k] = 1;
+						$resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$k] = 1;
 						$resColl["pays"][$k] = "Structure(s) sans pays défini(s) dans HAL";
 						$resColl["idhal"][$k] = $arrayCurl["response"]["docs"][$i]["halId_s"];
 						$k++;
@@ -4223,6 +4237,11 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 						$key = array_search("Structure(s) sans pays défini(s) dans HAL", $resColl["pays"]);
 						if (strpos($resColl["idhal"][$key], $arrayCurl["response"]["docs"][$i]["halId_s"]) === false) {
 							$resColl["nombre"][$key] += 1;
+							if (isset($resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$key])) {
+								$resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$key] += 1;
+							}else{
+								$resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$key] = 1;
+							}
 							$resColl["idhal"][$key] .= "~".$arrayCurl["response"]["docs"][$i]["halId_s"];
 						}
 					}
@@ -4231,16 +4250,30 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 						if (isset($arrayCurl["response"]["docs"][$i]["structCountry_s"][$j]) && array_search($arrayCurl["response"]["docs"][$i]["structCountry_s"][$j], $tabPaysFR) === false) {
 							if (array_key_exists(strtoupper($arrayCurl["response"]["docs"][$i]["structCountry_s"][$j]), $countries)) {
 								$pays = $countries[strtoupper($arrayCurl["response"]["docs"][$i]["structCountry_s"][$j])];
-								if ($cptStr == 0) {$totCollStr += 1; $cptStr = 1;}
+								if ($cptStr == 0) {
+									$totCollStr += 1;
+									$cptStr = 1;
+									if (isset($typCollStr[$arrayCurl["response"]["docs"][$i]["docType_s"]])) {
+										$typCollStr[$arrayCurl["response"]["docs"][$i]["docType_s"]] += 1;
+									}else{
+										$typCollStr[$arrayCurl["response"]["docs"][$i]["docType_s"]] = 1;
+									}
+								}
 								if (array_search($pays, $resColl["pays"]) === false) {//Nouveau pays
 									$resColl["pays"][$k] = $pays;
 									$resColl["nombre"][$k] = 1;
+									$resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$k] = 1;
 									$resColl["idhal"][$k] = $arrayCurl["response"]["docs"][$i]["halId_s"];
 									$k++;
 								}else{
 									$key = array_search($pays, $resColl["pays"]);
 									if (strpos($resColl["idhal"][$key], $arrayCurl["response"]["docs"][$i]["halId_s"]) === false) {
 										$resColl["nombre"][$key] += 1;
+										if (isset($resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$key])) {
+											$resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$key] += 1;
+										}else{
+											$resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$key] = 1;
+										}
 										$resColl["idhal"][$key] .= "~".$arrayCurl["response"]["docs"][$i]["halId_s"];
 									}
 								}
@@ -4248,6 +4281,11 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 								$key = array_search("Structure(s) sans pays défini(s) dans HAL", $resColl["pays"]);
 								if (strpos($resColl["idhal"][$key], $arrayCurl["response"]["docs"][$i]["halId_s"]) === false) {
 									$resColl["nombre"][$key] += 1;
+									if (isset($resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$key])) {
+										$resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$key] += 1;
+									}else{
+										$resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$key] = 1;
+									}
 									$resColl["idhal"][$key] .= "~".$arrayCurl["response"]["docs"][$i]["halId_s"];
 								}
 							}
@@ -4257,7 +4295,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				$i++;
 			}
 		}
-
+		//var_dump($typCollStr);
+		//var_dump($typColl);
+		//var_dump($resColl);
 		if ($k != 0) {//Au moins 1 résultat
 			/*
 			//Nombre total de publications
@@ -4277,11 +4317,20 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				}
 			}
 			
+			//Remplir les tableaux de types de documents avec des valeurs nulles si cellule vide de manière à pouvoir trier
+			foreach($docType as $type) {
+				for ($i=0; $i<count($resColl["nombre"]); $i++) {
+					if (!isset($resColl[$type][$i])) {
+						$resColl[$type][$i] = 0;
+					}
+				}
+			}
+			
 			//Initialement, classement du tableau par le nombre de publications ordre décroissant puis affichage
-			if ($payTri == "SORT_ASC") {array_multisort($resColl["pays"], SORT_ASC, SORT_STRING, $resColl["nombre"], $resColl["pcent"], $resColl["idhal"]);}
-			if ($payTri == "SORT_DESC") {array_multisort($resColl["pays"], SORT_DESC, SORT_STRING, $resColl["nombre"], $resColl["pcent"], $resColl["idhal"]);}
-			if ($nbrTri == "SORT_ASC") {array_multisort($resColl["nombre"], SORT_ASC, SORT_NUMERIC, $resColl["pcent"], $resColl["idhal"], $resColl["pays"]);}
-			if ($nbrTri == "SORT_DESC") {array_multisort($resColl["nombre"], SORT_DESC, SORT_NUMERIC, $resColl["pcent"], $resColl["idhal"], $resColl["pays"]);}
+			if ($payTri == "SORT_ASC") {array_multisort($resColl["pays"], SORT_ASC, SORT_STRING, $resColl["nombre"], $resColl["pcent"], $resColl["idhal"], $resColl["ART"], $resColl["COMM"], $resColl["POSTER"], $resColl["COUV"], $resColl["OUV"], $resColl["DOUV"]);}
+			if ($payTri == "SORT_DESC") {array_multisort($resColl["pays"], SORT_DESC, SORT_STRING, $resColl["nombre"], $resColl["pcent"], $resColl["idhal"], $resColl["ART"], $resColl["COMM"], $resColl["POSTER"], $resColl["COUV"], $resColl["OUV"], $resColl["DOUV"]);}
+			if ($nbrTri == "SORT_ASC") {array_multisort($resColl["nombre"], SORT_ASC, SORT_NUMERIC, $resColl["pcent"], $resColl["idhal"], $resColl["pays"], $resColl["ART"], $resColl["COMM"], $resColl["POSTER"], $resColl["COUV"], $resColl["OUV"], $resColl["DOUV"]);}
+			if ($nbrTri == "SORT_DESC") {array_multisort($resColl["nombre"], SORT_DESC, SORT_NUMERIC, $resColl["pcent"], $resColl["idhal"], $resColl["pays"], $resColl["ART"], $resColl["COMM"], $resColl["POSTER"], $resColl["COUV"], $resColl["OUV"], $resColl["DOUV"]);}
 			
 			//echo $totColl;
 			//var_dump($resColl);
@@ -4374,8 +4423,14 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$payUrl.'">Pays</a></b></th>');
 			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$nbrUrl.'">Nombre de publications</a></b></th>');
 			echo ('<th scope="col" style="text-align:left"><b>%</b></th>');
+			echo ('<th scope="col" style="text-align:left"><b>ART</b></th>');
+			echo ('<th scope="col" style="text-align:left"><b>COMM</b></th>');
+			echo ('<th scope="col" style="text-align:left"><b>POSTER</b></th>');
+			echo ('<th scope="col" style="text-align:left"><b>COUV</b></th>');
+			echo ('<th scope="col" style="text-align:left"><b>OUV</b></th>');
+			echo ('<th scope="col" style="text-align:left"><b>DOUV</b></th>');
 			echo ('<th scope="col" style="text-align:left"><b>Références HAL</b></th>');
-			$chaine = "Pays;Code pays ISO;Nombre de publications;%;Références HAL;";
+			$chaine = "Pays;Code pays ISO;Nombre de publications;%;ART;COMM;POSTER;COUV;OUV;DOUV;Références HAL;";
 			echo ('</tr>');
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
@@ -4383,6 +4438,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			echo ('<tbody>');
 			
 			//Affichage du nombre total de publications de la collection sur la période concernée
+			$chaine = "Publications de la collection sur la période concernée".";;".$totColl.";100%;";
 			echo ('<tr>');
 			echo ('<td>');
 			echo ("Publications de la collection sur la période concernée");
@@ -4393,16 +4449,25 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			echo ('<td>');
 			echo ('100%');
 			echo ('</td>');
+			foreach($docType as $type) {
+				$totType = 0;
+				if (isset($typColl[$type])) {
+					$totType = $typColl[$type];
+				}
+				echo ('<td>'.number_format($totType*100/$totColl, 2).'%</td>');
+				$chaine .= number_format($totType*100/$totColl, 2).";";
+			}
 			echo ('<td>');
 			echo ('-');
 			echo ('</td>');
-			$chaine = "Publications de la collection sur la période concernée".";;".$totColl.";100%;-;";
+			$chaine .= "-;";
 			echo ('</tr>');
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
 			
 			//Affichage du nombre de publications impliquant au moins un pays étranger
 			$pcentStr = ($totColl != 0) ? number_format($totCollStr*100/$totColl, 2) : 0;
+			$chaine = "Publications impliquant au moins un pays étranger".";;".$totCollStr.";".$pcentStr.";";
 			echo ('<tr>');
 			echo ('<td>');
 			echo ("Publications impliquant au moins un pays étranger");
@@ -4413,10 +4478,18 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			echo ('<td>');
 			echo ($pcentStr.'%');
 			echo ('</td>');
+			foreach($docType as $type) {
+				$totType = 0;
+				if (isset($typCollStr[$type])) {
+					$totType = $typCollStr[$type];
+				}
+				echo ('<td>'.number_format($totType*100/$totColl, 2).'%</td>');
+				$chaine .= number_format($totType*100/$totColl, 2).";";
+			}
 			echo ('<td>');
 			echo ('-');
 			echo ('</td>');
-			$chaine = "Publications impliquant au moins un pays étranger".";;".$totCollStr.";".$pcentStr.";-;";
+			$chaine .= "-;";
 			echo ('</tr>');
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
@@ -4424,6 +4497,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			$key = -1;
 			for ($i=0; $i<count($resColl["pays"]); $i++) {
 				if ($resColl["pays"][$i] != "Structure(s) sans pays défini(s) dans HAL") {
+					$chaine = $resColl["pays"][$i].";".array_search($resColl["pays"][$i], $countries).";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";";
 					echo ('<tr>');
 					echo ('<td>');
 					echo ($resColl["pays"][$i]);
@@ -4434,6 +4508,14 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 					echo ('<td>');
 					echo ($resColl["pcent"][$i]);
 					echo ('%</td>');
+					foreach($docType as $type) {
+						$totType = 0;
+						if (isset($resColl[$type][$i])) {
+							$totType = $resColl[$type][$i];
+						}
+						echo ('<td>'.number_format($totType*100/$totColl, 2).'%</td>');
+						$chaine .= number_format($totType*100/$totColl, 2).";";
+					}
 					echo ('<td>');
 					$idhal = $resColl["idhal"][$i];
 					$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
@@ -4442,7 +4524,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 					$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
 					echo ($liens);
 					echo ('</td>');
-					$chaine = $resColl["pays"][$i].";".array_search($resColl["pays"][$i], $countries).";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";
+					$chaine .= $liens.";";
 					echo ('</tr>');
 					$chaine .= chr(13).chr(10);
 					fwrite($inF,$chaine);
@@ -4453,6 +4535,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			
 			//Affichage en fin de tableau de la ligne des structure(s) sans pays défini(s) dans HAL
 			if ($key != -1) {
+				$chaine = $resColl["pays"][$key].";;".$resColl["nombre"][$key].";".$resColl["pcent"][$key].";";
 				echo ('<tr>');
 				echo ('<td>');
 				echo ($resColl["pays"][$key]);
@@ -4463,6 +4546,10 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				echo ('<td>');
 				echo ($resColl["pcent"][$key]);
 				echo ('</td>');
+				foreach($docType as $type) {
+					echo ('<td>-</td>');
+					$chaine .= "-;";
+				}
 				echo ('<td>');
 				$idhal = $resColl["idhal"][$key];
 				$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
@@ -4471,7 +4558,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
 				echo ($liens);
 				echo ('</td>');
-				$chaine = $resColl["pays"][$key].";;".$resColl["nombre"][$key].";".$resColl["pcent"][$key].";".$liens.";";
+				$chaine .= $liens.";";
 				echo ('</tr>');
 				$chaine .= chr(13).chr(10);
 				fwrite($inF,$chaine);
