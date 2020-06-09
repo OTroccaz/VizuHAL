@@ -4229,7 +4229,13 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				if (count($arrayCurl["response"]["docs"][$i]["structCountry_s"]) != count($arrayCurl["response"]["docs"][$i]["structName_s"])) {//Pays non défini pour une structure
 					if (array_search("Structure(s) sans pays défini(s) dans HAL", $resColl["pays"]) === false) {
 						$resColl["nombre"][$k] = 1;
-						$resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$k] = 1;
+						foreach($docType as $type) {
+							if ($arrayCurl["response"]["docs"][$i]["docType_s"] == $type) {
+								$resColl[$type][$k] = 1;
+							}else{
+								$resColl[$type][$k] = 0;
+							}
+						}
 						$resColl["pays"][$k] = "Structure(s) sans pays défini(s) dans HAL";
 						$resColl["idhal"][$k] = $arrayCurl["response"]["docs"][$i]["halId_s"];
 						$k++;
@@ -4237,10 +4243,16 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 						$key = array_search("Structure(s) sans pays défini(s) dans HAL", $resColl["pays"]);
 						if (strpos($resColl["idhal"][$key], $arrayCurl["response"]["docs"][$i]["halId_s"]) === false) {
 							$resColl["nombre"][$key] += 1;
-							if (isset($resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$key])) {
-								$resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$key] += 1;
-							}else{
-								$resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$key] = 1;
+							foreach($docType as $type) {
+								if ($arrayCurl["response"]["docs"][$i]["docType_s"] == $type) {
+									if (isset($resColl[$type][$key])) {
+										$resColl[$type][$key] += 1;
+									}else{
+										$resColl[$type][$key] = 1;
+									}
+								}else{
+									$resColl[$type][$key] = 0;
+								}
 							}
 							$resColl["idhal"][$key] .= "~".$arrayCurl["response"]["docs"][$i]["halId_s"];
 						}
@@ -4262,17 +4274,23 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 								if (array_search($pays, $resColl["pays"]) === false) {//Nouveau pays
 									$resColl["pays"][$k] = $pays;
 									$resColl["nombre"][$k] = 1;
-									$resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$k] = 1;
+									foreach($docType as $type) {
+										if ($arrayCurl["response"]["docs"][$i]["docType_s"] == $type) {
+											$resColl[$type][$k] = 1;
+										}else{
+											$resColl[$type][$k] = 0;
+										}
+									}
 									$resColl["idhal"][$k] = $arrayCurl["response"]["docs"][$i]["halId_s"];
 									$k++;
 								}else{
 									$key = array_search($pays, $resColl["pays"]);
 									if (strpos($resColl["idhal"][$key], $arrayCurl["response"]["docs"][$i]["halId_s"]) === false) {
 										$resColl["nombre"][$key] += 1;
-										if (isset($resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$key])) {
-											$resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$key] += 1;
-										}else{
-											$resColl[$arrayCurl["response"]["docs"][$i]["docType_s"]][$key] = 1;
+										foreach($docType as $type) {
+											if ($arrayCurl["response"]["docs"][$i]["docType_s"] == $type) {
+												$resColl[$type][$key] += 1;
+											}
 										}
 										$resColl["idhal"][$key] .= "~".$arrayCurl["response"]["docs"][$i]["halId_s"];
 									}
@@ -4317,6 +4335,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				}
 			}
 			
+			/*
 			//Remplir les tableaux de types de documents avec des valeurs nulles si cellule vide de manière à pouvoir trier
 			foreach($docType as $type) {
 				for ($i=0; $i<count($resColl["nombre"]); $i++) {
@@ -4325,6 +4344,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 					}
 				}
 			}
+			*/
 			
 			//Initialement, classement du tableau par le nombre de publications ordre décroissant puis affichage
 			if ($payTri == "SORT_ASC") {array_multisort($resColl["pays"], SORT_ASC, SORT_STRING, $resColl["nombre"], $resColl["pcent"], $resColl["idhal"], $resColl["ART"], $resColl["COMM"], $resColl["POSTER"], $resColl["COUV"], $resColl["OUV"], $resColl["DOUV"]);}
