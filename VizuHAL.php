@@ -4211,7 +4211,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$tabPaysFR = array('fr','FR','mq','MQ','gp','GP','gf','GF','yt','YT','nc','NC','pf','PF','pm','PM','tf','TF','re','RE');//Territoires français à ne pas considérer dans l'international
 		
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
-			$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&fq=-country_s:[%22%22%20TO%20*]&rows=10000";
+			$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000";
 			//echo $url;
 			askCurl($url, $arrayCurl);
 			//var_dump($arrayCurl);
@@ -5260,7 +5260,7 @@ echo('<div id="DTreq21" style="width:100%;float: left;background-color:#f5f5f5;b
 echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
 echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
 echo('
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=structName_s,structType_s,halId_s,structCountry_s&fq=-country_s:[%22%22%20TO%20*]&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=structName_s,structType_s,halId_s,structCountry_s&fq=-country_s:[%22%22%20TO%20*]&rows=10000</a><br> 
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
 Liens XML/JSON : l’export des références en csv n’est malheureusement pas possible (même si théoriquement proposé par le CCSD).<br>
 Sont exclus des résultats les territoires français d’outre-mer de la <a target="_blank" href="http://documentation.abes.fr/sudoc/formats/CodesPays.htm">liste ISO 3166</a> : "Martinique" MQ,"Guadeloupe" GP, etc.<br>
 <br>
@@ -5273,7 +5273,7 @@ echo('<div id="DTreq22" style="width:100%;float: left;background-color:#f5f5f5;b
 echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
 echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
 echo('
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=structName_s,structType_s,halId_s,structCountry_s&fq=-country_s:[%22%22%20TO%20*]&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=structName_s,structType_s,halId_s,structCountry_s&fq=-country_s:[%22%22%20TO%20*]&rows=10000</a><br> 
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
 Liens XML/JSON : l’export des références en csv n’est malheureusement pas possible (même si théoriquement proposé par le CCSD).<br>
 Données utilisées pour le label « institution » :<br>
 structType_s = "institution", "regroupinstitution", "regrouplaboratory", "department"<br>
@@ -5289,7 +5289,7 @@ echo('<div id="DTreq23" style="width:100%;float: left;background-color:#f5f5f5;b
 echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
 echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
 echo('
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=structName_s,structType_s,halId_s,structCountry_s&fq=-country_s:[%22%22%20TO%20*]&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=structName_s,structType_s,halId_s,structCountry_s&fq=-country_s:[%22%22%20TO%20*]&rows=10000</a><br> 
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
 Liens XML/JSON : l’export des références en csv n’est malheureusement pas possible (même si théoriquement proposé par le CCSD).<br>
 Sont exclus des résultats les territoires français d’outre-mer de la <a target="_blank" href="http://documentation.abes.fr/sudoc/formats/CodesPays.htm">liste ISO 3166</a> : "Martinique" MQ,"Guadeloupe" GP, etc.<br>
 <br>
