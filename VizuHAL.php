@@ -284,7 +284,7 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
   <link rel="icon" type="type/ico" href="favicon.ico">
   <link rel="stylesheet" href="./VizuHAL.css">
 </head>
-<body onload="freqt();">
+<body style="font-family: Corbel;" onload="freqt();">
 
 <noscript>
 <div align='center' id='noscript'><font color='red'><b>ATTENTION !!! JavaScript est désactivé ou non pris en charge par votre navigateur : cette procédure ne fonctionnera pas correctement.</b></font><br>
@@ -293,8 +293,8 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 
 <table width="100%">
 <tr>
-<td style="text-align: left;"><img alt="VizuHAL" title="VizuHAL" width="250px" src="./img/logo_Vizuhal.png"></td>
-<td style="text-align: right;"><img alt="Université de Rennes 1" title="Université de Rennes 1" width="150px" src="./img/logo_UR1_gris_petit.jpg"></td>
+<th scope="col" style="text-align: left;"><img alt="VizuHAL" title="VizuHAL" width="250px" src="./img/logo_Vizuhal.png"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Générez des stats HAL</th>
+<th scope="col" style="text-align: right;"><img alt="Université de Rennes 1" title="Université de Rennes 1" width="150px" src="./img/logo_UR1_gris_petit.jpg"></th>
 </tr>
 </table>
 <hr style="color: #467666; height: 1px; border-width: 1px; border-top-color: #467666; border-style: inset;">
