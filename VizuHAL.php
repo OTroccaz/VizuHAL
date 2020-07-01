@@ -113,7 +113,8 @@ function askCurl($url, &$arrayCurl) {
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
   curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+	curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
   $json = curl_exec($ch);
   curl_close($ch);
   
@@ -135,7 +136,8 @@ function askCurlNF($url) {
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
   curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+	curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
   $json = curl_exec($ch);
   curl_close($ch);
 
@@ -288,7 +290,7 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 
 <noscript>
 <div align='center' id='noscript'><font color='red'><b>ATTENTION !!! JavaScript est désactivé ou non pris en charge par votre navigateur : cette procédure ne fonctionnera pas correctement.</b></font><br>
-<b>Pour modifier cette option, voir <a target='_blank' href='http://www.libellules.ch/browser_javascript_activ.php'>ce lien</a>.</b></div><br>
+<b>Pour modifier cette option, voir <a target='_blank' rel='noopener noreferrer' href='http://www.libellules.ch/browser_javascript_activ.php'>ce lien</a>.</b></div><br>
 </noscript>
 
 <table width="100%">
@@ -423,7 +425,7 @@ if (isset($team) && $team != "") {$team1 = $team; $team2 = $team;}else{$team1 = 
 if (isset($port) && $port != "choix") {$team1 = "";}
 ?>
 <!--Code collection HAL-->
-<input type="text" id="team" class="form-control" style="height: 25px; width: 300px;" name="team" value="<?php echo $team1;?>" onClick="this.value='<?php echo $team2;?>'; document.getElementById('port').value = 'choix';">&nbsp;<a target="_blank" href="https://hal-univ-rennes1.archives-ouvertes.fr/page/codes-collections">Trouver le code de mon équipe / labo</a>
+<input type="text" id="team" class="form-control" style="height: 25px; width: 300px;" name="team" value="<?php echo $team1;?>" onClick="this.value='<?php echo $team2;?>'; document.getElementById('port').value = 'choix';">&nbsp;<a target="_blank" rel="noopener noreferrer" href="https://hal-univ-rennes1.archives-ouvertes.fr/page/codes-collections">Trouver le code de mon équipe / labo</a>
 <h2><b><u>ou</u></b></h2>
 <br>
 <!--Portail HAL-->
@@ -2253,7 +2255,8 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
 			curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+			curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
 			$json = curl_exec($ch);
 			curl_close($ch);
 			
