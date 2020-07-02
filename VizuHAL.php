@@ -1,5 +1,25 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <?php
+//Constantes
+$cstCA = "cacert.pem";
+$cstNR = "<strong>Aucun résultat</strong><br><br>";
+$cstNom = "Nom</a></strong></th>";
+$cstTyp = "Type</a></strong></th>";
+$cstCod = "Code HAL</a></strong></th>";
+$cstPay = "Pays</a></strong></th>";
+$cstNbP = "Nombre de publications</a></strong></th>";
+$cstTS1 = "<th scope=\"col\" style=\"text-align:left;\"><strong>";
+$cstTS2 = "<th scope=\"col\" style=\"text-align:left;\"><strong>%</strong></th>";
+$cstTS3 = "<th scope=\"col\" style=\"text-align:left;\"><strong>Références HAL</strong></th>";
+$cstDoc = "<span style=\"color:#333333;\" class=\"accordeon\"><strong>Consultez la documentation technique</strong>&nbsp;<font color=\"#aaaaaa\"><em>(Cliquez)</em></font></span>";
+$cstETH = "</em></th>";
+$cstTEM = "<th scope=\"row\" style=\"text-align:center\"><em>";
+$cstPTH = "%</em></th>";
+$cstRED = "<th scope=\"col\" style=\"text-align:left;\"><strong>Regroupement éditorial</strong></th>";
+$cstPUB = "<th scope=\"col\" style=\"text-align:left;\"><strong>Publications</strong></th>";
+$cstART = "<th scope=\"col\" style=\"text-align:left;\"><strong>% articles</strong></th>";
+
+
 // récupération de l'adresse IP du client (on cherche d'abord à savoir s'il est derrière un proxy)
 if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
   $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
@@ -14,9 +34,9 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 include("./IP_list.php");
 if (!in_array($ip, $IP_aut)) {
 if (!in_array($ip, $IP_aut)) {
-  echo "<br><br><center><font face='Corbel'><b>";
+  echo "<br><br><center><font face='Corbel'><strong>";
   echo "Votre poste n'est pas autorisé à accéder à cette application.";
-  echo "</b></font></center>";
+  echo "</strong></font></center>";
   die;
 }
 */
@@ -48,7 +68,7 @@ register_shutdown_function(function() {
     $error = error_get_last();
 
     if ($error['type'] === E_ERROR && strpos($error['message'], 'Maximum execution time of') === 0) {
-        echo "<br><b><font color='red'>Le script a été arrêté car son temps d'exécution dépasse la limite maximale autorisée.</font></b><br>";
+        echo "<br><strong><font color='red'>Le script a été arrêté car son temps d'exécution dépasse la limite maximale autorisée.</font></strong><br>";
     }
 });
 
@@ -106,29 +126,31 @@ function objectToArray($object) {
   return array_map('objectToArray', $object);
 }
 
-function askCurl($url, &$arrayCurl) {
+function askCurl($url, &$arrayCurl, $cstCA) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_HEADER, 0);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
   curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
-	curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
+  if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+		curl_setopt($ch, CURLOPT_CAINFO, $cstCA);
+	}
   $json = curl_exec($ch);
   curl_close($ch);
   
   $memory = intval(ini_get('memory_limit')) * 1024 * 1024;
   $limite = strlen($json)*10;
   if ($limite > $memory) {
-    die ('<b><font color="red">Désolé ! La collection et/ou la période choisie génère(nt) trop de résultats pour être traités correctement.</font></b>');
+    die ('<strong><font color="red">Désolé ! La collection et/ou la période choisie génère(nt) trop de résultats pour être traités correctement.</font></strong>');
   }else{
     $parsed_json = json_decode($json, true);
     $arrayCurl = objectToArray($parsed_json);
   }
 }
 
-function askCurlNF($url) {
+function askCurlNF($url, $cstCA) {
   $url = str_replace(" ", "%20", $url);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
@@ -136,15 +158,17 @@ function askCurlNF($url) {
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
   curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
-	curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
+	if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+		curl_setopt($ch, CURLOPT_CAINFO, $cstCA);
+	}
   $json = curl_exec($ch);
   curl_close($ch);
 
   $memory = intval(ini_get('memory_limit')) * 1024 * 1024;
   $limite = strlen($json)*10;
   if ($limite > $memory) {
-    die ('<b><font color="red">Désolé ! La collection et/ou la période choisie génère(nt) trop de résultats pour être traités correctement.</font></b>');
+    die ('<strong><font color="red">Désolé ! La collection et/ou la période choisie génère(nt) trop de résultats pour être traités correctement.</font></strong>');
   }else{
     if (!empty($json)) {
       $dom = new DOMDocument();
@@ -162,7 +186,7 @@ function askCurlNF($url) {
   return $qte;
 }
 
-function extractHAL($team, $year, $reqt, &$resHAL) {
+function extractHAL($team, $year, $reqt, &$resHAL, $cstCA) {
   if ($reqt == "req3") {
     $dT = "&fq=docType_s:ART";
   }else{
@@ -171,31 +195,31 @@ function extractHAL($team, $year, $reqt, &$resHAL) {
   
   //Dépôts par année de publication
   $urlHALDep = "https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice OR file)".$dT."&fq=-status_i=111&rows=0";
-  $qte = askCurlNF($urlHALDep);
+  $qte = askCurlNF($urlHALDep, $cstCA);
   $resHAL[$year][strtoupper($team)]["nfDep"] = $qte;
   
   //notices sans TI
   $urlHALPronoTI = "https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:notice".$dT."&fq=-status_i=111&rows=0";
-  $qte = askCurlNF($urlHALPronoTI);
+  $qte = askCurlNF($urlHALPronoTI, $cstCA);
   $resHAL[$year][strtoupper($team)]["nfPronoTI"] = $qte;
   
   //Manuscrits plein texte avec TI
   $urlHALProavTI = "https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:file".$dT."&fq=-status_i=111&rows=0";
-  $qte = askCurlNF($urlHALProavTI);
+  $qte = askCurlNF($urlHALProavTI, $cstCA);
   $resHAL[$year][strtoupper($team)]["nfProavTI"] = $qte;
   
   //notices avec lien open access, sans TI déposé dans HAL mais avec TI librement accessible hors HAL
   $urlHALPronoTIavOA = "https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=linkExtId_s:*&fq=-linkExtId_s:istex".$dT."&fq=-status_i=111&rows=0";
-  $qte = askCurlNF($urlHALPronoTIavOA);
+  $qte = askCurlNF($urlHALPronoTIavOA, $cstCA);
   $resHAL[$year][strtoupper($team)]["nfPronoTIavOA"] = $qte;
   
   //Manuscrits et lien open access avec TI déposé dans HAL ou librement accessible hors HAL
   $urlHALProavTIavOA = "https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=(submitType_s:file OR linkExtId_s:*)&fq=-linkExtId_s:istex".$dT."&fq=-status_i=111&rows=0";
-  $qte = askCurlNF($urlHALProavTIavOA);
+  $qte = askCurlNF($urlHALProavTIavOA, $cstCA);
   $resHAL[$year][strtoupper($team)]["nfProavTIavOA"] = $qte;
 }
 
-function extractHALnbPubEd($team, $year, $type, $spefq, &$nbTotArt, &$nbPubEdRE) {
+function extractHALnbPubEd($team, $year, $type, $spefq, &$nbTotArt, &$nbPubEdRE, $cstCA) {
 	$nbPubEd = array();
 	$nbPubEdRE = array();//Regroupement éditorial
 	include("./Prefixe_DOI.php");
@@ -219,7 +243,7 @@ function extractHALnbPubEd($team, $year, $type, $spefq, &$nbTotArt, &$nbPubEdRE)
 			if ($urlHAL == "Passer_tour") {
 				$qteArt = 0;
 			}else{
-				$qteArt = askCurlNF($urlHAL);
+				$qteArt = askCurlNF($urlHAL, $cstCA);
 			}
 		}
 		$nbPubEd[$i]["editeur_ng"] = $editeur_ng;
@@ -246,7 +270,7 @@ function extractHALnbPubEd($team, $year, $type, $spefq, &$nbTotArt, &$nbPubEdRE)
 		$qteTotArt += $nbPubEdRE[$i]["nbArt"];
 	}
 	$urlHALTotArt = "https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year.$spefq."&fq=-status_i=111*&fq=docType_s:".$type;
-	$nbTotArt = askCurlNF($urlHALTotArt);
+	$nbTotArt = askCurlNF($urlHALTotArt, $cstCA);
 	$hre = $nbTotArt - $qteTotArt;//Hors regroupement éditorial
 	$i = count($nbPubEdRE);
 	$nbPubEdRE[$i]["editeur_ng"] = "Hors regroupement éditorial";
@@ -289,11 +313,11 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 <body style="font-family: Corbel;" onload="freqt();">
 
 <noscript>
-<div align='center' id='noscript'><font color='red'><b>ATTENTION !!! JavaScript est désactivé ou non pris en charge par votre navigateur : cette procédure ne fonctionnera pas correctement.</b></font><br>
-<b>Pour modifier cette option, voir <a target='_blank' rel='noopener noreferrer' href='http://www.libellules.ch/browser_javascript_activ.php'>ce lien</a>.</b></div><br>
+<div class='center, red' id='noscript'><strong>ATTENTION !!! JavaScript est désactivé ou non pris en charge par votre navigateur : cette procédure ne fonctionnera pas correctement.</strong><br>
+<strong>Pour modifier cette option, voir <a target='_blank' rel='noopener noreferrer' href='http://www.libellules.ch/browser_javascript_activ.php'>ce lien</a>.</strong></div><br>
 </noscript>
 
-<table width="100%">
+<table class="table100" aria-describedby="Entêtes">
 <tr>
 <th scope="col" style="text-align: left;"><img alt="VizuHAL" title="VizuHAL" width="250px" src="./img/logo_Vizuhal.png"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Générez des stats HAL</th>
 <th scope="col" style="text-align: right;"><img alt="Université de Rennes 1" title="Université de Rennes 1" width="150px" src="./img/logo_UR1_gris_petit.jpg"></th>
@@ -309,7 +333,7 @@ Entrez un code collection OU sélectionnez un portail dans la liste déroulante,
 
 <form name="troli" action="VizuHAL.php" method="post"  onsubmit="freqt();">
 <p class="form-inline"><label for="team">Code collection HAL</label> <a class='info' onclick='return false' href="#">(qu'est-ce que c’est ?)<span>Code visible dans l’URL d’une collection.
-Exemple : IPR-MOL est le code de la collection http://hal.archives-ouvertes.fr/<b>IPR-PMOL</b> de l’équipe Physique moléculaire
+Exemple : IPR-MOL est le code de la collection http://hal.archives-ouvertes.fr/<strong>IPR-PMOL</strong> de l’équipe Physique moléculaire
 de l’unité IPR UMR CNRS 6251</span></a> :
 
 <?php
@@ -426,7 +450,7 @@ if (isset($port) && $port != "choix") {$team1 = "";}
 ?>
 <!--Code collection HAL-->
 <input type="text" id="team" class="form-control" style="height: 25px; width: 300px;" name="team" value="<?php echo $team1;?>" onClick="this.value='<?php echo $team2;?>'; document.getElementById('port').value = 'choix';">&nbsp;<a target="_blank" rel="noopener noreferrer" href="https://hal-univ-rennes1.archives-ouvertes.fr/page/codes-collections">Trouver le code de mon équipe / labo</a>
-<h2><b><u>ou</u></b></h2>
+<h2><strong><u>ou</u></strong></h2>
 <br>
 <!--Portail HAL-->
 <p class="form-inline"><label for="port">Portail HAL :&nbsp;</label></td>
@@ -434,16 +458,16 @@ if (isset($port) && $port != "choix") {$team1 = "";}
 <option value="choix">Veuillez choisir parmi la liste</option>
 <?php
 $sel = array();
-if (isset($port) && $port != "choix") {$sel[$port] = "selected";}else{$sel[$port] = "";}
+if (isset($port) && $port != "choix") {$sel[$port] = "selected";}
 
 $dossier = opendir('./');
 while (false !== ($fichier = readdir($dossier))) {
   if($fichier != '.' && $fichier != '..' && strpos($fichier, 'PortHAL')!== false) {
     $qui = str_replace(array('Port', '.php'), '', $fichier);
 		if(isset($sel[$qui])) {
-			echo ('<option value='.$qui.' '.$sel[$qui].'>'.$qui.'</option>');
+			echo '<option value='.$qui.' '.$sel[$qui].'>'.$qui.'</option>';
 		}else{
-			echo ('<option value='.$qui.'>'.$qui.'</option>');
+			echo '<option value='.$qui.'>'.$qui.'</option>';
 		}
   }
 }
@@ -536,9 +560,9 @@ while ($i >= date('Y', time()) - 30) {
 <!--Requête 2-->
 <div id="req2">
 <!--Paramètres :-->
-<table>
-<tr><td valign="top">Période :&nbsp;</td>
-<td>
+<table aria-describedby="Période">
+<tr><th scope="col" valign="top">Période :&nbsp;</th>
+<th scope="col">
 <p class="form-inline">
 <label for="anneedeb2">Depuis</label>
 <select id="anneedeb2" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="anneedeb2">
@@ -565,9 +589,9 @@ while ($i >= date('Y', time()) - 30) {
 }
 ?>
 </select>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><u>Attention :</u> l'extraction via un portail demande beaucoup de temps et il est préférable de se limiter à une période annuelle.</i>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em><u>Attention :</u> l'extraction via un portail demande beaucoup de temps et il est préférable de se limiter à une période annuelle.</em>
 <br>
-</td></tr></table>
+</th></tr></table>
 <p class="form-inline">
 <input type="submit" class="btn btn-md btn-primary" value="Valider" name="valider">
 </p>
@@ -807,9 +831,9 @@ while ($i >= date('Y', time()) - 30) {
 <!--Requête 14-->
 <div id="req14">
 <!--Paramètres :-->
-<table>
-<tr><td valign="top">Période :&nbsp;</td>
-<td>
+<table aria-describedby="Période">
+<tr><th scope="col" valign="top">Période :&nbsp;</th>
+<th scope="col">
 <p class="form-inline">
 <label for="anneedeb14">Depuis</label>
 <select id="anneedeb14" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="anneedeb14">
@@ -836,9 +860,9 @@ while ($i >= date('Y', time()) - 30) {
 }
 ?>
 </select>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><u>Attention :</u> l'extraction sur plusieurs années peut demander beaucoup de temps et il est préférable de se limiter à une période raisonnable.</i>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em><u>Attention :</u> l'extraction sur plusieurs années peut demander beaucoup de temps et il est préférable de se limiter à une période raisonnable.</em>
 <br>
-</td></tr></table>
+</th></tr></table>
 <br>
 <p class="form-inline">
 <input type="submit" class="btn btn-md btn-primary" value="Valider" name="valider">
@@ -848,9 +872,9 @@ while ($i >= date('Y', time()) - 30) {
 <!--Requête 15-->
 <div id="req15">
 <!--Paramètres :-->
-<table>
-<tr><td valign="top">Période :&nbsp;</td>
-<td>
+<table aria-describedby="Période">
+<tr><th scope="col" valign="top">Période :&nbsp;</th>
+<th scope="col">
 <p class="form-inline">
 <label for="anneedeb15">Depuis</label>
 <select id="anneedeb15" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="anneedeb15">
@@ -877,9 +901,9 @@ while ($i >= date('Y', time()) - 30) {
 }
 ?>
 </select>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><u>Attention :</u> l'extraction sur plusieurs années peut demander beaucoup de temps et il est préférable de se limiter à une période raisonnable.</i>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em><u>Attention :</u> l'extraction sur plusieurs années peut demander beaucoup de temps et il est préférable de se limiter à une période raisonnable.</em>
 <br>
-</td></tr></table>
+</th></tr></table>
 <br>
 <p class="form-inline">
 <input type="submit" class="btn btn-md btn-primary" value="Valider" name="valider">
@@ -889,9 +913,9 @@ while ($i >= date('Y', time()) - 30) {
 <!--Requête 16-->
 <div id="req16">
 <!--Paramètres :-->
-<table>
-<tr><td valign="top">Période :&nbsp;</td>
-<td>
+<table aria-describedby="Période">
+<tr><th scope="col" valign="top">Période :&nbsp;</th>
+<th scope="col">
 <p class="form-inline">
 <label for="anneedeb16">Depuis</label>
 <select id="anneedeb16" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="anneedeb16">
@@ -918,9 +942,9 @@ while ($i >= date('Y', time()) - 30) {
 }
 ?>
 </select>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><u>Attention :</u> l'extraction sur plusieurs années peut demander beaucoup de temps et il est préférable de se limiter à une période raisonnable.</i>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em><u>Attention :</u> l'extraction sur plusieurs années peut demander beaucoup de temps et il est préférable de se limiter à une période raisonnable.</em>
 <br>
-</td></tr></table>
+</th></tr></table>
 <br>
 <p class="form-inline">
 <input type="submit" class="btn btn-md btn-primary" value="Valider" name="valider">
@@ -1013,9 +1037,9 @@ while ($i >= date('Y', time()) - 30) {
 
 <!--Requête 21-->
 <div id="req21">
-<table>
-<tr><td valign="top">Période :&nbsp;</td>
-<td>
+<table aria-describedby="Période">
+<tr><th scope="col" valign="top">Période :&nbsp;</th>
+<th scope="col">
 <p class="form-inline">
 <label for="anneedeb21">Depuis</label>
 <select id="anneedeb21" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="anneedeb21">
@@ -1042,9 +1066,9 @@ while ($i >= date('Y', time()) - 30) {
 }
 ?>
 </select>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><u>Attention :</u> l'extraction sur plusieurs années peut demander beaucoup de temps et il est préférable de se limiter à une période raisonnable.</i>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em><u>Attention :</u> l'extraction sur plusieurs années peut demander beaucoup de temps et il est préférable de se limiter à une période raisonnable.</em>
 <br>
-</td></tr></table>
+</th></tr></table>
 <br>
 <p class="form-inline">
 <input type="submit" class="btn btn-md btn-primary" value="Valider" name="valider">
@@ -1053,9 +1077,9 @@ while ($i >= date('Y', time()) - 30) {
 
 <!--Requête 22-->
 <div id="req22">
-<table>
-<tr><td valign="top">Période :&nbsp;</td>
-<td>
+<table aria-describedby="Période">
+<tr><th scope="col" valign="top">Période :&nbsp;</th>
+<th scope="col">
 <p class="form-inline">
 <label for="anneedeb22">Depuis</label>
 <select id="anneedeb22" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="anneedeb22">
@@ -1082,9 +1106,9 @@ while ($i >= date('Y', time()) - 30) {
 }
 ?>
 </select>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><u>Attention :</u> l'extraction sur plusieurs années peut demander beaucoup de temps et il est préférable de se limiter à une période raisonnable.</i>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em><u>Attention :</u> l'extraction sur plusieurs années peut demander beaucoup de temps et il est préférable de se limiter à une période raisonnable.</em>
 <br>
-</td></tr></table>
+</th></tr></table>
 <br>
 <p class="form-inline">
 <input type="submit" class="btn btn-md btn-primary" value="Valider" name="valider">
@@ -1093,9 +1117,9 @@ while ($i >= date('Y', time()) - 30) {
 
 <!--Requête 23-->
 <div id="req23">
-<table>
-<tr><td valign="top">Période :&nbsp;</td>
-<td>
+<table aria-describedby="Période">
+<tr><th scope="col" valign="top">Période :&nbsp;</th>
+<th scope="col">
 <p class="form-inline">
 <label for="anneedeb23">Depuis</label>
 <select id="anneedeb23" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="anneedeb23">
@@ -1122,9 +1146,9 @@ while ($i >= date('Y', time()) - 30) {
 }
 ?>
 </select>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><u>Attention :</u> l'extraction sur plusieurs années peut demander beaucoup de temps et il est préférable de se limiter à une période raisonnable.</i>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em><u>Attention :</u> l'extraction sur plusieurs années peut demander beaucoup de temps et il est préférable de se limiter à une période raisonnable.</em>
 <br>
-</td></tr></table>
+</th></tr></table>
 <br>
 <p class="form-inline">
 <input type="submit" class="btn btn-md btn-primary" value="Valider" name="valider">
@@ -1140,17 +1164,17 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	flush();
   //Bloquer interrogation code collection labo avec requête 3, 4, 8 ou 9
   if (($reqt == "req3" || $reqt == "req4" || $reqt == "req8" || $reqt == "req9") && isset($port) && $port == "choix") {
-    echo "<br><br><center><font face='Corbel'><b>";
+    echo "<br><br><center><font face='Corbel'><strong>";
     echo "Cette requête n'est pas applicable à un code collection mais uniquement à un portail.";
-    echo "</b></font></center>";
+    echo "</strong></font></center>";
     die;
   }
 	
 	//Bloquer interrogation portail avec requête 10, 11, 12, 13, 14, 15, 17, 18, 19, 20 ou 21
   if (($reqt == "req10" || $reqt == "req11" || $reqt == "req12" || $reqt == "req13" || $reqt == "req14" || $reqt == "req15" || $reqt == "req17" || $reqt == "req18" || $reqt == "req19" || $reqt == "req20" || $reqt == "req21") && isset($port) && $port != "choix") {
-    echo "<br><br><center><font face='Corbel'><b>";
+    echo "<br><br><center><font face='Corbel'><strong>";
     echo "Cette requête n'est pas applicable à portail mais uniquement à un code collection.";
-    echo "</b></font></center>";
+    echo "</strong></font></center>";
     die;
   }
   
@@ -1179,41 +1203,41 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     fwrite($inF,$chaine);
 		
 		//Intitulé
-		echo('<br><b>1. Portail : production scientifique par secteur et par unité</b><br><br>');
+		echo '<br><strong>1. Portail : production scientifique par secteur et par unité</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête présente, pour une année donnée, le nombre de publications référencées dans le portail HAL institutionnel, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Les résultats sont déclinés par secteurs (le cas échéant), et par unités ou structures de recherche. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête présente, pour une année donnée, le nombre de publications référencées dans le portail HAL institutionnel, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Les résultats sont déclinés par secteurs (le cas échéant), et par unités ou structures de recherche. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
     for($year = $anneedeb; $year <= $anneefin; $year++) {
       //Export CSV
       //Colonnes
       $chaine = "Unité;Secteur;Productions ".$year.";;";
-      $chaine .= "Productions ".$year." sans texte intégral déposé dans HAL déposé dans HAL;;";
-      $chaine .= "Productions ".$year." avec texte intégral déposé dans HAL déposé dans HAL;;";
-      $chaine .= "Productions ".$year." sans texte intégral déposé dans HAL déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL;;";
-      $chaine .= "Productions ".$year." avec texte intégral déposé dans HAL déposé dans HAL ou librement accessible hors HAL;;";
+      $chaine .= "Productions ".$year." sans texte intégral déposé dans HAL;";
+      $chaine .= "Productions ".$year." avec texte intégral déposé dans HAL;";
+      $chaine .= "Productions ".$year." sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL;;";
+      $chaine .= "Productions ".$year." avec texte intégral déposé dans HAL ou librement accessible hors HAL;;";
       $chaine .= chr(13).chr(10);
       fwrite($inF,$chaine);
       
       $ils = 0;
       $chaine = "";
-      echo ('<table class="table table-striped table-hover table-responsive table-bordered">');
-      echo ('<thead>');
-      echo ('<tr>');
-      echo ('<th scope="col">Unité</th>');
-      echo ('<th scope="col">Secteur</th>');
-      echo ('<th scope="col">Productions '.$year.'</th>');
-      echo ('<th scope="col"></th>');
-      echo ('<th scope="col">Productions '.$year.' sans texte intégral déposé dans HAL déposé dans HAL</th>');
-      echo ('<th scope="col"></th>');
-      echo ('<th scope="col">Productions '.$year.' avec texte intégral déposé dans HAL déposé dans HAL</th>');
-      echo ('<th scope="col"></th>');
-      echo ('<th scope="col">Productions '.$year.' sans texte intégral déposé dans HAL déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL</th>');
-      echo ('<th scope="col"></th>');
-      echo ('<th scope="col">Productions '.$year.' avec texte intégral déposé dans HAL déposé dans HAL ou librement accessible hors HAL</th>');
-      echo ('<th scope="col"></th>');
-      echo ('</tr>');
-      echo ('</thead>');
+      echo '<table class="table table-striped table-hover table-responsive table-bordered">';
+      echo '<thead>';
+      echo '<tr>';
+      echo '<th scope="col">Unité</th>';
+      echo '<th scope="col">Secteur</th>';
+      echo '<th scope="col">Productions '.$year.'</th>';
+      echo '<th scope="col"></th>';
+      echo '<th scope="col">Productions '.$year.' sans texte intégral déposé dans HAL</th>';
+      echo '<th scope="col"></th>';
+      echo '<th scope="col">Productions '.$year.' avec texte intégral déposé dans HAL</th>';
+      echo '<th scope="col"></th>';
+      echo '<th scope="col">Productions '.$year.' sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL</th>';
+      echo '<th scope="col"></th>';
+      echo '<th scope="col">Productions '.$year.' avec texte intégral déposé dans HAL ou librement accessible hors HAL</th>';
+      echo '<th scope="col"></th>';
+      echo '</tr>';
+      echo '</thead>';
       
       if (isset($port) && $port != "choix") {
         $sectI = $LAB_SECT[1]["secteur"];
@@ -1235,58 +1259,58 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
           $sectF = $LAB_SECT[$ils]["secteur"];
           $codeSF = $LAB_SECT[$ils]["code_secteur"];
           if ($sectI != $sectF && isset($port) && $port != "choix") {//Total secteur à inclure
-            extractHAL(strtoupper($codeSI), $year, $reqt, $resHAL);
+            extractHAL(strtoupper($codeSI), $year, $reqt, $resHAL, $cstCA);
             $chaine = "";
-            echo ('<tr class="info">');
-            echo ('<th scope="row"><i>Secteur '.$sectI.'</i></th>');
+            echo '<tr class="info">';
+            echo '<th scope="row"><em>Secteur '.$sectI.$cstETH;
             $chaine .= "Secteur ".$sectI.";";
-            echo ('<th scope="row"><i>'.$sectI.'</i></th>');
+            echo '<th scope="row"><em>'.$sectI.$cstETH;
             $chaine .= $sectI.";";
             
             $sect[$is] = $sectI;
             $is++;
             $tabPro[$year][$sectI]["nfDep"] = $resHAL[$year][$codeSI]["nfDep"];
-            echo ('<th scope="row" style="text-align:center"><i>'.$resHAL[$year][$codeSI]["nfDep"].'</i></th>');
+            echo $cstTEM.$resHAL[$year][$codeSI]["nfDep"].$cstETH;
             $chaine .= $resHAL[$year][$codeSI]["nfDep"].";";
             $pcent = 0;
             if ($resHAL[$year][$codeSI]["nfDep"] != 0) {$pcent = round($resHAL[$year][$codeSI]["nfDep"]*100/$resHAL[$year][$codeSI]["nfDep"]);}
-            echo ('<th scope="row" style="text-align:center"><i>'.$pcent.'%</i></th>');
+            echo $cstTEM.$pcent.$cstPTH;
             $chaine .= $pcent."%;";
             
             $tabPro[$year][$sectI]["nfPronoTI"] = $resHAL[$year][$codeSI]["nfPronoTI"];
-            echo ('<th scope="row" style="text-align:center"><i>'.$resHAL[$year][$codeSI]["nfPronoTI"].'</i></th>');
+            echo $cstTEM.$resHAL[$year][$codeSI]["nfPronoTI"].$cstETH;
             $chaine .= $resHAL[$year][$codeSI]["nfPronoTI"].";";
             $pcent = 0;
             if ($resHAL[$year][$codeSI]["nfPronoTI"]) {$pcent = round($resHAL[$year][$codeSI]["nfPronoTI"]*100/$resHAL[$year][$codeSI]["nfDep"]);}
-            echo ('<th scope="row" style="text-align:center"><i>'.$pcent.'%</i></th>');
+            echo $cstTEM.$pcent.$cstPTH;
             $chaine .= $pcent."%;";
             
             $tabPro[$year][$sectI]["nfProavTI"] = $resHAL[$year][$codeSI]["nfProavTI"];
-            echo ('<th scope="row" style="text-align:center"><i>'.$resHAL[$year][$codeSI]["nfProavTI"].'</i></th>');
+            echo $cstTEM.$resHAL[$year][$codeSI]["nfProavTI"].$cstETH;
             $chaine .= $resHAL[$year][$codeSI]["nfProavTI"].";";
             $pcent = 0;
             if ($resHAL[$year][$codeSI]["nfProavTI"] != 0) {$pcent = round($resHAL[$year][$codeSI]["nfProavTI"]*100/$resHAL[$year][$codeSI]["nfDep"]);}
-            echo ('<th scope="row" style="text-align:center"><i>'.$pcent.'%</i></th>');
+            echo $cstTEM.$pcent.$cstPTH;
             $chaine .= $pcent."%;";
             
             $tabPro[$year][$sectI]["nfPronoTIavOA"] = $resHAL[$year][$codeSI]["nfPronoTIavOA"];
-            echo ('<th scope="row" style="text-align:center"><i>'.$resHAL[$year][$codeSI]["nfPronoTIavOA"].'</i></th>');
+            echo $cstTEM.$resHAL[$year][$codeSI]["nfPronoTIavOA"].$cstETH;
             $chaine .= $resHAL[$year][$codeSI]["nfPronoTIavOA"].";";
             $pcent = 0;
             if ($resHAL[$year][$codeSI]["nfPronoTIavOA"] != 0) {$pcent = round($resHAL[$year][$codeSI]["nfPronoTIavOA"]*100/$resHAL[$year][$codeSI]["nfDep"]);}
-            echo ('<th scope="row" style="text-align:center"><i>'.$pcent.'%</i></th>');
+            echo $cstTEM.$pcent.$cstPTH;
             $chaine .= $pcent."%;";
             
             $tabPro[$year][$sectI]["nfProavTIavOA"] = $resHAL[$year][$codeSI]["nfProavTIavOA"];
-            echo ('<th scope="row" style="text-align:center"><i>'.$resHAL[$year][$codeSI]["nfProavTIavOA"].'</i></th>');
+            echo $cstTEM.$resHAL[$year][$codeSI]["nfProavTIavOA"].$cstETH;
             $chaine .= $resHAL[$year][$codeSI]["nfProavTIavOA"].";";
             $pcent = 0;
             if ($resHAL[$year][$codeSI]["nfProavTIavOA"] != 0) {$pcent = round($resHAL[$year][$codeSI]["nfProavTIavOA"]*100/$resHAL[$year][$codeSI]["nfDep"]);}
-            echo ('<th scope="row" style="text-align:center"><i>'.$pcent.'%</i></th>');
+            echo $cstTEM.$pcent.$cstPTH;
             $chaine .= $pcent."%;";
             
-            echo ('</tr>');
-            echo ('</tbody>');
+            echo '</tr>';
+            echo '</tbody>';
             $chaine .= chr(13).chr(10);
             fwrite($inF,$chaine);
             
@@ -1295,10 +1319,10 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
           }
         }
         $chaine = "";
-        extractHAL($team, $year, $reqt, $resHAL);
-        echo ('<tbody>');    
+        extractHAL($team, $year, $reqt, $resHAL, $cstCA);
+        echo '<tbody>';    
         if ($ils == 0) {
-          echo ('<tr class="warning">');
+          echo '<tr class="warning">';
           if (isset($port) && $port != "choix") {
             $sect[0] = $LAB_SECT[$ils]["secteur"];
             $tabPro[$year][$sect[0]]["nfDep"] = intval($resHAL[$year][$team]["nfDep"]);
@@ -1306,72 +1330,72 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
             $tabPro[$year][$sect[0]]["nfProavTI"] = intval($resHAL[$year][$team]["nfProavTI"]);
             $tabPro[$year][$sect[0]]["nfPronoTIavOA"] = intval($resHAL[$year][$team]["nfPronoTIavOA"]);
             $tabPro[$year][$sect[0]]["nfProavTIavOA"] = intval($resHAL[$year][$team]["nfProavTIavOA"]);
-            echo ('<th scope="row">Tout '.$LAB_SECT[$ils]["code_collection"].'</th>');
+            echo '<th scope="row">Tout '.$LAB_SECT[$ils]["code_collection"].'</th>';
             $chaine .= "Tout ".$LAB_SECT[$ils]["code_collection"].";";
           }else{
-            echo ('<th scope="row">'.$LAB_SECT[$ils]["code_collection"].'</th>');
+            echo '<th scope="row">'.$LAB_SECT[$ils]["code_collection"].'</th>';
             $chaine .= $LAB_SECT[$ils]["code_collection"].";";
           }
         }else{
-          echo ('<tr class="active">');
-          echo ('<th scope="row">'.$LAB_SECT[$ils]["unite"].'</th>');
+          echo '<tr class="active">';
+          echo '<th scope="row">'.$LAB_SECT[$ils]["unite"].'</th>';
           $chaine .= $LAB_SECT[$ils]["unite"].";";
         }
         if ($ils == 0) {
           if (isset($port) && $port != "choix") {
-            echo ('<th scope="row">A_Tous</th>');
+            echo '<th scope="row">A_Tous</th>';
             $chaine .= "A_Tous;";
           }else{
-            echo ('<th scope="row"></th>');
+            echo '<th scope="row"></th>';
             $chaine .= ";";
           }
         }else{
-          echo ('<th scope="row">'.$LAB_SECT[$ils]["secteur"].'</th>');
+          echo '<th scope="row">'.$LAB_SECT[$ils]["secteur"].'</th>';
           $chaine .= $LAB_SECT[$ils]["secteur"].";";
         }
         
-        echo ('<th scope="row" style="text-align:center">'.$resHAL[$year][$team]["nfDep"].'</th>');
+        echo '<th scope="row" style="text-align:center">'.$resHAL[$year][$team]["nfDep"].'</th>';
         if ($ils != 0) {$totDep = $resHAL[$year][$team]["nfDep"];}
         $chaine .= $resHAL[$year][$team]["nfDep"].";";
         $pcent = 0;
         if ($resHAL[$year][$team]["nfDep"] != 0) {$pcent = round($resHAL[$year][$team]["nfDep"]*100/$resHAL[$year][$team]["nfDep"]);}
-        echo ('<th scope="row" style="text-align:center">'.$pcent.'%</th>');
+        echo '<th scope="row" style="text-align:center">'.$pcent.'%</th>';
         $chaine .= $pcent."%;";
         
-        echo ('<th scope="row" style="text-align:center">'.$resHAL[$year][$team]["nfPronoTI"].'</th>');
+        echo '<th scope="row" style="text-align:center">'.$resHAL[$year][$team]["nfPronoTI"].'</th>';
         if ($ils != 0) {$totPronoTI = $resHAL[$year][$team]["nfPronoTI"];}
         $chaine .= $resHAL[$year][$team]["nfPronoTI"].";";
         $pcent = 0;
         if ($resHAL[$year][$team]["nfPronoTI"] != 0) {$pcent = round($resHAL[$year][$team]["nfPronoTI"]*100/$resHAL[$year][$team]["nfDep"]);}
-        echo ('<th scope="row" style="text-align:center">'.$pcent.'%</th>');
+        echo '<th scope="row" style="text-align:center">'.$pcent.'%</th>';
         $chaine .= $pcent."%;";
         
-        echo ('<th scope="row" style="text-align:center">'.$resHAL[$year][$team]["nfProavTI"].'</th>');
+        echo '<th scope="row" style="text-align:center">'.$resHAL[$year][$team]["nfProavTI"].'</th>';
         if ($ils != 0) {$totProavTI = $resHAL[$year][$team]["nfProavTI"];}
         $chaine .= $resHAL[$year][$team]["nfProavTI"].";";
         $pcent = 0;
         if ($resHAL[$year][$team]["nfProavTI"] != 0) {$pcent = round($resHAL[$year][$team]["nfProavTI"]*100/$resHAL[$year][$team]["nfDep"]);}
-        echo ('<th scope="row" style="text-align:center">'.$pcent.'%</th>');
+        echo '<th scope="row" style="text-align:center">'.$pcent.'%</th>';
         $chaine .= $pcent."%;";
         
-        echo ('<th scope="row" style="text-align:center">'.$resHAL[$year][$team]["nfPronoTIavOA"].'</th>');
+        echo '<th scope="row" style="text-align:center">'.$resHAL[$year][$team]["nfPronoTIavOA"].'</th>';
         if ($ils != 0) {$totPronoTIavOA = $resHAL[$year][$team]["nfPronoTIavOA"];}
         $chaine .= $resHAL[$year][$team]["nfPronoTIavOA"].";";
         $pcent = 0;
         if ($resHAL[$year][$team]["nfPronoTIavOA"] != 0) {$pcent = round($resHAL[$year][$team]["nfPronoTIavOA"]*100/$resHAL[$year][$team]["nfDep"]);}
-        echo ('<th scope="row" style="text-align:center">'.$pcent.'%</th>');
+        echo '<th scope="row" style="text-align:center">'.$pcent.'%</th>';
         $chaine .= $pcent."%;";
         
-        echo ('<th scope="row" style="text-align:center">'.$resHAL[$year][$team]["nfProavTIavOA"].'</th>');
+        echo '<th scope="row" style="text-align:center">'.$resHAL[$year][$team]["nfProavTIavOA"].'</th>';
         if ($ils != 0) {$totProavTIavOA = $resHAL[$year][$team]["nfProavTIavOA"];}
         $chaine .= $resHAL[$year][$team]["nfProavTIavOA"].";";
         $pcent = 0;
         if ($resHAL[$year][$team]["nfProavTIavOA"] != 0) {$pcent = round($resHAL[$year][$team]["nfProavTIavOA"]*100/$resHAL[$year][$team]["nfDep"]);}
-        echo ('<th scope="row" style="text-align:center">'.$pcent.'%</th>');
+        echo '<th scope="row" style="text-align:center">'.$pcent.'%</th>';
         $chaine .= $pcent."%;";
         
-        echo ('</tr>');
-        echo ('</tbody>');
+        echo '</tr>';
+        echo '</tbody>';
         $chaine .= chr(13).chr(10);
         fwrite($inF,$chaine);
         $atester = $LAB_SECT[$ils]["code_collection"];
@@ -1380,62 +1404,62 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
       //Total dernier secteur à inclure
       if (isset($port) && $port != "choix") {
         $chaine = "";
-        extractHAL(strtoupper($codeSF), $year, $reqt, $resHAL);
-        echo ('<tr class="info">');
-        echo ('<th scope="row"><i>Secteur '.$sectF.'</i></th>');
+        extractHAL(strtoupper($codeSF), $year, $reqt, $resHAL, $cstCA);
+        echo '<tr class="info">';
+        echo '<th scope="row"><em>Secteur '.$sectF.$cstETH;
         $chaine .= "Secteur ".$sectF.";";
-        echo ('<th scope="row"><i>'.$sectF.'</i></th>');
+        echo '<th scope="row"><em>'.$sectF.$cstETH;
         $chaine .= $sectF.";";
         
         $sect[$is] = $sectF;
         $is++;
         $tabPro[$year][$sectF]["nfDep"] = $resHAL[$year][$codeSF]["nfDep"];
         $chaine .= $resHAL[$year][$codeSF]["nfDep"].";";
-        echo ('<th scope="row" style="text-align:center"><i>'.$resHAL[$year][$codeSF]["nfDep"].'</i></th>');
+        echo $cstTEM.$resHAL[$year][$codeSF]["nfDep"].$cstETH;
         $pcent = 0;
         if ($resHAL[$year][$codeSF]["nfDep"] != 0) {$pcent = round($resHAL[$year][$codeSF]["nfDep"]*100/$resHAL[$year][$codeSF]["nfDep"]);}
-        echo ('<th scope="row" style="text-align:center"><i>'.$pcent.'%</i></th>');
+        echo $cstTEM.$pcent.$cstPTH;
         $chaine .= $pcent."%;";
         
         $tabPro[$year][$sectF]["nfPronoTI"] = $resHAL[$year][$codeSF]["nfPronoTI"];
-        echo ('<th scope="row" style="text-align:center"><i>'.$resHAL[$year][$codeSF]["nfPronoTI"].'</i></th>');
+        echo $cstTEM.$resHAL[$year][$codeSF]["nfPronoTI"].$cstETH;
         $chaine .= $resHAL[$year][$codeSF]["nfPronoTI"].";";
         $pcent = 0;
         if ($resHAL[$year][$codeSF]["nfPronoTI"]) {$pcent = round($resHAL[$year][$codeSF]["nfPronoTI"]*100/$resHAL[$year][$codeSF]["nfDep"]);}
-        echo ('<th scope="row" style="text-align:center"><i>'.$pcent.'%</i></th>');
+        echo $cstTEM.$pcent.$cstPTH;
         $chaine .= $pcent."%;";
         
         $tabPro[$year][$sectF]["nfProavTI"] = $resHAL[$year][$codeSF]["nfProavTI"];
-        echo ('<th scope="row" style="text-align:center"><i>'.$resHAL[$year][$codeSF]["nfProavTI"].'</i></th>');
+        echo $cstTEM.$resHAL[$year][$codeSF]["nfProavTI"].$cstETH;
         $chaine .= $resHAL[$year][$codeSF]["nfProavTI"].";";
         $pcent = 0;
         if ($resHAL[$year][$codeSF]["nfProavTI"] != 0) {$pcent = round($resHAL[$year][$codeSF]["nfProavTI"]*100/$resHAL[$year][$codeSF]["nfDep"]);}
-        echo ('<th scope="row" style="text-align:center"><i>'.$pcent.'%</i></th>');
+        echo $cstTEM.$pcent.$cstPTH;
         $chaine .= $pcent."%;";
         
         $tabPro[$year][$sectF]["nfPronoTIavOA"] = $resHAL[$year][$codeSF]["nfPronoTIavOA"];
-        echo ('<th scope="row" style="text-align:center"><i>'.$resHAL[$year][$codeSF]["nfPronoTIavOA"].'</i></th>');
+        echo $cstTEM.$resHAL[$year][$codeSF]["nfPronoTIavOA"].$cstETH;
         $chaine .= $resHAL[$year][$codeSF]["nfPronoTIavOA"].";";
         $pcent = 0;
         if ($resHAL[$year][$codeSF]["nfPronoTIavOA"] != 0) {$pcent = round($resHAL[$year][$codeSF]["nfPronoTIavOA"]*100/$resHAL[$year][$codeSF]["nfDep"]);}
-        echo ('<th scope="row" style="text-align:center"><i>'.$pcent.'%</i></th>');
+        echo $cstTEM.$pcent.$cstPTH;
         $chaine .= $pcent."%;";
         
         $tabPro[$year][$sectF]["nfProavTIavOA"] = $resHAL[$year][$codeSF]["nfProavTIavOA"];
-        echo ('<th scope="row" style="text-align:center"><i>'.$resHAL[$year][$codeSF]["nfProavTIavOA"].'</i></th>');
+        echo $cstTEM.$resHAL[$year][$codeSF]["nfProavTIavOA"].$cstETH;
         $chaine .= $resHAL[$year][$codeSF]["nfProavTIavOA"].";";
         $pcent = 0;
         if ($resHAL[$year][$codeSF]["nfProavTIavOA"] != 0) {$pcent = round($resHAL[$year][$codeSF]["nfProavTIavOA"]*100/$resHAL[$year][$codeSF]["nfDep"]);}
-        echo ('<th scope="row" style="text-align:center"><i>'.$pcent.'%</i></th>');
+        echo $cstTEM.$pcent.$cstPTH;
         $chaine .= $pcent."%;";
         
-        echo ('</tr>');
-        echo ('</tbody>');
+        echo '</tr>';
+        echo '</tbody>';
         $chaine .= chr(13).chr(10);
         fwrite($inF,$chaine);
       }
-      echo ('</table>');
-      echo ('<a href=\'./csv/req1.csv\'>Exporter le tableau au format CSV</a><br><br>');
+      echo '</table>';
+      echo '<a href=\'./csv/req1.csv\'>Exporter le tableau au format CSV</a><br><br>';
     }
   }
   //var_dump($resHAL);
@@ -1443,10 +1467,10 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   //Tableau de résultats requête 2
   if ($reqt == "req2") {
 		//Intitulé
-		echo('<br><b>2. Portail ou collection : évolution sur une période</b><br><br>');
+		echo '<br><strong>2. Portail ou collection : évolution sur une période</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête présente, sur une période donnée, le nombre de publications référencées dans le portail HAL institutionnel (secteurs disciplinaires, le cas échéant) ou une collection, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Pour le portail, les résultats sont déclinés par secteurs (le cas échéant). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête présente, sur une période donnée, le nombre de publications référencées dans le portail HAL institutionnel (secteurs disciplinaires, le cas échéant) ou une collection, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Pour le portail, les résultats sont déclinés par secteurs (le cas échéant). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
     //Export CSV
     $Fnm = "./csv/req2.csv";
@@ -1455,10 +1479,10 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     $chaine = "\xEF\xBB\xBF";
     fwrite($inF,$chaine);
     
-    echo ('<table class="table table-striped table-hover table-responsive table-bordered">');
-    echo ('<thead>');
-    echo ('<tr>');
-    echo ('<th scope="col">&nbsp;</th>');
+    echo '<table class="table table-striped table-hover table-responsive table-bordered">';
+    echo '<thead>';
+    echo '<tr>';
+    echo '<th scope="col">&nbsp;</th>';
     $chaine = ";";
     $ils = 0;
     $sect = array();
@@ -1480,12 +1504,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
       if ($ils == 0) {
         $sect[$is] = $LAB_SECT[$ils]["code_collection"];
         $is++;
-        echo ('<th scope="col" colspan="6" style="text-align:center">'.$LAB_SECT[$ils]["code_collection"].'</th>');
+        echo '<th scope="col" colspan="6" style="text-align:center">'.$LAB_SECT[$ils]["code_collection"].'</th>';
         $chaine .= $LAB_SECT[$ils]["code_collection"].";;;;;;";
       }else{
         $sectF = $LAB_SECT[$ils]["secteur"];
         if ($sectI != $sectF && isset($port) && $port != "choix") {//Total secteur à inclure
-          echo ('<th scope="col" colspan="6" style="text-align:center">'.$sectI.'</th>');
+          echo '<th scope="col" colspan="6" style="text-align:center">'.$sectI.'</th>';
           $chaine .= $sectI.";;;;;;";
           $sect[$is] = $sectI;
           $sectI = $sectF;
@@ -1497,34 +1521,34 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     }
     //Total dernier secteur à inclure
     if (isset($port) && $port != "choix") {
-      echo ('<th scope="col" colspan="6" style="text-align:center">'.$sectF.'</th>');
+      echo '<th scope="col" colspan="6" style="text-align:center">'.$sectF.'</th>';
       $chaine .= $sectF.";;;;;;";
       $sect[$is] = $sectF;
       $is++;
     }
-    echo ('</tr>');
+    echo '</tr>';
     $chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
 
-    echo ('<tr>');
-    echo ('<th scope="col">Année</th>');
+    echo '<tr>';
+    echo '<th scope="col">Année</th>';
     $chaine = "Année;";
     for($ils=0; $ils<$is; $ils++) {
-      echo ('<th scope="col" style="text-align:center">Productions</th>');
+      echo '<th scope="col" style="text-align:center">Productions</th>';
       $chaine .= "Productions;";
-      echo ('<th scope="col" style="text-align:center">Productions avec texte intégral déposé dans HAL</th>');
+      echo '<th scope="col" style="text-align:center">Productions avec texte intégral déposé dans HAL</th>';
       $chaine .= "Productions avec texte intégral déposé dans HAL;";
-      echo ('<th scope="col" style="text-align:center">Taux de texte intégral déposé dans HAL</th>');
+      echo '<th scope="col" style="text-align:center">Taux de texte intégral déposé dans HAL</th>';
       $chaine .= "Taux de texte intégral déposé dans HAL;";
-      echo ('<th scope="col" style="text-align:center">Productions sans texte intégral déposé dans HAL</th>');
+      echo '<th scope="col" style="text-align:center">Productions sans texte intégral déposé dans HAL</th>';
       $chaine .= "Productions sans texte intégral déposé dans HAL;";
-      echo ('<th scope="col" style="text-align:center">Productions sans texte intégral déposé dans HAL mais avec texte intégral librement accessible hors HAL</th>');
+      echo '<th scope="col" style="text-align:center">Productions sans texte intégral déposé dans HAL mais avec texte intégral librement accessible hors HAL</th>';
       $chaine .= "Productions sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL;";
-      echo ('<th scope="col" style="text-align:center">Taux de productions sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL</th>');
+      echo '<th scope="col" style="text-align:center">Taux de productions sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL</th>';
       $chaine .= "Taux de productions sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL;";
     }   
-    echo ('</tr>');
-    echo ('</thead>');
+    echo '</tr>';
+    echo '</thead>';
     $chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
     
@@ -1545,7 +1569,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
       while (isset($LAB_SECT[$ils]["code_collection"])) {
         if ($ils == 0) {
           $team = $LAB_SECT[$ils]["code_collection"];
-          extractHAL($team, $year, $reqt, $resHAL);
+          extractHAL($team, $year, $reqt, $resHAL, $cstCA);
           $tabPro[$year][$sect[$is]]["nfDep"] = intval($resHAL[$year][$team]["nfDep"]);
           $tabPro[$year][$sect[$is]]["nfProavTI"] = intval($resHAL[$year][$team]["nfProavTI"]);
           $tabPro[$year][$sect[$is]]["taux"] = 0;
@@ -1563,7 +1587,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
           $sectF = $LAB_SECT[$ils]["secteur"];
           if ($sectI != $sectF && isset($port) && $port != "choix") {//Secteur suivant
             $team = $LAB_SECT[$ils]["code_secteur"];
-            extractHAL(strtoupper($team), $year, $reqt, $resHAL);
+            extractHAL(strtoupper($team), $year, $reqt, $resHAL, $cstCA);
             $tabPro[$year][$sect[$is]]["nfDep"] = intval($resHAL[$year][$team]["nfDep"]);
             $tabPro[$year][$sect[$is]]["nfProavTI"] = intval($resHAL[$year][$team]["nfProavTI"]);
 						$tabPro[$year][$sect[$is]]["taux"] = 0;
@@ -1588,43 +1612,43 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     //var_dump($tabPro);
 
     //Affichage
-    echo ('<tbody>');
+    echo '<tbody>';
     for($year = $anneedeb; $year <= $anneefin; $year++) {
-      echo ('<tr class="active">');
-      echo ('<th scope="row">'.$year.'</th>');
+      echo '<tr class="active">';
+      echo '<th scope="row">'.$year.'</th>';
       $chaine = $year.";";
       $is = 0;
       while (isset($sect[$is])) {
-        echo ('<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["nfDep"].'</th>');
+        echo '<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["nfDep"].'</th>';
         $chaine .= $tabPro[$year][$sect[$is]]["nfDep"].";";
-        echo ('<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["nfProavTI"].'</th>');
+        echo '<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["nfProavTI"].'</th>';
         $chaine .= $tabPro[$year][$sect[$is]]["nfProavTI"].";";
-        echo ('<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["taux"].'%</th>');
+        echo '<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["taux"].'%</th>';
         $chaine .= $tabPro[$year][$sect[$is]]["taux"]."%;";
-        echo ('<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["nfPronoTI"].'</th>');
+        echo '<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["nfPronoTI"].'</th>';
         $chaine .= $tabPro[$year][$sect[$is]]["nfPronoTI"].";";
-        echo ('<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["nfPronoTIavOA"].'</th>');
+        echo '<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["nfPronoTIavOA"].'</th>';
         $chaine .= $tabPro[$year][$sect[$is]]["nfPronoTIavOA"].";";
-        echo ('<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["tauxnoTIavOA"].'%</th>');
+        echo '<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["tauxnoTIavOA"].'%</th>';
         $chaine .= $tabPro[$year][$sect[$is]]["tauxnoTIavOA"]."%;";
         $is++;
       }      
-      echo ('</tr>');
+      echo '</tr>';
       $chaine .= chr(13).chr(10);
       fwrite($inF,$chaine);
     }
-    echo ('</tbody>');
-    echo('</table>');
-    echo ('<a href=\'./csv/req2.csv\'>Exporter le tableau au format CSV</a><br><br>');
+    echo '</tbody>';
+    echo '</table>';
+    echo '<a href=\'./csv/req2.csv\'>Exporter le tableau au format CSV</a><br><br>';
   }
   
   //Tableau de résultats requête 3
   if ($reqt == "req3") {
 		//Intitulé
-		echo('<br><b>3. Portail : comparaison portailsComparaison portails</b><br><br>');
+		echo '<br><strong>3. Portail : comparaison portailsComparaison portails</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête permet de situer les données d’un portail institutionnel par rapport aux données d’autres portails (d’universités). Il indique, pour une année donnée, le nombre de publications (articles de revue) référencées dans le portail, avec ou sans texte intégral, incluant ou non un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête permet de situer les données d’un portail institutionnel par rapport aux données d’autres portails (d’universités). Il indique, pour une année donnée, le nombre de publications (articles de revue) référencées dans le portail, avec ou sans texte intégral, incluant ou non un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
   
     //Export CSV
     $Fnm = "./csv/req3.csv";
@@ -1636,42 +1660,42 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     $sect = array();
     $is = 0;
 
-    echo ('<table class="table table-striped table-hover table-responsive table-bordered">');
-    echo ('<thead>');
-    echo ('<tr>');
+    echo '<table class="table table-striped table-hover table-responsive table-bordered">';
+    echo '<thead>';
+    echo '<tr>';
     $chaine = "";
-    echo ('<th scope="col" style="text-align:center">Articles dans une revue publiés en '.$annee3.' et référencés dans le portail HAL</th>');
+    echo '<th scope="col" style="text-align:center">Articles dans une revue publiés en '.$annee3.' et référencés dans le portail HAL</th>';
     $chaine .= "Articles dans une revue publiés en ".$annee3." et référencés dans le portail HAL;";
-    echo ('<th scope="col" style="text-align:center;background-color:#F2F2F2;">Articles</th>');
+    echo '<th scope="col" style="text-align:center;background-color:#F2F2F2;">Articles</th>';
     $chaine .= "Articles;";
-    //echo ('<th scope="col" style="text-align:center;background-color:#F2F2F2;">Rang</th>');
+    //echo '<th scope="col" style="text-align:center;background-color:#F2F2F2;">Rang</th>';
     //$chaine .= "Rang;";
-    echo ('<th scope="col" style="text-align:center;background-color:#DDEBF7;">Articles '.$annee3.' sans texte intégral déposé dans HAL</th>');
+    echo '<th scope="col" style="text-align:center;background-color:#DDEBF7;">Articles '.$annee3.' sans texte intégral déposé dans HAL</th>';
     $chaine .= "Articles ".$annee3." sans texte intégral déposé dans HAL;";
-    echo ('<th scope="col" style="text-align:center;background-color:#DDEBF7;">%</th>');
+    echo '<th scope="col" style="text-align:center;background-color:#DDEBF7;">%</th>';
     $chaine .= "%;";
-    //echo ('<th scope="col" style="text-align:center;background-color:#DDEBF7;">Rang</th>');
+    //echo '<th scope="col" style="text-align:center;background-color:#DDEBF7;">Rang</th>';
     //$chaine .= "Rang;";
-    echo ('<th scope="col" style="text-align:center;background-color:#E2EFDA;">Articles '.$annee3.' avec texte intégral déposé dans HAL</th>');
+    echo '<th scope="col" style="text-align:center;background-color:#E2EFDA;">Articles '.$annee3.' avec texte intégral déposé dans HAL</th>';
     $chaine .= "Articles ".$annee3." avec texte intégral déposé dans HAL;";
-    echo ('<th scope="col" style="text-align:center;background-color:#E2EFDA;">%</th>');
+    echo '<th scope="col" style="text-align:center;background-color:#E2EFDA;">%</th>';
     $chaine .= "%;";
-    //echo ('<th scope="col" style="text-align:center;background-color:#E2EFDA;">Rang</th>');
+    //echo '<th scope="col" style="text-align:center;background-color:#E2EFDA;">Rang</th>';
     //$chaine .= "Rang;";
-    echo ('<th scope="col" style="text-align:center;background-color:#FFF2CC;">Articles '.$annee3.' avec texte intégral déposé dans HAL ou librement accessible hors HAL</th>');
+    echo '<th scope="col" style="text-align:center;background-color:#FFF2CC;">Articles '.$annee3.' avec texte intégral déposé dans HAL ou librement accessible hors HAL</th>';
     $chaine .= "Articles ".$annee3." avec texte intégral déposé dans HAL ou librement accessible hors HAL;";
-    echo ('<th scope="col" style="text-align:center;background-color:#FFF2CC;">%</th>');
+    echo '<th scope="col" style="text-align:center;background-color:#FFF2CC;">%</th>';
     $chaine .= "%;";
-    //echo ('<th scope="col" style="text-align:center;background-color:#FFF2CC;">Rang</th>');
+    //echo '<th scope="col" style="text-align:center;background-color:#FFF2CC;">Rang</th>';
     //$chaine .= "Rang;";
-    echo ('<th scope="col" style="text-align:center;background-color:#F4D9C7;">Articles '.$annee3.' sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL</th>');
+    echo '<th scope="col" style="text-align:center;background-color:#F4D9C7;">Articles '.$annee3.' sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL</th>';
     $chaine .= "Articles ".$annee3." sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL;";
-    echo ('<th scope="col" style="text-align:center;background-color:#F4D9C7;">%</th>');
+    echo '<th scope="col" style="text-align:center;background-color:#F4D9C7;">%</th>';
     $chaine .= "%;";
-    //echo ('<th scope="col" style="text-align:center;background-color:#F4D9C7;">Rang</th>');
+    //echo '<th scope="col" style="text-align:center;background-color:#F4D9C7;">Rang</th>';
     //$chaine .= "Rang;";
-    echo ('</tr>');
-    echo ('</thead>');
+    echo '</tr>';
+    echo '</thead>';
     $chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
     
@@ -1681,7 +1705,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     $team = $LAB_SECT[0]["code_collection"];
     $year = $annee3;
     $sect[$is] = $team;
-    extractHAL(strtolower($team), $year, $reqt, $resHAL);
+    extractHAL(strtolower($team), $year, $reqt, $resHAL, $cstCA);
     $tabPro[$team]["nfDep"] = intval($resHAL[$year][$team]["nfDep"]);
     $tabPro[$team]["nfPronoTI"] = intval($resHAL[$year][$team]["nfPronoTI"]);
     $tabPro[$team]["pCentnoTI"] = 0;
@@ -1702,7 +1726,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     //Autres portails
     include("./Portails-HAL.php");
     $urlHAL = "https://api.archives-ouvertes.fr/ref/instance/";
-    askCurl($urlHAL, $arrayHAL);
+    askCurl($urlHAL, $arrayHAL, $cstCA);
     //var_dump($arrayHAL);
     $iHAL = 0;
     while (isset($arrayHAL["response"]["docs"][$iHAL]["code"])) {
@@ -1713,11 +1737,11 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
         $code = strtoupper($code);
         //if (isset($LAB_SECT[$code])) {$code = $LAB_SECT[$code];}//Equivalence trouvée
         $urlHALDep = "https://api.archives-ouvertes.fr/search/".strtolower($code)."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111&rows=0";
-        //echo $name.' - '.$code.' : '.askCurlNF($urlHALDep).'<br>';
+        //echo $name.' - '.$code.' : '.askCurlNF($urlHALDep, $cstCA).'<br>';
         //if (askCurlNF($urlHALDep) == 0) {echo $urlHALDep.'<br>';}
-        if (askCurlNF($urlHALDep) != 0 && $code != "") {//Y-a-t-il des résultats pour l'extraction avec ce code et cette année ?
+        if (askCurlNF($urlHALDep, $cstCA) != 0 && $code != "") {//Y-a-t-il des résultats pour l'extraction avec ce code et cette année ?
           $sect[$is] = $code;
-          extractHAL(strtolower($code), $year, $reqt, $resHAL);
+          extractHAL(strtolower($code), $year, $reqt, $resHAL, $cstCA);
           $tabPro[$code]["nfDep"] = intval($resHAL[$year][$code]["nfDep"]);
           $tabPro[$code]["nfPronoTI"] = intval($resHAL[$year][$code]["nfPronoTI"]);
           $tabPro[$code]["pCentnoTI"] = 0;
@@ -1786,7 +1810,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		ksort($tabPro);//Classement par ordre alphabétique
     
     //Affichage
-    echo ('<tbody>');
+    echo '<tbody>';
     
     foreach ($tabPro as $code => $t) {
       if ($code == $team) {
@@ -1804,54 +1828,54 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
         $evd4 = "background-color:#FFF2CC;";
         $evd5 = "background-color:#F4D9C7;";
       }
-      echo ('<tr'.$evd.'>'); 
+      echo '<tr'.$evd.'>'; 
       $chaine = "";
-      echo ('<td scope="row" style="text-align:center">'.$code.'</td>');
+      echo '<td scope="row" style="text-align:center">'.$code.'</td>';
       $chaine .= $code.";";
-      echo ('<td scope="row" style="text-align:center;'.$evd1.'">'.$tabPro[$code]["nfDep"].'</td>');
+      echo '<td scope="row" style="text-align:center;'.$evd1.'">'.$tabPro[$code]["nfDep"].'</td>';
       $chaine .= $tabPro[$code]["nfDep"].";";
-      //echo ('<td scope="row" style="text-align:center;'.$evd1.'">'.$tabPro[$code]["rgDep"].'</td>');
+      //echo '<td scope="row" style="text-align:center;'.$evd1.'">'.$tabPro[$code]["rgDep"].'</td>';
       //$chaine .= $tabPro[$code]["rgDep"].";";
-      echo ('<td scope="row" style="text-align:center;'.$evd2.'">'.$tabPro[$code]["nfPronoTI"].'</td>');
+      echo '<td scope="row" style="text-align:center;'.$evd2.'">'.$tabPro[$code]["nfPronoTI"].'</td>';
       $chaine .= $tabPro[$code]["nfPronoTI"].";";
-      echo ('<td scope="row" style="text-align:center;'.$evd2.'">'.$tabPro[$code]["pCentnoTI"].'</td>');
+      echo '<td scope="row" style="text-align:center;'.$evd2.'">'.$tabPro[$code]["pCentnoTI"].'</td>';
       $chaine .= $tabPro[$code]["pCentnoTI"].";";
-      //echo ('<td scope="row" style="text-align:center;'.$evd2.'">'.$tabPro[$code]["rgPronoTI"].'</td>');
+      //echo '<td scope="row" style="text-align:center;'.$evd2.'">'.$tabPro[$code]["rgPronoTI"].'</td>';
       //$chaine .= $tabPro[$code]["rgPronoTI"].";";
-      echo ('<td scope="row" style="text-align:center;'.$evd3.'">'.$tabPro[$code]["nfProavTI"].'</td>');
+      echo '<td scope="row" style="text-align:center;'.$evd3.'">'.$tabPro[$code]["nfProavTI"].'</td>';
       $chaine .= $tabPro[$code]["nfProavTI"].";";
-      echo ('<td scope="row" style="text-align:center;'.$evd3.'">'.$tabPro[$code]["pCentavTI"].'</td>');
+      echo '<td scope="row" style="text-align:center;'.$evd3.'">'.$tabPro[$code]["pCentavTI"].'</td>';
       $chaine .= $tabPro[$code]["pCentavTI"].";";
-      //echo ('<td scope="row" style="text-align:center;'.$evd3.'">'.$tabPro[$code]["rgProavTI"].'</td>');
+      //echo '<td scope="row" style="text-align:center;'.$evd3.'">'.$tabPro[$code]["rgProavTI"].'</td>';
       //$chaine .= $tabPro[$code]["rgProavTI"].";";
-      echo ('<td scope="row" style="text-align:center;'.$evd4.'">'.$tabPro[$code]["nfProavTIavOA"].'</td>');
+      echo '<td scope="row" style="text-align:center;'.$evd4.'">'.$tabPro[$code]["nfProavTIavOA"].'</td>';
       $chaine .= $tabPro[$code]["nfProavTIavOA"].";";
-      echo ('<td scope="row" style="text-align:center;'.$evd4.'">'.$tabPro[$code]["pCentavTIavOA"].'</td>');
+      echo '<td scope="row" style="text-align:center;'.$evd4.'">'.$tabPro[$code]["pCentavTIavOA"].'</td>';
       $chaine .= $tabPro[$code]["pCentavTIavOA"].";";
-      //echo ('<td scope="row" style="text-align:center;'.$evd4.'">'.$tabPro[$code]["rgProavTIavOA"].'</td>');
+      //echo '<td scope="row" style="text-align:center;'.$evd4.'">'.$tabPro[$code]["rgProavTIavOA"].'</td>';
       //$chaine .= $tabPro[$code]["rgProavTIavOA"].";";
-      echo ('<td scope="row" style="text-align:center;'.$evd5.'">'.$tabPro[$code]["nfPronoTIavOA"].'</td>');
+      echo '<td scope="row" style="text-align:center;'.$evd5.'">'.$tabPro[$code]["nfPronoTIavOA"].'</td>';
       $chaine .= $tabPro[$code]["nfPronoTIavOA"].";";
-      echo ('<td scope="row" style="text-align:center;'.$evd5.'">'.$tabPro[$code]["pCentnoTIavOA"].'</td>');
+      echo '<td scope="row" style="text-align:center;'.$evd5.'">'.$tabPro[$code]["pCentnoTIavOA"].'</td>';
       $chaine .= $tabPro[$code]["pCentnoTIavOA"].";";
-      //echo ('<td scope="row" style="text-align:center;'.$evd5.'">'.$tabPro[$code]["rgPronoTIavOA"].'</td>');  
+      //echo '<td scope="row" style="text-align:center;'.$evd5.'">'.$tabPro[$code]["rgPronoTIavOA"].'</td>';  
       //$chaine .= $tabPro[$code]["rgPronoTIavOA"].";";
-      echo ('</tr>');
+      echo '</tr>';
       $chaine .= chr(13).chr(10);
       fwrite($inF,$chaine);
     }
-    echo ('</tbody>');
-    echo ('</table>');
-    echo ('<a href=\'./csv/req3.csv\'>Exporter le tableau au format CSV</a><br><br>');
+    echo '</tbody>';
+    echo '</table>';
+    echo '<a href=\'./csv/req3.csv\'>Exporter le tableau au format CSV</a><br><br>';
   }
   
   //Tableau de résultats requête 4
   if ($reqt == "req4") {
 		//Intitulé
-		echo('<br><b>4. Portail : ESGBU (stocks et flux)</b><br><br>');
+		echo '<br><strong>4. Portail : ESGBU (stocks et flux)</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête fournit les 4 premiers indicateurs (stocks et flux) demandés dans l’enquête annuelle ESGBU pour l’archive ouverte. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête fournit les 4 premiers indicateurs (stocks et flux) demandés dans l’enquête annuelle ESGBU pour l’archive ouverte. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
     //Export CSV
     $Fnm = "./csv/req4.csv";
@@ -1871,86 +1895,86 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     $A04 = 0;
     
     $urlHALDep = "https://api.archives-ouvertes.fr/search/".strtolower($team)."/?wt=xml&fq=submitType_s:notice&fq=-status_i=111&fq=submittedDate_s:[1600-01-01-%20TO%20".$year."-12-31]&rows=0";
-    $A01 = askCurlNF($urlHALDep);
+    $A01 = askCurlNF($urlHALDep, $cstCA);
     
     $urlHALDep = "https://api.archives-ouvertes.fr/search/".strtolower($team)."/?wt=xml&fq=submitType_s:file&fq=-status_i=111&fq=submittedDate_s:[1600-01-01-%20TO%20".$year."-12-31]&rows=0";
-    $A02 = askCurlNF($urlHALDep);
+    $A02 = askCurlNF($urlHALDep, $cstCA);
     
     $urlHALDep = "https://api.archives-ouvertes.fr/search/".strtolower($team)."/?wt=xml&fq=submitType_s:notice&fq=-status_i=111&fq=submittedDate_s:[".$year."-01-01-%20TO%20".$year."-12-31]&rows=0";
-    $A03 = askCurlNF($urlHALDep);
+    $A03 = askCurlNF($urlHALDep, $cstCA);
     
     $urlHALDep = "https://api.archives-ouvertes.fr/search/".strtolower($team)."/?wt=xml&fq=submitType_s:file&fq=-status_i=111&fq=submittedDate_s:[".$year."-01-01-%20TO%20".$year."-12-31]&rows=0";
-    $A04 = askCurlNF($urlHALDep);
+    $A04 = askCurlNF($urlHALDep, $cstCA);
     
     //Affichage
-    echo ('<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:70%;">');
-    echo ('<thead>');
-    echo ('<tr>');
-    echo ('<th scope="col" colspan="2" style="text-align:left"><b>STOCKS '.$team.' au 31.12.'.$year.'</b></th>');
+    echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:70%;">';
+    echo '<thead>';
+    echo '<tr>';
+    echo '<th scope="col" colspan="2" style="text-align:left"><strong>STOCKS '.$team.' au 31.12.'.$year.'</strong></th>';
     $chaine = "STOCKS ".$team." au 31.12.".$year.";;";
-    echo ('</tr>');
+    echo '</tr>';
     $chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
-    echo ('</thead>');
-    echo ('<tbody>');
-    echo ('<tr>');
-    echo ('<td scope="row" style="text-align:left;background-color:#C6D9F1;">A01 - Nombre d\'unités documentaires référencées dans le système de collecte sous forme de notices uniquement</td>');
+    echo '</thead>';
+    echo '<tbody>';
+    echo '<tr>';
+    echo '<td scope="row" style="text-align:left;background-color:#C6D9F1;">A01 - Nombre d\'unités documentaires référencées dans le système de collecte sous forme de notices uniquement</td>';
     $chaine = "A01 - Nombre d'unités documentaires référencées dans le système de collecte sous forme de notices uniquement;";
-    echo ('<td scope="row" style="text-align:left;background-color:#C6D9F1;">'.$A01.'</td>');
+    echo '<td scope="row" style="text-align:left;background-color:#C6D9F1;">'.$A01.'</td>';
     $chaine .= $A01.";";
-    echo ('</tr>');
+    echo '</tr>';
     $chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
-    echo ('<tr>');
-    echo ('<td scope="row" style="text-align:left;background-color:#DCE6F2;">A02 - Nombre d\'unités documentaires référencées dans le système de collecte et déposées en texte intégral</td>');
+    echo '<tr>';
+    echo '<td scope="row" style="text-align:left;background-color:#DCE6F2;">A02 - Nombre d\'unités documentaires référencées dans le système de collecte et déposées en texte intégral</td>';
     $chaine = "A02 - Nombre d\'unités documentaires référencées dans le système de collecte et déposées en texte intégral;";
-    echo ('<td scope="row" style="text-align:left;background-color:#DCE6F2;">'.$A02.'</td>');
+    echo '<td scope="row" style="text-align:left;background-color:#DCE6F2;">'.$A02.'</td>';
     $chaine .= $A02.";";
-    echo ('</tr>');
+    echo '</tr>';
     $chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
-    echo ('<tr><td colspan="2">&nbsp;</td></tr>');
-    echo ('</tbody>');
+    echo '<tr><td colspan="2">&nbsp;</td></tr>';
+    echo '</tbody>';
     
-    echo ('<thead>');
-    echo ('<tr>');
-    echo ('<th scope="col" colspan="2" style="text-align:left"><b>FLUX sur l\'année civile '.$year.'</b></th>');
+    echo '<thead>';
+    echo '<tr>';
+    echo '<th scope="col" colspan="2" style="text-align:left"><strong>FLUX sur l\'année civile '.$year.'</strong></th>';
     $chaine = "FLUX sur l'année civile ".$year.";;";
-    echo ('</tr>');
+    echo '</tr>';
     $chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
-    echo ('</thead>');
-    echo ('<tbody>');
-    echo ('<tr>');
-    echo ('<td scope="row" style="text-align:left;background-color:#C6D9F1;">A03 - Accroissement annuel des unités documentaires référencées dans le système de collecte sous forme de notices uniquement</td>');
+    echo '</thead>';
+    echo '<tbody>';
+    echo '<tr>';
+    echo '<td scope="row" style="text-align:left;background-color:#C6D9F1;">A03 - Accroissement annuel des unités documentaires référencées dans le système de collecte sous forme de notices uniquement</td>';
     $chaine = "A03 - Accroissement annuel des unités documentaires référencées dans le système de collecte sous forme de notices uniquement;";
-    echo ('<td scope="row" style="text-align:left;background-color:#C6D9F1;">'.$A03.'</td>');
+    echo '<td scope="row" style="text-align:left;background-color:#C6D9F1;">'.$A03.'</td>';
     $chaine .= $A03.";";
-    echo ('</tr>');
+    echo '</tr>';
     $chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
-    echo ('<tr>');
-    echo ('<td scope="row" style="text-align:left;background-color:#DCE6F2;">A04 - Accroissement annuel des unités documentaires référencées dans le système de collecte et déposées en texte intégral</td>');
+    echo '<tr>';
+    echo '<td scope="row" style="text-align:left;background-color:#DCE6F2;">A04 - Accroissement annuel des unités documentaires référencées dans le système de collecte et déposées en texte intégral</td>';
     $chaine = "A04 - Accroissement annuel des unités documentaires référencées dans le système de collecte et déposées en texte intégral;";
-    echo ('<td scope="row" style="text-align:left;background-color:#DCE6F2;">'.$A04.'</td>');
+    echo '<td scope="row" style="text-align:left;background-color:#DCE6F2;">'.$A04.'</td>';
     $chaine .= $A04.";";
-    echo ('</tr>');
+    echo '</tr>';
     $chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
-    echo ('</tbody>');
+    echo '</tbody>';
     
     
-    echo ('</table>');
-    echo ('<a href=\'./csv/req4.csv\'>Exporter le tableau au format CSV</a><br><br>');
+    echo '</table>';
+    echo '<a href=\'./csv/req4.csv\'>Exporter le tableau au format CSV</a><br><br>';
   }
   
   //Tableau de résultats requête 5
   if ($reqt == "req5") {
 		//Intitulé
-		echo('<br><b>5. Portail ou Collection : Nombre de publications de type articles par éditeur</b><br><br>');
+		echo '<br><strong>5. Portail ou Collection : Nombre de publications de type articles par éditeur</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles de revues par éditeur pour une année donnée. Ne sont représentés que les principaux éditeurs et les articles HAL ayant un DOI (à l’exception des éditeurs Dalloz et Lextenso). Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ». <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles de revues par éditeur pour une année donnée. Ne sont représentés que les principaux éditeurs et les articles HAL ayant un DOI (à l’exception des éditeurs Dalloz et Lextenso). Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ». <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		//Export CSV
     $Fnm = "./csv/req5.csv";
@@ -1964,57 +1988,57 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			$team = strtolower($LAB_SECT[0]["secteur"]);
 		}
 		$spefq = "&fq=-submitType_s:annex";
-		extractHALnbPubEd($team, $year, "ART", $spefq, $nbTotArt, $nbPubEdRE);
+		extractHALnbPubEd($team, $year, "ART", $spefq, $nbTotArt, $nbPubEdRE, $cstCA);
 		//var_dump($nbPubEdRE);
 		//Affichage
-    echo ('<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:70%;">');
-    echo ('<thead>');
-    echo ('<tr>');
-   	echo ('<th scope="col" style="text-align:left"><b>Regroupement éditorial</b></th>');
-		echo ('<th scope="col" style="text-align:left"><b>Publications</b></th>');
-		echo ('<th scope="col" style="text-align:left"><b>% articles</b></th>');
+    echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:70%;">';
+    echo '<thead>';
+    echo '<tr>';
+   	echo $cstRED;
+		echo $cstPUB;
+		echo $cstART;
 		$chaine = "Regroupement éditorial;Publications;% articles;";
-    echo ('</tr>');
+    echo '</tr>';
     $chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
-		echo ('</thead>');
-		echo ('<tbody>');
+		echo '</thead>';
+		echo '<tbody>';
     for ($i=0; $i<count($nbPubEdRE); $i++) {
-			echo ('<tr>');
+			echo '<tr>';
 			if ($nbPubEdRE[$i]["editeur_ng"] == "Hors regroupement éditorial") {
-				$deb = "<i>";
-				$fin = "</i>";
+				$deb = "<em>";
+				$fin = "</em>";
 			}else{
 				$deb = "";
 				$fin = "";
 			}
-			echo ('<td>');
-			echo ($deb.$nbPubEdRE[$i]["editeur_ng"].$fin);
-			echo ('</td>');
-			echo ('<td>');
-			echo ($nbPubEdRE[$i]["nbArt"]);
-			echo ('</td>');
-			echo ('<td>');
+			echo '<td>';
+			echo $deb.$nbPubEdRE[$i]["editeur_ng"].$fin;
+			echo '</td>';
+			echo '<td>';
+			echo $nbPubEdRE[$i]["nbArt"];
+			echo '</td>';
+			echo '<td>';
 			$pcentArt = ($nbTotArt != 0) ? number_format($nbPubEdRE[$i]["nbArt"]*100/$nbTotArt, 1) : 0;
 			echo $pcentArt;
-			echo ('%</td>');
+			echo '%</td>';
 			$chaine = $nbPubEdRE[$i]["editeur_ng"].";".$nbPubEdRE[$i]["nbArt"].";".$pcentArt.";";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
 		}
-		echo ('</tbody>');
-		echo ('</table>');
-		echo ('<a href=\'./csv/req5.csv\'>Exporter le tableau au format CSV</a><br><br>');
+		echo '</tbody>';
+		echo '</table>';
+		echo '<a href=\'./csv/req5.csv\'>Exporter le tableau au format CSV</a><br><br>';
   }
 	
 	//Tableau de résultats requête 6
   if ($reqt == "req6") {
 		//Intitulé
-		echo('<br><b>6. Portail ou Collection : Nombre de publications de type communications par éditeur</b><br><br>');
+		echo '<br><strong>6. Portail ou Collection : Nombre de publications de type communications par éditeur</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre de communications par éditeur pour une année donnée. Ne sont représentés que les principaux éditeurs et les dépôts HAL ayant un DOI. Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ». <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête présente le nombre de communications par éditeur pour une année donnée. Ne sont représentés que les principaux éditeurs et les dépôts HAL ayant un DOI. Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ». <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		//Export CSV
     $Fnm = "./csv/req6.csv";
@@ -2028,58 +2052,58 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			$team = strtolower($LAB_SECT[0]["secteur"]);
 		}
 		$spefq = "&fq=-submitType_s:annex";
-		extractHALnbPubEd($team, $year, "COMM", $spefq, $nbTotArt, $nbPubEdRE);
+		extractHALnbPubEd($team, $year, "COMM", $spefq, $nbTotArt, $nbPubEdRE, $cstCA);
 		//var_dump($nbPubEdRE);
 		//Affichage
-    echo ('<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:70%;">');
-    echo ('<thead>');
-    echo ('<tr>');
-   	echo ('<th scope="col" style="text-align:left"><b>Regroupement éditorial</b></th>');
-		echo ('<th scope="col" style="text-align:left"><b>Publications</b></th>');
-		echo ('<th scope="col" style="text-align:left"><b>% articles</b></th>');
+    echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:70%;">';
+    echo '<thead>';
+    echo '<tr>';
+   	echo $cstRED;
+		echo $cstPUB;
+		echo $cstART;
     $chaine = "Regroupement éditorial;Publications;% articles;";
-    echo ('</tr>');
+    echo '</tr>';
     $chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
-		echo ('</thead>');
-		echo ('<tbody>');
+		echo '</thead>';
+		echo '<tbody>';
     for ($i=0; $i<count($nbPubEdRE); $i++) {
-			echo ('<tr>');
+			echo '<tr>';
 			if ($nbPubEdRE[$i]["editeur_ng"] == "Hors regroupement éditorial") {
-				$deb = "<i>";
-				$fin = "</i>";
+				$deb = "<em>";
+				$fin = "</em>";
 			}else{
 				$deb = "";
 				$fin = "";
 			}
-			echo ('<td>');
-			echo ($deb.$nbPubEdRE[$i]["editeur_ng"].$fin);
-			echo ('</td>');
-			echo ('<td>');
-			echo ($nbPubEdRE[$i]["nbArt"]);
-			echo ('</td>');
-			echo ('<td>');
+			echo '<td>';
+			echo $deb.$nbPubEdRE[$i]["editeur_ng"].$fin;
+			echo '</td>';
+			echo '<td>';
+			echo $nbPubEdRE[$i]["nbArt"];
+			echo '</td>';
+			echo '<td>';
 			$pcentArt = ($nbTotArt != 0) ? number_format($nbPubEdRE[$i]["nbArt"]*100/$nbTotArt, 1) : 0;
 			echo $pcentArt;
-			echo ('%</td>');
-			echo ('</tr>');
+			echo '%</td>';
+			echo '</tr>';
 			$chaine = $nbPubEdRE[$i]["editeur_ng"].";".$nbPubEdRE[$i]["nbArt"].";".$pcentArt.";";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
 		}
-		echo ('</tbody>');
-		echo ('</table>');
-		echo ('<a href=\'./csv/req6.csv\'>Exporter le tableau au format CSV</a><br><br>');
+		echo '</tbody>';
+		echo '</table>';
+		echo '<a href=\'./csv/req6.csv\'>Exporter le tableau au format CSV</a><br><br>';
   }
 	
 	//Tableau de résultats requête 7
   if ($reqt == "req7") {
 		//Intitulé
-		echo('<br><b>7. Portail ou Collection : Nombre de publications (articles de revue) par revue</b><br><br>');
+		echo '<br><strong>7. Portail ou Collection : Nombre de publications (articles de revue) par revue</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles présents dans le portail ou la collection, avec ou sans texte intégral, par revue. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles présents dans le portail ou la collection, avec ou sans texte intégral, par revue. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		//Export CSV
     $Fnm = "./csv/req7.csv";
@@ -2095,28 +2119,28 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		}
 		
 		$urlHAL = "https://api.archives-ouvertes.fr/search/".$team."/?q=*%3A*&rows=0&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=producedDateY_i:".$year;
-		askCurl($urlHAL, $arrayCurl);
+		askCurl($urlHAL, $arrayCurl, $cstCA);
 		$nbTotArt = $arrayCurl["response"]["numFound"];
 		$pivot = "journalTitle_s,journalPublisher_s,journalValid_s";
 		
 		//Affichage
-		echo ('<div id="cpt"></div>');
-		echo ('<b>'.$nbTotArt.' publications :</b>');
-    echo ('<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">');
-    echo ('<thead>');
-    echo ('<tr>');
-   	echo ('<th scope="col" style="text-align:left"><b>Revues</b></th>');
-		echo ('<th scope="col" style="text-align:left"><b>Publications</b></th>');
-		echo ('<th scope="col" style="text-align:left"><b>% articles</b></th>');
-		echo ('<th scope="col" style="text-align:left"><b>Editeurs</b></th>');
-		echo ('<th scope="col" style="text-align:left"><b># texte intégral déposé dans HAL</b></th>');
-		echo ('<th scope="col" style="text-align:left"><b>% texte intégral déposé dans HAL</b></th>');
+		echo '<div id="cpt"></div>';
+		echo '<strong>'.$nbTotArt.' publications :</strong>';
+    echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">';
+    echo '<thead>';
+    echo '<tr>';
+   	echo '<th scope="col" style="text-align:left"><strong>Revues</strong></th>';
+		echo $cstPUB;
+		echo $cstART;
+		echo '<th scope="col" style="text-align:left"><strong>Editeurs</strong></th>';
+		echo '<th scope="col" style="text-align:left"><strong># texte intégral déposé dans HAL</strong></th>';
+		echo '<th scope="col" style="text-align:left"><strong>% texte intégral déposé dans HAL</strong></th>';
 		$chaine = "Revues;Publications;% articles;Editeur;# texte intégral déposé dans HAL;% texte intégral déposé dans HAL;";
-    echo ('</tr>');
+    echo '</tr>';
     $chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
-		echo ('</thead>');
-		echo ('<tbody>');
+		echo '</thead>';
+		echo '<tbody>';
 		$rows = count($arrayCurl["facet_counts"]["facet_pivot"][$pivot]);
 		for ($i=0; $i<count($arrayCurl["facet_counts"]["facet_pivot"][$pivot]); $i++) {
 		//$rows = 10;//Pour limiter les résultats de la requête
@@ -2128,54 +2152,54 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			if ($valid == "oui") {
 				$nbTotArtTI = 0;
 				$urlTitle = "https://api.archives-ouvertes.fr/search/".$team."/?q=*%3A*&rows=0&indent=true&wt=xml&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=submitType_s:file&fq=docType_s:ART&fq=journalTitle_s:%22".$jTitle."%22&fq=producedDateY_i:".$year;
-				$nbTotArtTI = askCurlNF($urlTitle);
-				echo ('<tr>');
+				$nbTotArtTI = askCurlNF($urlTitle, $cstCA);
+				echo '<tr>';
 				$nbTotArti = $arrayCurl["facet_counts"]["facet_pivot"][$pivot][$i]["count"];
 				$somme += $nbTotArti;
-				echo ('<td>'. $arrayCurl["facet_counts"]["facet_pivot"][$pivot][$i]["value"].'</td>');
-				echo ('<td>'. $nbTotArti.'</td>');
+				echo '<td>'. $arrayCurl["facet_counts"]["facet_pivot"][$pivot][$i]["value"].'</td>';
+				echo '<td>'. $nbTotArti.'</td>';
 				$pcentArt = ($nbTotArt != 0) ? number_format($nbTotArti*100/$nbTotArt, 2) : 0;
-				echo ('<td>'.$pcentArt.'%</td>');
+				echo '<td>'.$pcentArt.'%</td>';
 				$editeur = "-";
 				if (isset($arrayCurl["facet_counts"]["facet_pivot"][$pivot][$i]["pivot"][0]["value"])) {$editeur = $arrayCurl["facet_counts"]["facet_pivot"][$pivot][$i]["pivot"][0]["value"];}
-				echo ('<td>'. $editeur.'</td>');
-				echo ('<td>'.$nbTotArtTI.'</td>');
+				echo '<td>'. $editeur.'</td>';
+				echo '<td>'.$nbTotArtTI.'</td>';
 				$pcentArtTI = ($nbTotArti != 0) ? number_format($nbTotArtTI*100/$nbTotArti, 1) : 0;
-				echo ('<td>'.$pcentArtTI.'%</td>');
+				echo '<td>'.$pcentArtTI.'%</td>';
 				$chaine = $arrayCurl["facet_counts"]["facet_pivot"][$pivot][$i]["value"].";";
 				$chaine .= $nbTotArti.";";
 				$chaine .= $pcentArt.";";
 				$chaine .= $editeur.";";
 				$chaine .= $nbTotArtTI.";";
 				$chaine .= $pcentArtTI.";";
-				echo ('</tr>');
+				echo '</tr>';
 				$chaine .= chr(13).chr(10);
 				fwrite($inF,$chaine);
 			}
 		}
-		echo ('</tbody>');
-		echo ('</table>');
-		echo ('<script>');
-		echo ('  document.getElementById("cpt").style.display = "none";');
-		echo ('</script>');
-		//echo ($somme.'<br>');
-		echo ('<a href=\'./csv/req7.csv\'>Exporter le tableau au format CSV</a><br><br>');
+		echo '</tbody>';
+		echo '</table>';
+		echo '<script>';
+		echo '  document.getElementById("cpt").style.display = "none";';
+		echo '</script>';
+		//echo $somme.'<br>';
+		echo '<a href=\'./csv/req7.csv\'>Exporter le tableau au format CSV</a><br><br>';
 	}
 
 	//Tableau de résultats requêtes 8 et 9 > seuls les pourcentages finaux représentent des indices différents
   if ($reqt == "req8" || $reqt == "req9") {
 		if ($reqt == "req8") {
 			//Intitulé
-			echo('<br><b>8. Portail : Pourcentage par secteur des articles de tel éditeur</b><br><br>');
+			echo '<br><strong>8. Portail : Pourcentage par secteur des articles de tel éditeur</strong><br><br>';
 			
 			//Descriptif
-			echo('<div style="background-color:#f5f5f5">Requête masquée : abandon car on dépasse les limites d’exécution du script.</div><br>');
+			echo '<div style="background-color:#f5f5f5">Requête masquée : abandon car on dépasse les limites d’exécution du script.</div><br>';
 		}else{
 			//Intitulé
-			echo('<br><b>9. Portail : Pourcentage par éditeur des articles de tel secteur</b><br><br>');
+			echo '<br><strong>9. Portail : Pourcentage par éditeur des articles de tel secteur</strong><br><br>';
 			
 			//Descriptif
-			echo('<div style="background-color:#f5f5f5">Requête masquée : abandon car on dépasse les limites d’exécution du script.</div><br>');
+			echo '<div style="background-color:#f5f5f5">Requête masquée : abandon car on dépasse les limites d’exécution du script.</div><br>';
 		}
 		
     //Export CSV
@@ -2188,10 +2212,10 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		($reqt == "req8") ? $year = $annee8 : $year = $annee9;
 		
 		$chaine = "";
-		echo ('<table class="table table-striped table-hover table-responsive table-bordered">');
-    echo ('<thead>');
-    echo ('<tr>');
-    echo ('<th scope="col">Articles '.$year.' '.$LAB_SECT[0]['code_secteur'].' par regroupement éditorial</th>');
+		echo '<table class="table table-striped table-hover table-responsive table-bordered">';
+    echo '<thead>';
+    echo '<tr>';
+    echo '<th scope="col">Articles '.$year.' '.$LAB_SECT[0]['code_secteur'].' par regroupement éditorial</th>';
 		$chaine .= 'Articles '.$year.' '.$LAB_SECT[0]['code_secteur'].' par regroupement éditorial;';
 		$ils = 1;
     $sect = array();
@@ -2206,7 +2230,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     while (isset($LAB_SECT[$ils]["secteur"])) {
 			$sectF = $LAB_SECT[$ils]["secteur"];
 			if ($sectI != $sectF && isset($port) && $port != "choix") {//Secteur à afficher
-				echo ('<th scope="col" colspan="2" style="text-align:center">'.$sectI.'</th>');
+				echo '<th scope="col" colspan="2" style="text-align:center">'.$sectI.'</th>';
 				$chaine .= $sectI.";;";
 				$sect[$is] = $sectI;
 				$sectI = $sectF;
@@ -2217,7 +2241,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		
 		//Dernier secteur à afficher
     if (isset($port) && $port != "choix") {
-      echo ('<th scope="col" colspan="2" style="text-align:center">'.$sectF.'</th>');
+      echo '<th scope="col" colspan="2" style="text-align:center">'.$sectF.'</th>';
       $chaine .= $sectF.";;";
       $sect[$is] = $sectF;
       $is++;
@@ -2229,11 +2253,11 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		
 		//Code portail à afficher
 		if (isset($port) && $port != "choix") {
-      echo ('<th scope="col" colspan="2" style="text-align:center">'.$LAB_SECT[0]['code_secteur'].'</th>');
+      echo '<th scope="col" colspan="2" style="text-align:center">'.$LAB_SECT[0]['code_secteur'].'</th>';
 			$chaine .= $LAB_SECT[0]['code_secteur'].";;";
 		}
 		
-		echo ('</tr>');
+		echo '</tr>';
     $chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
 		
@@ -2255,8 +2279,10 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
 			curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
-			curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
+			if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+				curl_setopt($ch, CURLOPT_CAINFO, $cstCA);
+			}
 			$json = curl_exec($ch);
 			curl_close($ch);
 			
@@ -2302,7 +2328,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		while (isset($LAB_SECT[$ils]["secteur"])) {
 			$code_collection = strtoupper($LAB_SECT[$ils]["code_collection"]);
 			$urlHAL = "https://api.archives-ouvertes.fr/search/".$code_collection."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:ART&fq=-status_i=111";
-			$qteArt = askCurlNF($urlHAL);
+			$qteArt = askCurlNF($urlHAL, $cstCA);
 			if (isset($resHAL["Hors regroupement éditorial"][$LAB_SECT[$ils]["secteur"]])) {
 				$resHAL["Hors regroupement éditorial"][$LAB_SECT[$ils]["secteur"]] += intval($qteArt);
 			}else{
@@ -2329,57 +2355,57 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		//Construction du tableau
 		//Totaux par secteur tout éditeur confondu
 		$chaine = "";
-		echo ('<tr>');
-    echo ('<th scope="col">TOTAL</th>');
+		echo '<tr>';
+    echo '<th scope="col">TOTAL</th>';
 		$chaine .= "TOTAL;";
 		foreach ($totSect as $key => $val) {
-			echo ('<th scope="col">'.$val.'</th>');
+			echo '<th scope="col">'.$val.'</th>';
 			($reqt == "req8") ? $pcent = 100 : $pcent = ($val * 100) / $totSect[$LAB_SECT[0]['secteur']];
-			echo ('<th scope="col">'.number_format($pcent, 1).'%</th>');
+			echo '<th scope="col">'.number_format($pcent, 1).'%</th>';
 			($reqt == "req8") ? $chaine .= $val.";".number_format($pcent, 1).";" : $chaine .= $val.";".number_format($pcent, 1)."%;";
 		}
-		echo ('</th>');
-		echo ('</tr>');
+		echo '</th>';
+		echo '</tr>';
 		$chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
 		
 		//Totaux par secteur et par éditeur
 		foreach ($resHAL as $key1 => $val1) {
 			$chaine = "";
-			echo ('<tr>');
-			echo ('<td scope="row">'.$key1.'</td>');
+			echo '<tr>';
+			echo '<td scope="row">'.$key1.'</td>';
 			$chaine .= str_replace(";", "-", $key1).";";
 			foreach ($sect as $key2 => $val2) {
 				if (isset($val1[$val2]) && $val1[$LAB_SECT[0]['secteur']] != 0) {
-					echo ('<td scope="row">'.$val1[$val2].'</td>');
+					echo '<td scope="row">'.$val1[$val2].'</td>';
 					$chaine .= $val1[$val2].";";
 					($reqt == "req8") ? $pcent = ($val1[$val2] * 100) / $totSect[$val2] : $pcent = ($val1[$val2] * 100) / $val1[$LAB_SECT[0]['secteur']];
 				}else{
-					echo ('<td scope="row">0</td>');
+					echo '<td scope="row">0</td>';
 					$chaine .= "0;";
 					$pcent = 0;
 				}
-				echo ('<td scope="row">'.number_format($pcent, 1).'%</td>');
+				echo '<td scope="row">'.number_format($pcent, 1).'%</td>';
 				$chaine .= number_format($pcent, 1)."%;";
 			}
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
 		}
 		
-		echo ('</table>');
+		echo '</table>';
     ($reqt == "req8") ? $nf = "req8" : $nf = "req9";
-		echo ('<a href=\'./csv/'.$nf.'.csv\'>Exporter le tableau au format CSV</a><br><br>');
+		echo '<a href=\'./csv/'.$nf.'.csv\'>Exporter le tableau au format CSV</a><br><br>';
 		//var_dump($resHAL);	
 	}
 	
 	//Tableau de résultats requête 10
   if ($reqt == "req10") {
 		//Intitulé
-		echo('<br><b>10. Collection : Nombre d\'articles sans texte intégral déposé dans HAL par éditeur</b><br><br>');
+		echo '<br><strong>10. Collection : Nombre d\'articles sans texte intégral déposé dans HAL par éditeur</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles de revue, sans texte intégral, par éditeur et pour une année donnée. Ne sont représentés que les principaux éditeurs et les articles HAL ayant un DOI (à l’exception des éditeurs Dalloz et Lextenso). Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ».  <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles de revue, sans texte intégral, par éditeur et pour une année donnée. Ne sont représentés que les principaux éditeurs et les articles HAL ayant un DOI (à l’exception des éditeurs Dalloz et Lextenso). Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ».  <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		//Export CSV
     $Fnm = "./csv/req10.csv";
@@ -2391,52 +2417,52 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$year = $annee10;
 		
 		$spefq = "&fq=submitType_s:notice";
-		extractHALnbPubEd($team, $year, "ART", $spefq, $nbTotArt, $nbPubEdRE);
+		extractHALnbPubEd($team, $year, "ART", $spefq, $nbTotArt, $nbPubEdRE, $cstCA);
 		//var_dump($nbPubEdRE);
 		//Affichage
-    echo ('<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:70%;">');
-    echo ('<thead>');
-    echo ('<tr>');
-   	echo ('<th scope="col" style="text-align:left"><b>Regroupement éditorial</b></th>');
-		echo ('<th scope="col" style="text-align:left"><b>Nombre d\'articles sans texte intégral déposé dans HAL</b></th>');
+    echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:70%;">';
+    echo '<thead>';
+    echo '<tr>';
+   	echo $cstRED;
+		echo '<th scope="col" style="text-align:left"><strong>Nombre d\'articles sans texte intégral déposé dans HAL</strong></th>';
 		$chaine = "Regroupement éditorial;Nombre d'articles sans texte intégral déposé dans HAL;";
-    echo ('</tr>');
+    echo '</tr>';
     $chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
-		echo ('</thead>');
-		echo ('<tbody>');
+		echo '</thead>';
+		echo '<tbody>';
     for ($i=0; $i<count($nbPubEdRE); $i++) {
-			echo ('<tr>');
+			echo '<tr>';
 			if ($nbPubEdRE[$i]["editeur_ng"] == "Hors regroupement éditorial") {
-				$deb = "<i>";
-				$fin = "</i>";
+				$deb = "<em>";
+				$fin = "</em>";
 			}else{
 				$deb = "";
 				$fin = "";
 			}
-			echo ('<td>');
-			echo ($deb.$nbPubEdRE[$i]["editeur_ng"].$fin);
-			echo ('</td>');
-			echo ('<td>');
-			echo ($nbPubEdRE[$i]["nbArt"]);
-			echo ('</td>');
+			echo '<td>';
+			echo $deb.$nbPubEdRE[$i]["editeur_ng"].$fin;
+			echo '</td>';
+			echo '<td>';
+			echo $nbPubEdRE[$i]["nbArt"];
+			echo '</td>';
 			$chaine = $nbPubEdRE[$i]["editeur_ng"].";".$nbPubEdRE[$i]["nbArt"].";";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
 		}
-		echo ('</tbody>');
-		echo ('</table>');
-		echo ('<a href=\'./csv/req10.csv\'>Exporter le tableau au format CSV</a><br><br>');
+		echo '</tbody>';
+		echo '</table>';
+		echo '<a href=\'./csv/req10.csv\'>Exporter le tableau au format CSV</a><br><br>';
   }
 	
 	//Tableau de résultats requête 11
   if ($reqt == "req11") {
 		//Intitulé
-		echo('<br><b>11. Collection : Nombre d\'articles avec texte intégral déposé dans HAL par éditeur</b><br><br>');
+		echo '<br><strong>11. Collection : Nombre d\'articles avec texte intégral déposé dans HAL par éditeur</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles de revue, avec texte intégral, par éditeur et pour une année donnée. Ne sont représentés que les principaux éditeurs et les articles HAL ayant un DOI (à l’exception des éditeurs Dalloz et Lextenso). Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ».  <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles de revue, avec texte intégral, par éditeur et pour une année donnée. Ne sont représentés que les principaux éditeurs et les articles HAL ayant un DOI (à l’exception des éditeurs Dalloz et Lextenso). Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ».  <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		//Export CSV
     $Fnm = "./csv/req11.csv";
@@ -2448,52 +2474,52 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$year = $annee11;
 		
 		$spefq = "&fq=submitType_s:file";
-		extractHALnbPubEd($team, $year, "ART", $spefq, $nbTotArt, $nbPubEdRE);
+		extractHALnbPubEd($team, $year, "ART", $spefq, $nbTotArt, $nbPubEdRE, $cstCA);
 		//var_dump($nbPubEdRE);
 		//Affichage
-    echo ('<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:70%;">');
-    echo ('<thead>');
-    echo ('<tr>');
-   	echo ('<th scope="col" style="text-align:left"><b>Regroupement éditorial</b></th>');
-		echo ('<th scope="col" style="text-align:left"><b>Nombre d\'articles avec texte intégral déposé dans HAL</b></th>');
+    echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:70%;">';
+    echo '<thead>';
+    echo '<tr>';
+   	echo $cstRED;
+		echo '<th scope="col" style="text-align:left"><strong>Nombre d\'articles avec texte intégral déposé dans HAL</strong></th>';
 		$chaine = "Regroupement éditorial;Nombre d'articles avec texte intégral déposé dans HAL;";
-    echo ('</tr>');
+    echo '</tr>';
     $chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
-		echo ('</thead>');
-		echo ('<tbody>');
+		echo '</thead>';
+		echo '<tbody>';
     for ($i=0; $i<count($nbPubEdRE); $i++) {
-			echo ('<tr>');
+			echo '<tr>';
 			if ($nbPubEdRE[$i]["editeur_ng"] == "Hors regroupement éditorial") {
-				$deb = "<i>";
-				$fin = "</i>";
+				$deb = "<em>";
+				$fin = "</em>";
 			}else{
 				$deb = "";
 				$fin = "";
 			}
-			echo ('<td>');
-			echo ($deb.$nbPubEdRE[$i]["editeur_ng"].$fin);
-			echo ('</td>');
-			echo ('<td>');
-			echo ($nbPubEdRE[$i]["nbArt"]);
-			echo ('</td>');
+			echo '<td>';
+			echo $deb.$nbPubEdRE[$i]["editeur_ng"].$fin;
+			echo '</td>';
+			echo '<td>';
+			echo $nbPubEdRE[$i]["nbArt"];
+			echo '</td>';
 			$chaine = $nbPubEdRE[$i]["editeur_ng"].";".$nbPubEdRE[$i]["nbArt"].";";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
 		}
-		echo ('</tbody>');
-		echo ('</table>');
-		echo ('<a href=\'./csv/req11.csv\'>Exporter le tableau au format CSV</a><br><br>');
+		echo '</tbody>';
+		echo '</table>';
+		echo '<a href=\'./csv/req11.csv\'>Exporter le tableau au format CSV</a><br><br>';
   }
 	
 	//Tableau de résultats requête 12
   if ($reqt == "req12") {
 		//Intitulé
-		echo('<br><b>12. Collection : Nombre d\'articles avec texte intégral déposé dans HAL OU lien externe vers PDF en open access par éditeur</b><br><br>');
+		echo '<br><strong>12. Collection : Nombre d\'articles avec texte intégral déposé dans HAL OU lien externe vers PDF en open access par éditeur</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles de revue, avec texte intégral ou avec un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>), par éditeur et pour une année donnée. Ne sont représentés que les principaux éditeurs et les articles HAL ayant un DOI (à l’exception des éditeurs Dalloz et Lextenso). Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ».  <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles de revue, avec texte intégral ou avec un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>), par éditeur et pour une année donnée. Ne sont représentés que les principaux éditeurs et les articles HAL ayant un DOI (à l’exception des éditeurs Dalloz et Lextenso). Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ».  <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		//Export CSV
     $Fnm = "./csv/req12.csv";
@@ -2505,52 +2531,52 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$year = $annee12;
 		
 		$spefq = "&fq=(submitType_s:file%20OR%20linkExtId_s:*)";
-		extractHALnbPubEd($team, $year, "ART", $spefq, $nbTotArt, $nbPubEdRE);
+		extractHALnbPubEd($team, $year, "ART", $spefq, $nbTotArt, $nbPubEdRE, $cstCA);
 		//var_dump($nbPubEdRE);
 		//Affichage
-    echo ('<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:70%;">');
-    echo ('<thead>');
-    echo ('<tr>');
-   	echo ('<th scope="col" style="text-align:left"><b>Regroupement éditorial</b></th>');
-		echo ('<th scope="col" style="text-align:left"><b>Nombre d\'articles avec texte intégral déposé dans HAL OU lien externe vers PDF en open access</b></th>');
+    echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:70%;">';
+    echo '<thead>';
+    echo '<tr>';
+   	echo $cstRED;
+		echo '<th scope="col" style="text-align:left"><strong>Nombre d\'articles avec texte intégral déposé dans HAL OU lien externe vers PDF en open access</strong></th>';
 		$chaine = "Regroupement éditorial;Nombre d'articles avec texte intégral déposé dans HAL OU lien externe vers PDF en open access;";
-    echo ('</tr>');
+    echo '</tr>';
     $chaine .= chr(13).chr(10);
     fwrite($inF,$chaine);
-		echo ('</thead>');
-		echo ('<tbody>');
+		echo '</thead>';
+		echo '<tbody>';
     for ($i=0; $i<count($nbPubEdRE); $i++) {
-			echo ('<tr>');
+			echo '<tr>';
 			if ($nbPubEdRE[$i]["editeur_ng"] == "Hors regroupement éditorial") {
-				$deb = "<i>";
-				$fin = "</i>";
+				$deb = "<em>";
+				$fin = "</em>";
 			}else{
 				$deb = "";
 				$fin = "";
 			}
-			echo ('<td>');
-			echo ($deb.$nbPubEdRE[$i]["editeur_ng"].$fin);
-			echo ('</td>');
-			echo ('<td>');
-			echo ($nbPubEdRE[$i]["nbArt"]);
-			echo ('</td>');
+			echo '<td>';
+			echo $deb.$nbPubEdRE[$i]["editeur_ng"].$fin;
+			echo '</td>';
+			echo '<td>';
+			echo $nbPubEdRE[$i]["nbArt"];
+			echo '</td>';
 			$chaine = $nbPubEdRE[$i]["editeur_ng"].";".$nbPubEdRE[$i]["nbArt"].";";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
 		}
-		echo ('</tbody>');
-		echo ('</table>');
-		echo ('<a href=\'./csv/req12.csv\'>Exporter le tableau au format CSV</a><br><br>');
+		echo '</tbody>';
+		echo '</table>';
+		echo '<a href=\'./csv/req12.csv\'>Exporter le tableau au format CSV</a><br><br>';
   }
 	
 	//Tableau de résultats requête 13
   if ($reqt == "req13") {
 		//Intitulé
-		echo('<br><b>13. Portail ou collection : évolution sur une et trois années</b><br><br>');
+		echo '<br><strong>13. Portail ou collection : évolution sur une et trois années</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête mesure la progression du nombre de dépôts, avec ou sans texte intégral ou avec un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>), sur 1 et 3 années, à partir de l’année de référence saisie par l’utilisateur. La comparaison 1 / 3 ans permet le cas échéant de relativiser une baisse ou une augmentation sur 1 an, afin de vérifier s’il s’agit d’une tendance de fond, ou au contraire d’un changement circonstanciel. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête mesure la progression du nombre de dépôts, avec ou sans texte intégral ou avec un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>), sur 1 et 3 années, à partir de l’année de référence saisie par l’utilisateur. La comparaison 1 / 3 ans permet le cas échéant de relativiser une baisse ou une augmentation sur 1 an, afin de vérifier s’il s’agit d’une tendance de fond, ou au contraire d’un changement circonstanciel. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		function signe($int)
 		{
@@ -2574,7 +2600,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		
     for($year = $anneefin; $year <= $anneedeb; $year++) {
 			if ($year != $annee13 - 2) {
-				extractHAL($team, $year, $reqt, $resHAL);
+				extractHAL($team, $year, $reqt, $resHAL, $cstCA);
 			}
 		}
 		
@@ -2626,81 +2652,81 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$chaine .= chr(13).chr(10);
 		fwrite($inF,$chaine);
 		
-		echo ('<table class="table table-striped table-hover table-responsive table-bordered">');
-		echo ('<thead>');
-		echo ('<tr>');
-		echo ('<th scope="col"><font color="red">'.$team.' - '.$annee13.'</font></th>');
-		echo ('<th scope="col" colspan="2" style="text-align:center">Sur 1 an</th>');
-		echo ('<th scope="col" colspan="2" style="text-align:center">Sur 3 ans</th>');
-		echo ('</tr>');
-    echo ('</thead>');
+		echo '<table class="table table-striped table-hover table-responsive table-bordered">';
+		echo '<thead>';
+		echo '<tr>';
+		echo '<th scope="col"><font color="red">'.$team.' - '.$annee13.'</font></th>';
+		echo '<th scope="col" colspan="2" style="text-align:center">Sur 1 an</th>';
+		echo '<th scope="col" colspan="2" style="text-align:center">Sur 3 ans</th>';
+		echo '</tr>';
+    echo '</thead>';
 		
-		echo ('<tbody>');
+		echo '<tbody>';
 		
 		$chaine = "Publications avec ou sans texte intégral déposé dans HAL;";
-		echo ('<tr>');
-    echo ('<th scope="row">Publications avec ou sans texte intégral déposé dans HAL <a class=info onclick=\'return false\' href="#"><img src="./img/pdi.jpg"><span>Nombre total de publications référencées dans HAL. Une baisse peut signaler soit une baisse de la production, soit une baisse du référencement (dépôt par les auteurs et/ou des intermédiaires), soit le cas échéant un problème de <b>visibilité</b> de la production dans les bases bibliographiques (WoS, Pubmed, Scopus…), qui peut aussi être lié à un problème de <b>signature</b> (affiliation insuffisante ou erronée).</span></a></th>');
+		echo '<tr>';
+    echo '<th scope="row">Publications avec ou sans texte intégral déposé dans HAL <a class=info onclick=\'return false\' href="#"><img src="./img/pdi.jpg"><span>Nombre total de publications référencées dans HAL. Une baisse peut signaler soit une baisse de la production, soit une baisse du référencement (dépôt par les auteurs et/ou des intermédiaires), soit le cas échéant un problème de <strong>visibilité</strong> de la production dans les bases bibliographiques (WoS, Pubmed, Scopus…), qui peut aussi être lié à un problème de <strong>signature</strong> (affiliation insuffisante ou erronée).</span></a></th>';
 		($pct1noavTI > 0) ? $img = './img/hausse.png' : (($pct1noavTI < 0) ? $img = './img/baisse.png' : $img = './img/zero.png');
-		echo ('<th scope="row" style="text-align:center"><img src='.$img.'></th>');
-		echo ('<th scope="row" style="text-align:center">'.signe($pct1noavTI).' %</th>');
+		echo '<th scope="row" style="text-align:center"><img src='.$img.'></th>';
+		echo '<th scope="row" style="text-align:center">'.signe($pct1noavTI).' %</th>';
 		$chaine .= signe($pct1noavTI)."%;";
 		($pct3noavTI > 0) ? $img = './img/hausse.png' : (($pct3noavTI < 0) ? $img = './img/baisse.png' : $img = './img/zero.png');
-		echo ('<th scope="row" style="text-align:center"><img src='.$img.'></th>');
-		echo ('<th scope="row" style="text-align:center">'.signe($pct3noavTI).' %</th>');
+		echo '<th scope="row" style="text-align:center"><img src='.$img.'></th>';
+		echo '<th scope="row" style="text-align:center">'.signe($pct3noavTI).' %</th>';
 		$chaine .= signe($pct3noavTI)."%;";
-		echo ('</tr>');
+		echo '</tr>';
 		$chaine .= chr(13).chr(10);
 		fwrite($inF,$chaine);
 		
 		$chaine = "Publications avec texte intégral déposé dans HAL;";
-		echo ('<tr>');
-    echo ('<th scope="row">Publications avec texte intégral déposé dans HAL</th>');
+		echo '<tr>';
+    echo '<th scope="row">Publications avec texte intégral déposé dans HAL</th>';
 		($pct1avTI > 0) ? $img = './img/hausse.png' : (($pct1avTI < 0) ? $img = './img/baisse.png' : $img = './img/zero.png');
-		echo ('<th scope="row" style="text-align:center"><img src='.$img.'></th>');
-		echo ('<th scope="row" style="text-align:center">'.signe($pct1avTI).' %</th>');
+		echo '<th scope="row" style="text-align:center"><img src='.$img.'></th>';
+		echo '<th scope="row" style="text-align:center">'.signe($pct1avTI).' %</th>';
 		$chaine .= signe($pct1avTI)."%;";
 		($pct3avTI > 0) ? $img = './img/hausse.png' : (($pct3avTI < 0) ? $img = './img/baisse.png' : $img = './img/zero.png');
-		echo ('<th scope="row" style="text-align:center"><img src='.$img.'></th>');
-		echo ('<th scope="row" style="text-align:center">'.signe($pct3avTI).' %</th>');
+		echo '<th scope="row" style="text-align:center"><img src='.$img.'></th>';
+		echo '<th scope="row" style="text-align:center">'.signe($pct3avTI).' %</th>';
 		$chaine .= signe($pct3avTI)."%;";
-		echo ('</tr>');
+		echo '</tr>';
 		$chaine .= chr(13).chr(10);
 		fwrite($inF,$chaine);
 		
 		$chaine = "Publications avec texte intégral déposé dans HAL + lien externe vers PDF en open access;";
-		echo ('<tr>');
-    echo ('<th scope="row">Publications avec texte intégral déposé dans HAL + lien externe vers PDF en open access <a class=info onclick=\'return false\' href="#"><img src="./img/pdi.jpg"><span>Taux global d’open access : texte intégral déposé dans HAL ou référence HAL avec un lien vers un PDF librement disponible hors de HAL (via Unpaywall > https://unpaywall.org/). </span></a></th>');
+		echo '<tr>';
+    echo '<th scope="row">Publications avec texte intégral déposé dans HAL + lien externe vers PDF en open access <a class=info onclick=\'return false\' href="#"><img src="./img/pdi.jpg"><span>Taux global d’open access : texte intégral déposé dans HAL ou référence HAL avec un lien vers un PDF librement disponible hors de HAL (via Unpaywall > https://unpaywall.org/). </span></a></th>';
 		($pct1avTIavOA > 0) ? $img = './img/hausse.png' : (($pct1avTIavOA < 0) ? $img = './img/baisse.png' : $img = './img/zero.png');
-		echo ('<th scope="row" style="text-align:center"><img src='.$img.'></th>');
-		echo ('<th scope="row" style="text-align:center">'.signe($pct1avTIavOA).' %</th>');
+		echo '<th scope="row" style="text-align:center"><img src='.$img.'></th>';
+		echo '<th scope="row" style="text-align:center">'.signe($pct1avTIavOA).' %</th>';
 		$chaine .= signe($pct1avTIavOA)."%;";
 		($pct3avTIavOA > 0) ? $img = './img/hausse.png' : (($pct3avTIavOA < 0) ? $img = './img/baisse.png' : $img = './img/zero.png');
-		echo ('<th scope="row" style="text-align:center"><img src='.$img.'></th>');
-		echo ('<th scope="row" style="text-align:center">'.signe($pct3avTIavOA).' %</th>');
+		echo '<th scope="row" style="text-align:center"><img src='.$img.'></th>';
+		echo '<th scope="row" style="text-align:center">'.signe($pct3avTIavOA).' %</th>';
 		$chaine .= signe($pct3avTIavOA)."%;";
-		echo ('</tr>');
+		echo '</tr>';
 		$chaine .= chr(13).chr(10);
 		fwrite($inF,$chaine);
 		
 		$chaine = "Publications sans texte intégral déposé dans HAL + lien externe vers PDF en open access;";
-		echo ('<tr>');
-    echo ('<th scope="row">Publications sans texte intégral déposé dans HAL + lien externe vers PDF en open access <a class=info onclick=\'return false\' href="#"><img src="./img/pdi.jpg"><span>Références HAL sans texte intégral, mais avec un lien vers l’article en open access sur le site de la revue. Une baisse peut simplement signifier que les auteurs ont ajouté massivement dans HAL le PDF de ces articles. Une hausse peut également signifier un recours accru à la publication dans des revues en open access, et/ou au paiement de frais de mise en open access des articles.</span></a></th>');
+		echo '<tr>';
+    echo '<th scope="row">Publications sans texte intégral déposé dans HAL + lien externe vers PDF en open access <a class=info onclick=\'return false\' href="#"><img src="./img/pdi.jpg"><span>Références HAL sans texte intégral, mais avec un lien vers l’article en open access sur le site de la revue. Une baisse peut simplement signifier que les auteurs ont ajouté massivement dans HAL le PDF de ces articles. Une hausse peut également signifier un recours accru à la publication dans des revues en open access, et/ou au paiement de frais de mise en open access des articles.</span></a></th>';
 		($pct1noTIavOA > 0) ? $img = './img/hausse.png' : (($pct1noTIavOA < 0) ? $img = './img/baisse.png' : $img = './img/zero.png');
-		echo ('<th scope="row" style="text-align:center"><img src='.$img.'></th>');
-		echo ('<th scope="row" style="text-align:center">'.signe($pct1noTIavOA).' %</th>');
+		echo '<th scope="row" style="text-align:center"><img src='.$img.'></th>';
+		echo '<th scope="row" style="text-align:center">'.signe($pct1noTIavOA).' %</th>';
 		$chaine .= signe($pct1noTIavOA)."%;";
 		($pct3noTIavOA > 0) ? $img = './img/hausse.png' : (($pct3noTIavOA < 0) ? $img = './img/baisse.png' : $img = './img/zero.png');
-		echo ('<th scope="row" style="text-align:center"><img src='.$img.'></th>');
-		echo ('<th scope="row" style="text-align:center">'.signe($pct3noTIavOA).' %</th>');
+		echo '<th scope="row" style="text-align:center"><img src='.$img.'></th>';
+		echo '<th scope="row" style="text-align:center">'.signe($pct3noTIavOA).' %</th>';
 		$chaine .= signe($pct3noTIavOA)."%;";
-		echo ('</tr>');
+		echo '</tr>';
 		$chaine .= chr(13).chr(10);
 		fwrite($inF,$chaine);
 		
-		echo ('</tbody>');
-		echo ('</table>');
+		echo '</tbody>';
+		echo '</table>';
 		
-    echo ('<a href=\'./csv/req13a.csv\'>Exporter le tableau au format CSV</a><br><br>');
+    echo '<a href=\'./csv/req13a.csv\'>Exporter le tableau au format CSV</a><br><br>';
 		
 		
 		//Valeurs
@@ -2718,7 +2744,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		
     for($year = $anneefin; $year <= $anneedeb; $year++) {
 			if ($year != $annee13 - 2) {
-				extractHAL($team, $year, $reqt, $resHAL);
+				extractHAL($team, $year, $reqt, $resHAL, $cstCA);
 			}
 		}
 		
@@ -2728,84 +2754,84 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$chaine .= chr(13).chr(10);
 		fwrite($inF,$chaine);
 		
-		echo ('<table class="table table-striped table-hover table-responsive table-bordered">');
-		echo ('<thead>');
-		echo ('<tr>');
-		echo ('<th scope="col"><font color="red">'.$team.' - '.$annee13.'</font></th>');
-		echo ('<th scope="col" style="text-align:center">'.($annee13 - 3).'</th>');
-		echo ('<th scope="col" style="text-align:center">'.($annee13 - 1).'</th>');
-		echo ('<th scope="col" style="text-align:center">'.$annee13.'</th>');
-		echo ('</tr>');
-    echo ('</thead>');
+		echo '<table class="table table-striped table-hover table-responsive table-bordered">';
+		echo '<thead>';
+		echo '<tr>';
+		echo '<th scope="col"><font color="red">'.$team.' - '.$annee13.'</font></th>';
+		echo '<th scope="col" style="text-align:center">'.($annee13 - 3).'</th>';
+		echo '<th scope="col" style="text-align:center">'.($annee13 - 1).'</th>';
+		echo '<th scope="col" style="text-align:center">'.$annee13.'</th>';
+		echo '</tr>';
+    echo '</thead>';
 		
-		echo ('<tbody>');
+		echo '<tbody>';
 		
 		$chaine = "Publications avec ou sans texte intégral déposé dans HAL;";
-		echo ('<tr>');
-    echo ('<th scope="row">Publications avec ou sans texte intégral déposé dans HAL</th>');
-		echo ('<th scope="row" style="text-align:center">'.($resHAL[$annee13-3][$team]["nfPronoTI"] + $resHAL[$annee13-3][$team]["nfProavTI"]).'</th>');
+		echo '<tr>';
+    echo '<th scope="row">Publications avec ou sans texte intégral déposé dans HAL</th>';
+		echo '<th scope="row" style="text-align:center">'.($resHAL[$annee13-3][$team]["nfPronoTI"] + $resHAL[$annee13-3][$team]["nfProavTI"]).'</th>';
 		$chaine .= ($resHAL[$annee13-3][$team]["nfPronoTI"] + $resHAL[$annee13-3][$team]["nfProavTI"]).";";
-		echo ('<th scope="row" style="text-align:center">'.($resHAL[$annee13-1][$team]["nfPronoTI"] + $resHAL[$annee13-1][$team]["nfProavTI"]).'</th>');
+		echo '<th scope="row" style="text-align:center">'.($resHAL[$annee13-1][$team]["nfPronoTI"] + $resHAL[$annee13-1][$team]["nfProavTI"]).'</th>';
 		$chaine .= ($resHAL[$annee13-1][$team]["nfPronoTI"] + $resHAL[$annee13-1][$team]["nfProavTI"]).";";
-		echo ('<th scope="row" style="text-align:center">'.($resHAL[$annee13][$team]["nfPronoTI"] + $resHAL[$annee13][$team]["nfProavTI"]).'</th>');
+		echo '<th scope="row" style="text-align:center">'.($resHAL[$annee13][$team]["nfPronoTI"] + $resHAL[$annee13][$team]["nfProavTI"]).'</th>';
 		$chaine .= ($resHAL[$annee13][$team]["nfPronoTI"] + $resHAL[$annee13][$team]["nfProavTI"]).";";
-		echo ('</tr>');
+		echo '</tr>';
 		$chaine .= chr(13).chr(10);
 		fwrite($inF,$chaine);
 		
 		$chaine = "Publications avec texte intégral déposé dans HAL;";
-		echo ('<tr>');
-    echo ('<th scope="row">Publications avec texte intégral déposé dans HAL</th>');		
-		echo ('<th scope="row" style="text-align:center">'.$resHAL[$annee13-3][$team]["nfProavTI"].'</th>');
+		echo '<tr>';
+    echo '<th scope="row">Publications avec texte intégral déposé dans HAL</th>';		
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-3][$team]["nfProavTI"].'</th>';
 		$chaine .= $resHAL[$annee13-3][$team]["nfProavTI"].";";
-		echo ('<th scope="row" style="text-align:center">'.$resHAL[$annee13-1][$team]["nfProavTI"].'</th>');
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-1][$team]["nfProavTI"].'</th>';
 		$chaine .= $resHAL[$annee13-1][$team]["nfProavTI"].";";
-		echo ('<th scope="row" style="text-align:center">'.$resHAL[$annee13][$team]["nfProavTI"].'</th>');
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13][$team]["nfProavTI"].'</th>';
 		$chaine .= $resHAL[$annee13][$team]["nfProavTI"].";";
-		echo ('</tr>');
+		echo '</tr>';
 		$chaine .= chr(13).chr(10);
 		fwrite($inF,$chaine);
 		
 		$chaine = "Publications avec texte intégral déposé dans HAL + lien externe vers PDF en open access;";
-		echo ('<tr>');
-    echo ('<th scope="row">Publications avec texte intégral déposé dans HAL + lien externe vers PDF en open access</th>');
-		echo ('<th scope="row" style="text-align:center">'.$resHAL[$annee13-3][$team]["nfProavTIavOA"].'</th>');
+		echo '<tr>';
+    echo '<th scope="row">Publications avec texte intégral déposé dans HAL + lien externe vers PDF en open access</th>';
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-3][$team]["nfProavTIavOA"].'</th>';
 		$chaine .= $resHAL[$annee13-3][$team]["nfProavTIavOA"].";";
-		echo ('<th scope="row" style="text-align:center">'.$resHAL[$annee13-1][$team]["nfProavTIavOA"].'</th>');
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-1][$team]["nfProavTIavOA"].'</th>';
 		$chaine .= $resHAL[$annee13-1][$team]["nfProavTIavOA"].";";
-		echo ('<th scope="row" style="text-align:center">'.$resHAL[$annee13][$team]["nfProavTIavOA"].'</th>');
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13][$team]["nfProavTIavOA"].'</th>';
 		$chaine .= $resHAL[$annee13][$team]["nfProavTIavOA"].";";
-		echo ('</tr>');
+		echo '</tr>';
 		$chaine .= chr(13).chr(10);
 		fwrite($inF,$chaine);
 		
 		$chaine = "Publications sans texte intégral déposé dans HAL + lien externe vers PDF en open access;";
-		echo ('<tr>');
-    echo ('<th scope="row">Publications sans texte intégral déposé dans HAL + lien externe vers PDF en open access</th>');
-		echo ('<th scope="row" style="text-align:center">'.$resHAL[$annee13-3][$team]["nfPronoTIavOA"].'</th>');
+		echo '<tr>';
+    echo '<th scope="row">Publications sans texte intégral déposé dans HAL + lien externe vers PDF en open access</th>';
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-3][$team]["nfPronoTIavOA"].'</th>';
 		$chaine .= $resHAL[$annee13-3][$team]["nfPronoTIavOA"].";";
-		echo ('<th scope="row" style="text-align:center">'.$resHAL[$annee13-1][$team]["nfPronoTIavOA"].'</th>');
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-1][$team]["nfPronoTIavOA"].'</th>';
 		$chaine .= $resHAL[$annee13-1][$team]["nfPronoTIavOA"].";";
-		echo ('<th scope="row" style="text-align:center">'.$resHAL[$annee13][$team]["nfPronoTIavOA"].'</th>');
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13][$team]["nfPronoTIavOA"].'</th>';
 		$chaine .= $resHAL[$annee13][$team]["nfPronoTIavOA"].";";
-		echo ('</tr>');
+		echo '</tr>';
 		$chaine .= chr(13).chr(10);
 		fwrite($inF,$chaine);
 		
-		echo ('</tbody>');
-		echo ('</table>');
+		echo '</tbody>';
+		echo '</table>';
 		
-    echo ('<a href=\'./csv/req13b.csv\'>Exporter le tableau au format CSV</a><br><br>');
+    echo '<a href=\'./csv/req13b.csv\'>Exporter le tableau au format CSV</a><br><br>';
   }
   //var_dump($resHAL);
 	
 	//Tableau de résultats requête 14
   if ($reqt == "req14") {
 		//Intitulé
-		echo('<br><b>14. Collection : Nombre de projets ANR</b><br><br>');
+		echo '<br><strong>14. Collection : Nombre de projets ANR</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête présente la liste des projets ANR d’une collection, avec pour chaque projet le nombre et la liste des publications HAL. En fin de tableau figurent sous la mention « à compléter » les projets mentionnés dans le champ « financement » des dépôts HAL mais pour lesquels il manque la forme validée du référentiel*. Cette requête ne prend en effet en compte que les projets référencés dans le champ ANR des dépôts HAL. <a href="#DT">Voir détails techniques en bas de page</a>.<br><br><i>(*) : Vous pouvez ainsi rechercher dans la collection HAL les notices concernées (recherche avancée dans le champ « financement »), et compléter les projets manquants dans le champ ANR.</i></div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête présente la liste des projets ANR d’une collection, avec pour chaque projet le nombre et la liste des publications HAL. En fin de tableau figurent sous la mention « à compléter » les projets mentionnés dans le champ « financement » des dépôts HAL mais pour lesquels il manque la forme validée du référentiel*. Cette requête ne prend en effet en compte que les projets référencés dans le champ ANR des dépôts HAL. <a href="#DT">Voir détails techniques en bas de page</a>.<br><br><em>(*) : Vous pouvez ainsi rechercher dans la collection HAL les notices concernées (recherche avancée dans le champ « financement »), et compléter les projets manquants dans le champ ANR.</em></div><br>';
 		
 		//Export CSV
     $Fnm = "./csv/req14.csv";
@@ -2820,9 +2846,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
 			$urlANR = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=anrProjectId_i,anrProjectAcronym_s,funding_s,anrProjectId_i,anrProjectReference_s&rows=10000";
-			askCurl($urlANR, $arrayCurl);
+			askCurl($urlANR, $arrayCurl, $cstCA);
 			$nbTotANR = $arrayCurl["response"]["numFound"];
-			//echo ('<br>Total potentiel de '.$nbTotANR.' projets ANR pour '.$team.' en '.$year.'.');
+			//echo '<br>Total potentiel de '.$nbTotANR.' projets ANR pour '.$team.' en '.$year.'.');
 			
 			$i = 0;
 			while (isset($arrayCurl["response"]["docs"][$i])) {
@@ -2842,7 +2868,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 							//Nombre total de publications pour ce projet et cette année
 							if (isset($arrayCurl["response"]["docs"][$i]["anrProjectId_i"][$k])) {
 								$urlPub = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fq=anrProjectId_i:".$arrayCurl["response"]["docs"][$i]["anrProjectId_i"][$k]."&rows=10000";
-								askCurl($urlPub, $arrayPub);
+								askCurl($urlPub, $arrayPub, $cstCA);
 								$nbTotPub = $arrayPub["response"]["numFound"];
 								$resANR["Nombre"][$nbANR] = $nbTotPub;
 								//Liste des publications
@@ -2873,7 +2899,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 								$j = 0;
 								while (isset($ANRTab[$j])) {
 									if (strpos($ANRTab[$j], "ANR-") !== false) {//Affichage de la référence
-										//echo ('<tr><td>'.$nbANR.'</td><td>'.$ANRTab[$j].'</td><td>-</td><td>-</td><td>-</td></tr>');
+										//echo '<tr><td>'.$nbANR.'</td><td>'.$ANRTab[$j].'</td><td>-</td><td>-</td><td>-</td></tr>';
 										$resANR["Reference"][$nbANR] = $ANRTab[$j];
 										$resANR["Acronyme"][$nbANR] = "Zzz: à compléter";
 										$resANR["Nombre"][$nbANR] = "-";
@@ -2892,23 +2918,23 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				$i++;
 			}
 		}
-		echo ('<tbody>');
+		echo '<tbody>';
 		//var_dump($resANR);
 		if (count($resANR) > 0) {//Au moins 1 résultat
 			//Début de l'affichage
-			echo ('<br><table class="table table-striped table-hover table-responsive table-bordered">');
-			echo ('<thead>');
-			echo ('<tr>');
-			echo ('<th scope="col" style="text-align:left"></th>');
-			echo ('<th scope="col" style="text-align:left"><b>Acronyme</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>Référence du projet ANR</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>Nombre de dépôts HAL contenant cette référence</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>Liste des publications</b></th>');
+			echo '<br><table class="table table-striped table-hover table-responsive table-bordered">';
+			echo '<thead>';
+			echo '<tr>';
+			echo '<th scope="col" style="text-align:left"></th>';
+			echo '<th scope="col" style="text-align:left"><strong>Acronyme</strong></th>';
+			echo '<th scope="col" style="text-align:left"><strong>Référence du projet ANR</strong></th>';
+			echo '<th scope="col" style="text-align:left"><strong>Nombre de dépôts HAL contenant cette référence</strong></th>';
+			echo '<th scope="col" style="text-align:left"><strong>Liste des publications</strong></th>';
 			$chaine = "Acronyme;Référence du projet;Nombre de dépôts HAL contenant cette référence;Liste des publications;";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
-			echo ('</thead>');
+			echo '</thead>';
 		
 			//Classement du tableau par ordre alphabétique des acronymes puis affichage
 			array_multisort($resANR["Acronyme"], SORT_ASC, SORT_FLAG_CASE, $resANR["Reference"], $resANR["Nombre"], $resANR["Liste"], $resANR["ListeCSV"]);
@@ -2939,36 +2965,36 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			$nbANRfin = 0;
 			while (isset($resANRfin["Reference"][$nbANRfin])) {
 				$idPro = $nbANRfin + 1;
-				echo('<tr><td>'.$idPro.'</td>');
-				echo('<td>'.$resANRfin["Acronyme"][$nbANRfin].'</td>');
+				echo '<tr><td>'.$idPro.'</td>';
+				echo '<td>'.$resANRfin["Acronyme"][$nbANRfin].'</td>';
 				$chaine = $resANRfin["Acronyme"][$nbANRfin].";";
-				echo('<td>'.$resANRfin["Reference"][$nbANRfin].'</td>');
+				echo '<td>'.$resANRfin["Reference"][$nbANRfin].'</td>';
 				$chaine .= $resANRfin["Reference"][$nbANRfin].";";
-				echo('<td>'.$resANRfin["Nombre"][$nbANRfin].'</td>');
+				echo '<td>'.$resANRfin["Nombre"][$nbANRfin].'</td>';
 				$chaine .= $resANRfin["Nombre"][$nbANRfin].";";
-				echo('<td>'.$resANRfin["Liste"][$nbANRfin].'</td></tr>');
+				echo '<td>'.$resANRfin["Liste"][$nbANRfin].'</td></tr>';
 				$listeCSV = substr($resANRfin["ListeCSV"][$nbANRfin], 0, (strlen($resANRfin["ListeCSV"][$nbANRfin]) - 7));
 				$chaine .= str_replace(array('&#x27E8;','&#x27E9;'),array('(',')'), $listeCSV).";";
 				$chaine .= chr(13).chr(10);
 				fwrite($inF,$chaine);
 				$nbANRfin++;
 			}
-			echo ('</tbody>');
-			echo ('</table><br>');
+			echo '</tbody>';
+			echo '</table><br>';
 			
-			echo ('<a href=\'./csv/req14.csv\'>Exporter le tableau au format CSV</a><br><br>');
+			echo '<a href=\'./csv/req14.csv\'>Exporter le tableau au format CSV</a><br><br>';
 		}else{
-			echo ('<b>Aucun résultat</b><br><br>');
+			echo $cstNR;
 		}
   }
 	
 	//Tableau de résultats requête 15
   if ($reqt == "req15") {
 		//Intitulé
-		echo('<br><b>15. Collection : Nombre de projets européens</b><br><br>');
+		echo '<br><strong>15. Collection : Nombre de projets européens</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête présente la liste des projets européens d’une collection, avec pour chaque projet le nombre et la liste des publications HAL. En fin de tableau figurent sous la mention « à compléter » les projets mentionnés dans le champ « financement » des dépôts HAL mais pour lesquels il manque la forme validée du référentiel*. Cette requête ne prend en effet en compte que les projets référencés dans le champ projet européen des dépôts HAL. <a href="#DT">Voir détails techniques en bas de page</a>.<br><br><i>(*) : Vous pouvez ainsi rechercher dans la collection HAL les notices concernées (recherche avancée dans le champ « financement »), et compléter les projets manquants dans le champ ANR.</i></div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête présente la liste des projets européens d’une collection, avec pour chaque projet le nombre et la liste des publications HAL. En fin de tableau figurent sous la mention « à compléter » les projets mentionnés dans le champ « financement » des dépôts HAL mais pour lesquels il manque la forme validée du référentiel*. Cette requête ne prend en effet en compte que les projets référencés dans le champ projet européen des dépôts HAL. <a href="#DT">Voir détails techniques en bas de page</a>.<br><br><em>(*) : Vous pouvez ainsi rechercher dans la collection HAL les notices concernées (recherche avancée dans le champ « financement »), et compléter les projets manquants dans le champ ANR.</em></div><br>';
 		
 		//Export CSV
     $Fnm = "./csv/req15.csv";
@@ -2983,9 +3009,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
 			$urlEUR = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=europeanProjectId_i,europeanProjectAcronym_s,funding_s,europeanProjectId_i,europeanProjectReference_s&rows=10000";
-			askCurl($urlEUR, $arrayCurl);
+			askCurl($urlEUR, $arrayCurl, $cstCA);
 			$nbTotEUR = $arrayCurl["response"]["numFound"];
-			//echo ('<br>Total potentiel de '.$nbTotEUR.' projets EUR pour '.$team.' en '.$year.'.');
+			//echo '<br>Total potentiel de '.$nbTotEUR.' projets EUR pour '.$team.' en '.$year.'.');
 			
 			$i = 0;
 			while (isset($arrayCurl["response"]["docs"][$i])) {
@@ -3009,7 +3035,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 							//Nombre total de publications pour ce projet et cette année
 							if (isset($arrayCurl["response"]["docs"][$i]["europeanProjectId_i"][$k])) {
 								$urlPub = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fq=europeanProjectId_i:".$arrayCurl["response"]["docs"][$i]["europeanProjectId_i"][$k]."&rows=10000";
-								askCurl($urlPub, $arrayPub);
+								askCurl($urlPub, $arrayPub, $cstCA);
 								$nbTotPub = $arrayPub["response"]["numFound"];
 								$resEUR["Nombre"][$nbEUR] = $nbTotPub;
 								//Liste des publications
@@ -3035,26 +3061,26 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				$i++;
 			}
 		}
-		echo ('<tbody>');
+		echo '<tbody>';
 		//var_dump($resEUR);
 		if (count($resEUR) > 0) {//Au moins 1 résultat
 			//Classement du tableau par ordre alphabétique des acronymes puis affichage
 			array_multisort($resEUR["Acronyme"], SORT_ASC, SORT_FLAG_CASE, $resEUR["Reference"], $resEUR["Nombre"], $resEUR["Liste"], $resEUR["ListeCSV"]);
 			
 			//Début de l'affichage
-			echo ('<br><table class="table table-striped table-hover table-responsive table-bordered">');
-			echo ('<thead>');
-			echo ('<tr>');
-			echo ('<th scope="col" style="text-align:left"></th>');
-			echo ('<th scope="col" style="text-align:left"><b>Acronyme</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>Référence du projet européen</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>Nombre de dépôts HAL contenant cette référence</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>Liste des publications</b></th>');
+			echo '<br><table class="table table-striped table-hover table-responsive table-bordered">';
+			echo '<thead>';
+			echo '<tr>';
+			echo '<th scope="col" style="text-align:left"></th>';
+			echo '<th scope="col" style="text-align:left"><strong>Acronyme</strong></th>';
+			echo '<th scope="col" style="text-align:left"><strong>Référence du projet européen</strong></th>';
+			echo '<th scope="col" style="text-align:left"><strong>Nombre de dépôts HAL contenant cette référence</strong></th>';
+			echo '<th scope="col" style="text-align:left"><strong>Liste des publications</strong></th>';
 			$chaine = "Acronyme;Référence du projet;Nombre de dépôts HAL contenant cette référence;Liste des publications;";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
-			echo ('</thead>');
+			echo '</thead>';
 			
 			//Regroupement des lignes de projets identiques mais d'années différentes
 			$resEURfin = array();
@@ -3082,36 +3108,36 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			$nbEURfin = 0;
 			while (isset($resEURfin["Reference"][$nbEURfin])) {
 				$idPro = $nbEURfin + 1;
-				echo('<tr><td>'.$idPro.'</td>');
-				echo('<td>'.$resEURfin["Acronyme"][$nbEURfin].'</td>');
+				echo '<tr><td>'.$idPro.'</td>';
+				echo '<td>'.$resEURfin["Acronyme"][$nbEURfin].'</td>';
 				$chaine = $resEURfin["Acronyme"][$nbEURfin].";";
-				echo('<td>'.$resEURfin["Reference"][$nbEURfin].'</td>');
+				echo '<td>'.$resEURfin["Reference"][$nbEURfin].'</td>';
 				$chaine .= $resEURfin["Reference"][$nbEURfin].";";
-				echo('<td>'.$resEURfin["Nombre"][$nbEURfin].'</td>');
+				echo '<td>'.$resEURfin["Nombre"][$nbEURfin].'</td>';
 				$chaine .= $resEURfin["Nombre"][$nbEURfin].";";
-				echo('<td>'.$resEURfin["Liste"][$nbEURfin].'</td></tr>');
+				echo '<td>'.$resEURfin["Liste"][$nbEURfin].'</td></tr>';
 				$listeCSV = substr($resEURfin["ListeCSV"][$nbEURfin], 0, (strlen($resEURfin["ListeCSV"][$nbEURfin]) - 7));
 				$chaine .= str_replace(array('&#x27E8;','&#x27E9;'),array('(',')'), $listeCSV).";";
 				$chaine .= chr(13).chr(10);
 				fwrite($inF,$chaine);
 				$nbEURfin++;
 			}
-			echo ('</tbody>');
-			echo ('</table><br>');
+			echo '</tbody>';
+			echo '</table><br>';
 			
-			echo ('<a href=\'./csv/req15.csv\'>Exporter le tableau au format CSV</a><br><br>');
+			echo '<a href=\'./csv/req15.csv\'>Exporter le tableau au format CSV</a><br><br>';
 		}else{
-			echo ('<b>Aucun résultat</b><br><br>');
+			echo $cstNR;
 		}
   }
 	
 	//Tableau de résultats requête 16
   if ($reqt == "req16") {
 		//Intitulé
-		echo('<br><b>16. Collection : Profil des contributeurs HAL</b><br><br>');
+		echo '<br><strong>16. Collection : Profil des contributeurs HAL</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des contributeurs classée par nombre de dépôts (références, texte intégral, données de recherche), ainsi que le portail de dépôt. A noter que les contributions secondaires (ajout d’un fichier) ne sont pas créditées par HAL : c’est toujours le nom du premier contributeur qui est remonté. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des contributeurs classée par nombre de dépôts (références, texte intégral, données de recherche), ainsi que le portail de dépôt. A noter que les contributions secondaires (ajout d’un fichier) ne sont pas créditées par HAL : c’est toujours le nom du premier contributeur qui est remonté. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		include("./Portails-SID.php");
 		
@@ -3171,7 +3197,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		while (isset($LAB_SECT[$col]["code_collection"])) {
 			for ($year = $anneedeb; $year <= $anneefin; $year++) {
 				$urlHAL = "https://api.archives-ouvertes.fr/search/".$LAB_SECT[$col]["code_collection"]."/?fq=producedDateY_i:".$year."&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s,sid_i&rows=10000&sort=contributorFullName_s%20desc";
-				askCurl($urlHAL, $arrayCtb);
+				askCurl($urlHAL, $arrayCtb, $cstCA);
 				$nbTotCtb += $arrayCtb["response"]["numFound"];
 				for ($i=0; $i<$arrayCtb["response"]["numFound"]; $i++) {
 					if (isset($arrayCtb["response"]["docs"][$i]["contributorFullName_s"])) {//Nom du contributeur parfois non renseigné
@@ -3192,21 +3218,21 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		if ($nbTotCtb != 0) {//Au moins 1 résultat
 			//Affichage
 			$speCode = '<a href="?reqt=req16&port='.$port.'&team='.$team.'&anneedeb='.$anneedeb.'&anneefin='.$anneefin;
-			echo ('<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">');
-			echo ('<thead>');
-			echo ('<tr>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speCode.'&ordr='.$nomUrl.'">Nom du contributeur</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speCode.'&ordr='.$ntdUrl.'">Nombre total de dépôts</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speCode.'&ordr='.$ndrUrl.'">Nombre de dépôts (références)</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speCode.'&ordr='.$ndtUrl.'">Nombre de dépôts (texte intégral)</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speCode.'&ordr='.$nddUrl.'">Nombre de dépôts (données de recherche)</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>Portail(s) de dépôt</b></th>');
+			echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">';
+			echo '<thead>';
+			echo '<tr>';
+			echo $cstTS1.$speCode.'&ordr='.$nomUrl.'">Nom du contributeur</a></strong></th>';
+			echo $cstTS1.$speCode.'&ordr='.$ntdUrl.'">Nombre total de dépôts</a></strong></th>';
+			echo $cstTS1.$speCode.'&ordr='.$ndrUrl.'">Nombre de dépôts (références)</a></strong></th>';
+			echo $cstTS1.$speCode.'&ordr='.$ndtUrl.'">Nombre de dépôts (texte intégral)</a></strong></th>';
+			echo $cstTS1.$speCode.'&ordr='.$nddUrl.'">Nombre de dépôts (données de recherche)</a></strong></th>';
+			echo '<th scope="col" style="text-align:left"><strong>Portail(s) de dépôt</strong></th>';
 			$chaine = "Nom du contributeur;Nombre total de dépôts;Nombre de dépôts (références);Nombre de dépôts (texte intégral);Nombre de dépôts (données de recherche);Portail(s) de dépôt;";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
-			echo ('</thead>');
-			echo ('<tbody>');
+			echo '</thead>';
+			echo '<tbody>';
 
 			//Création d'un tableau regroupant les contributeurs et le nombre de dépôts
 			$ctbDep = array();
@@ -3266,39 +3292,39 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			//array_multisort($ctbDep["anx"], SORT_ASC, SORT_NUMERIC, $ctbDep["tot"], $ctbDep["nom"], $ctbDep["ref"], $ctbDep["txt"], $ctbDep["ptl"]);
 
 			for ($i=0; $i<count($ctbDep["nom"]); $i++) {
-				echo ('<tr>');
-				echo ('<td>'. $ctbDep["nom"][$i].'</td>');
+				echo '<tr>';
+				echo '<td>'. $ctbDep["nom"][$i].'</td>';
 				$chaine = $ctbDep["nom"][$i].";";
-				echo ('<td>'. $ctbDep["tot"][$i].'</td>');
+				echo '<td>'. $ctbDep["tot"][$i].'</td>';
 				$chaine .= $ctbDep["tot"][$i].";";
-				echo ('<td>'. $ctbDep["ref"][$i].'</td>');
+				echo '<td>'. $ctbDep["ref"][$i].'</td>';
 				$chaine .= $ctbDep["ref"][$i].";";
-				echo ('<td>'. $ctbDep["txt"][$i].'</td>');
+				echo '<td>'. $ctbDep["txt"][$i].'</td>';
 				$chaine .= $ctbDep["txt"][$i].";";
-				echo ('<td>'. $ctbDep["anx"][$i].'</td>');
+				echo '<td>'. $ctbDep["anx"][$i].'</td>';
 				$chaine .= $ctbDep["anx"][$i].";";
-				echo ('<td>'. $ctbDep["ptl"][$i].'</td>');
+				echo '<td>'. $ctbDep["ptl"][$i].'</td>';
 				$chaine .= $ctbDep["ptl"][$i].";";
-				echo ('</tr>');
+				echo '</tr>';
 				$chaine .= chr(13).chr(10);
 				fwrite($inF,$chaine);
 			}
 			
-			echo ('</tbody>');
-			echo ('</table>');
-			echo ('<a href=\'./csv/req16.csv\'>Exporter le tableau au format CSV</a><br><br>');
+			echo '</tbody>';
+			echo '</table>';
+			echo '<a href=\'./csv/req16.csv\'>Exporter le tableau au format CSV</a><br><br>';
 		}else{
-			echo('<b>Aucun résultat</b><br><br>');
+			echo $cstNR;
 		}
 	}
 	
 	//Tableau de résultats requête 17
   if ($reqt == "req17") {
 		//Intitulé
-		echo('<br><b>17. Collection : Collaborations nationales</b><br><br>');
+		echo '<br><strong>17. Collection : Collaborations nationales</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des structures françaises auxquelles sont affiliés des co-auteurs. Cette liste mêle les 3 niveaux (laboratoires, établissements, autres) mais il est possible de les distinguer (voir les 3 requêtes suivantes). La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des structures françaises auxquelles sont affiliés des co-auteurs. Cette liste mêle les 3 niveaux (laboratoires, établissements, autres) mais il est possible de les distinguer (voir les 3 requêtes suivantes). La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		//Tri par défaut
 		$nomTri = "";
@@ -3339,8 +3365,8 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$year = $annee17;
 		$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
 		//echo $url;
-		$totColl = askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s");
-		askCurl($url, $arrayCurl);
+		$totColl = askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
+		askCurl($url, $arrayCurl, $cstCA);
 		//var_dump($arrayCurl);
 		
 		$i = 0;
@@ -3388,68 +3414,68 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			
 			//Affichage
 			$speTri = '<a href="?reqt=req17&team='.$team.'&annee17='.$annee17;
-			echo ('<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">');
-			echo ('<thead>');
-			echo ('<tr>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$nomUrl.'">Nom</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$typUrl.'">Type</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$codUrl.'">Code HAL</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$nbrUrl.'">Nombre de publications</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>%</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>Références HAL</b></th>');
+			echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">';
+			echo '<thead>';
+			echo '<tr>';
+			echo $cstTS1.$speTri.'&ordr='.$nomUrl.'">'.$cstNom;
+			echo $cstTS1.$speTri.'&ordr='.$typUrl.'">'.$cstTyp;
+			echo $cstTS1.$speTri.'&ordr='.$codUrl.'">'.$cstCod;
+			echo $cstTS1.$speTri.'&ordr='.$nbrUrl.'">'.$cstNbP;
+			echo $cstTS2;
+			echo $cstTS3;
 			$chaine = "Nom;Type;Code HAL;Nombre de publications;%;Références HAL;";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
-			echo ('</thead>');
-			echo ('<tbody>');
+			echo '</thead>';
+			echo '<tbody>';
 			
 			for ($i=0; $i<count($resColl["nom"]); $i++) {
-				echo ('<tr>');
-				echo ('<td>');
-				echo ($resColl["nom"][$i]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["type"][$i]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["code"][$i]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["nombre"][$i]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["pcent"][$i]);
-				echo ('%</td>');
-				echo ('<td>');
+				echo '<tr>';
+				echo '<td>';
+				echo $resColl["nom"][$i];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["type"][$i];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["code"][$i];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["nombre"][$i];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["pcent"][$i];
+				echo '%</td>';
+				echo '<td>';
 				$idhal = $resColl["idhal"][$i];
 				$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
 				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 				$liens .= ' - ';
 				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
-				echo ($liens);
-				echo ('</td>');
+				echo $liens;
+				echo '</td>';
 				$chaine = $resColl["nom"][$i].";".$resColl["type"][$i].";".$resColl["code"][$i].";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";
-				echo ('</tr>');
+				echo '</tr>';
 				$chaine .= chr(13).chr(10);
 				fwrite($inF,$chaine);
 			}
 			
-			echo ('</tbody>');
-			echo ('</table>');
-			echo ('<a href=\'./csv/req17.csv\'>Exporter le tableau au format CSV</a><br><br>');
+			echo '</tbody>';
+			echo '</table>';
+			echo '<a href=\'./csv/req17.csv\'>Exporter le tableau au format CSV</a><br><br>';
 		}else{
-			echo('<b>Aucun résultat</b><br><br>');
+			echo $cstNR;
 		}
   }
 	
 	//Tableau de résultats requête 18
   if ($reqt == "req18") {
 		//Intitulé
-		echo('<br><b>18. Collection : Collaborations nationales (laboratoires)</b><br><br>');
+		echo '<br><strong>18. Collection : Collaborations nationales (laboratoires)</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des unités de recherche françaises auxquelles sont affiliés des co-auteurs. La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des unités de recherche françaises auxquelles sont affiliés des co-auteurs. La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		//Tri par défaut
 		$nomTri = "";
@@ -3490,8 +3516,8 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$year = $annee18;
 		$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
 		//echo $url;
-		$totColl = askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s");
-		askCurl($url, $arrayCurl);
+		$totColl = askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
+		askCurl($url, $arrayCurl, $cstCA);
 		//var_dump($arrayCurl);
 		
 		$i = 0;
@@ -3539,68 +3565,68 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			
 			//Affichage
 			$speTri = '<a href="?reqt=req18&team='.$team.'&annee18='.$annee18;
-			echo ('<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">');
-			echo ('<thead>');
-			echo ('<tr>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$nomUrl.'">Nom</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$typUrl.'">Type</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$codUrl.'">Code HAL</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$nbrUrl.'">Nombre de publications</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>%</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>Références HAL</b></th>');
+			echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">';
+			echo '<thead>';
+			echo '<tr>';
+			echo $cstTS1.$speTri.'&ordr='.$nomUrl.'">'.$cstNom;
+			echo $cstTS1.$speTri.'&ordr='.$typUrl.'">'.$cstTyp;
+			echo $cstTS1.$speTri.'&ordr='.$codUrl.'">'.$cstCod;
+			echo $cstTS1.$speTri.'&ordr='.$nbrUrl.'">'.$cstNbP;
+			echo $cstTS2;
+			echo $cstTS3;
 			$chaine = "Nom;Type;Code HAL;Nombre de publications;%;Références HAL;";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
-			echo ('</thead>');
-			echo ('<tbody>');
+			echo '</thead>';
+			echo '<tbody>';
 			
 			for ($i=0; $i<count($resColl["nom"]); $i++) {
-				echo ('<tr>');
-				echo ('<td>');
-				echo ($resColl["nom"][$i]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["type"][$i]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["code"][$i]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["nombre"][$i]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["pcent"][$i]);
-				echo ('%</td>');
-				echo ('<td>');
+				echo '<tr>';
+				echo '<td>';
+				echo $resColl["nom"][$i];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["type"][$i];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["code"][$i];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["nombre"][$i];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["pcent"][$i];
+				echo '%</td>';
+				echo '<td>';
 				$idhal = $resColl["idhal"][$i];
 				$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
 				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 				$liens .= ' - ';
 				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
-				echo ($liens);
-				echo ('</td>');
+				echo $liens;
+				echo '</td>';
 				$chaine = $resColl["nom"][$i].";".$resColl["type"][$i].";".$resColl["code"][$i].";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";
-				echo ('</tr>');
+				echo '</tr>';
 				$chaine .= chr(13).chr(10);
 				fwrite($inF,$chaine);
 			}
 			
-			echo ('</tbody>');
-			echo ('</table>');
-			echo ('<a href=\'./csv/req18.csv\'>Exporter le tableau au format CSV</a><br><br>');
+			echo '</tbody>';
+			echo '</table>';
+			echo '<a href=\'./csv/req18.csv\'>Exporter le tableau au format CSV</a><br><br>';
 		}else{
-			echo('<b>Aucun résultat</b><br><br>');
+			echo $cstNR;
 		}
   }
 	
 	//Tableau de résultats requête 19
   if ($reqt == "req19") {
 		//Intitulé
-		echo('<br><b>19. Collection : Collaborations nationales (établissements)</b><br><br>');
+		echo '<br><strong>19. Collection : Collaborations nationales (établissements)</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des institutions françaises auxquelles sont affiliés des co-auteurs. La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des institutions françaises auxquelles sont affiliés des co-auteurs. La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		//Tri par défaut
 		$nomTri = "";
@@ -3641,8 +3667,8 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$year = $annee19;
 		$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
 		//echo $url;
-		$totColl = askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s");
-		askCurl($url, $arrayCurl);
+		$totColl = askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
+		askCurl($url, $arrayCurl, $cstCA);
 		//var_dump($arrayCurl);
 
 		$i = 0;
@@ -3690,68 +3716,68 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			
 			//Affichage
 			$speTri = '<a href="?reqt=req19&team='.$team.'&annee19='.$annee19;
-			echo ('<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">');
-			echo ('<thead>');
-			echo ('<tr>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$nomUrl.'">Nom</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$typUrl.'">Type</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$codUrl.'">Code HAL</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$nbrUrl.'">Nombre de publications</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>%</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>Références HAL</b></th>');
+			echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">';
+			echo '<thead>';
+			echo '<tr>';
+			echo $cstTS1.$speTri.'&ordr='.$nomUrl.'">'.$cstNom;
+			echo $cstTS1.$speTri.'&ordr='.$typUrl.'">'.$cstTyp;
+			echo $cstTS1.$speTri.'&ordr='.$codUrl.'">'.$cstCod;
+			echo $cstTS1.$speTri.'&ordr='.$nbrUrl.'">'.$cstNbP;
+			echo $cstTS2;
+			echo $cstTS3;
 			$chaine = "Nom;Type;Code HAL;Nombre de publications;%;Références HAL;";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
-			echo ('</thead>');
-			echo ('<tbody>');
+			echo '</thead>';
+			echo '<tbody>';
 			
 			for ($i=0; $i<count($resColl["nom"]); $i++) {
-				echo ('<tr>');
-				echo ('<td>');
-				echo ($resColl["nom"][$i]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["type"][$i]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["code"][$i]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["nombre"][$i]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["pcent"][$i]);
-				echo ('%</td>');
-				echo ('<td>');
+				echo '<tr>';
+				echo '<td>';
+				echo $resColl["nom"][$i];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["type"][$i];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["code"][$i];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["nombre"][$i];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["pcent"][$i];
+				echo '%</td>';
+				echo '<td>';
 				$idhal = $resColl["idhal"][$i];
 				$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
 				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 				$liens .= ' - ';
 				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
-				echo ($liens);
-				echo ('</td>');
+				echo $liens;
+				echo '</td>';
 				$chaine = $resColl["nom"][$i].";".$resColl["type"][$i].";".$resColl["code"][$i].";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";
-				echo ('</tr>');
+				echo '</tr>';
 				$chaine .= chr(13).chr(10);
 				fwrite($inF,$chaine);
 			}
 			
-			echo ('</tbody>');
-			echo ('</table>');
-			echo ('<a href=\'./csv/req19.csv\'>Exporter le tableau au format CSV</a><br><br>');
+			echo '</tbody>';
+			echo '</table>';
+			echo '<a href=\'./csv/req19.csv\'>Exporter le tableau au format CSV</a><br><br>';
 		}else{
-			echo('<b>Aucun résultat</b><br><br>');
+			echo $cstNR;
 		}
   }
 	
 	//Tableau de résultats requête 20
   if ($reqt == "req20") {
 		//Intitulé
-		echo('<br><b>20. Collection : Collaborations nationales (autres)</b><br><br>');
+		echo '<br><strong>20. Collection : Collaborations nationales (autres)</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des structures françaises (autres que laboratoires et institutions) auxquelles sont affiliés des co-auteurs. La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des structures françaises (autres que laboratoires et institutions) auxquelles sont affiliés des co-auteurs. La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		//Tri par défaut
 		$nomTri = "";
@@ -3792,8 +3818,8 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$year = $annee20;
 		$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
 		//echo $url;
-		$totColl = askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s");
-		askCurl($url, $arrayCurl);
+		$totColl = askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
+		askCurl($url, $arrayCurl, $cstCA);
 		//var_dump($arrayCurl);
 		
 		$i = 0;
@@ -3841,68 +3867,68 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			
 			//Affichage
 			$speTri = '<a href="?reqt=req20&team='.$team.'&annee20='.$annee20;
-			echo ('<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">');
-			echo ('<thead>');
-			echo ('<tr>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$nomUrl.'">Nom</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$typUrl.'">Type</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$codUrl.'">Code HAL</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$nbrUrl.'">Nombre de publications</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>%</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>Références HAL</b></th>');
+			echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">';
+			echo '<thead>';
+			echo '<tr>';
+			echo $cstTS1.$speTri.'&ordr='.$nomUrl.'">'.$cstNom;
+			echo $cstTS1.$speTri.'&ordr='.$typUrl.'">'.$cstTyp;
+			echo $cstTS1.$speTri.'&ordr='.$codUrl.'">'.$cstCod;
+			echo $cstTS1.$speTri.'&ordr='.$nbrUrl.'">'.$cstNbP;
+			echo $cstTS2;
+			echo $cstTS3;
 			$chaine = "Nom;Type;Code HAL;Nombre de publications;%;Références HAL;";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
-			echo ('</thead>');
-			echo ('<tbody>');
+			echo '</thead>';
+			echo '<tbody>';
 			
 			for ($i=0; $i<count($resColl["nom"]); $i++) {
-				echo ('<tr>');
-				echo ('<td>');
-				echo ($resColl["nom"][$i]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["type"][$i]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["code"][$i]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["nombre"][$i]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["pcent"][$i]);
-				echo ('%</td>');
-				echo ('<td>');
+				echo '<tr>';
+				echo '<td>';
+				echo $resColl["nom"][$i];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["type"][$i];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["code"][$i];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["nombre"][$i];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["pcent"][$i];
+				echo '%</td>';
+				echo '<td>';
 				$idhal = $resColl["idhal"][$i];
 				$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
 				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 				$liens .= ' - ';
 				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
-				echo ($liens);
-				echo ('</td>');
+				echo $liens;
+				echo '</td>';
 				$chaine = $resColl["nom"][$i].";".$resColl["type"][$i].";".$resColl["code"][$i].";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";
-				echo ('</tr>');
+				echo '</tr>';
 				$chaine .= chr(13).chr(10);
 				fwrite($inF,$chaine);
 			}
 			
-			echo ('</tbody>');
-			echo ('</table>');
-			echo ('<a href=\'./csv/req20.csv\'>Exporter le tableau au format CSV</a><br><br>');
+			echo '</tbody>';
+			echo '</table>';
+			echo '<a href=\'./csv/req20.csv\'>Exporter le tableau au format CSV</a><br><br>';
 		}else{
-			echo('<b>Aucun résultat</b><br><br>');
+			echo $cstNR;
 		}
   }
 	
 	//Tableau de résultats requête 21
   if ($reqt == "req21") {
 		//Intitulé
-		echo('<br><b>21. Collection : Collaborations internationales (toutes structures)</b><br><br>');
+		echo '<br><strong>21. Collection : Collaborations internationales (toutes structures)</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des structures étrangères auxquelles sont affiliés des co-auteurs. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées.  Les structures dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> sont classés sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des structures étrangères auxquelles sont affiliés des co-auteurs. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées.  Les structures dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> sont classés sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		include('./VizuHAL_codes_pays.php');
 		$typTab = array(
@@ -3957,8 +3983,8 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
 			$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s&rows=10000";
 			//echo $url;
-			//$totColl += askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s");
-			askCurl($url, $arrayCurl);
+			//$totColl += askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s", $cstCA);
+			askCurl($url, $arrayCurl, $cstCA);
 			//var_dump($arrayCurl);
 			$totColl += $arrayCurl["response"]["numFound"];
 			$i = 0;
@@ -4052,77 +4078,77 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			
 			//Affichage
 			$speTri = '<a href="?reqt=req21&team='.$team.'&anneedeb='.$anneedeb.'&anneefin='.$anneefin;
-			echo ('<br>Poucentages calculés sur le nombre total de publications de la collection sur la période concernée');
-			echo ('<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">');
-			echo ('<thead>');
-			echo ('<tr>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$nomUrl.'">Nom</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$payUrl.'">Pays</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$typUrl.'">Type</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$nbrUrl.'">Nombre de publications</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>%</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>Références HAL</b></th>');
+			echo '<br>Poucentages calculés sur le nombre total de publications de la collection sur la période concernée';
+			echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">';
+			echo '<thead>';
+			echo '<tr>';
+			echo $cstTS1.$speTri.'&ordr='.$nomUrl.'">'.$cstNom;
+			echo $cstTS1.$speTri.'&ordr='.$payUrl.'">'.$cstPay;
+			echo $cstTS1.$speTri.'&ordr='.$typUrl.'">'.$cstTyp;
+			echo $cstTS1.$speTri.'&ordr='.$nbrUrl.'">'.$cstNbP;
+			echo $cstTS2;
+			echo $cstTS3;
 			$chaine = "Nom;Pays;Type;Nombre de publications;%;Références HAL;";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
-			echo ('</thead>');
-			echo ('<tbody>');
+			echo '</thead>';
+			echo '<tbody>';
 			
 			//Affichage du nombre total de publications de la collection sur la période concernée
-			echo ('<tr>');
-			echo ('<td>');
-			echo ("Publications de la collection sur la période concernée");
-			echo ('</td>');
-			echo ('<td>');
-			echo ('-');
-			echo ('</td>');
-			echo ('<td>');
-			echo ('-');
-			echo ('</td>');
-			echo ('<td>');
-			echo ($totColl);
-			echo ('</td>');
-			echo ('<td>');
-			echo ('100%');
-			echo ('</td>');
-			echo ('<td>');
-			echo ('-');
-			echo ('</td>');
+			echo '<tr>';
+			echo '<td>';
+			echo "Publications de la collection sur la période concernée";
+			echo '</td>';
+			echo '<td>';
+			echo '-';
+			echo '</td>';
+			echo '<td>';
+			echo '-';
+			echo '</td>';
+			echo '<td>';
+			echo $totColl;
+			echo '</td>';
+			echo '<td>';
+			echo '100%';
+			echo '</td>';
+			echo '<td>';
+			echo '-';
+			echo '</td>';
 			$chaine = "Publications de la collection sur la période concernée".";-;-;".$totColl.";100%;-;";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
 			
 			$key = -1;
 			for ($i=0; $i<count($resColl["nom"]); $i++) {
 				if ($resColl["nom"][$i] != "Structure(s) sans pays défini(s) dans HAL") {
-					echo ('<tr>');
-					echo ('<td>');
-					echo ($resColl["nom"][$i]);
-					echo ('</td>');
-					echo ('<td>');
-					echo ($resColl["pays"][$i]);
-					echo ('</td>');
-					echo ('<td>');
-					echo ($resColl["type"][$i]);
-					echo ('</td>');
-					echo ('<td>');
-					echo ($resColl["nombre"][$i]);
-					echo ('</td>');
-					echo ('<td>');
-					echo ($resColl["pcent"][$i]);
-					echo ('%</td>');
-					echo ('<td>');
+					echo '<tr>';
+					echo '<td>';
+					echo $resColl["nom"][$i];
+					echo '</td>';
+					echo '<td>';
+					echo $resColl["pays"][$i];
+					echo '</td>';
+					echo '<td>';
+					echo $resColl["type"][$i];
+					echo '</td>';
+					echo '<td>';
+					echo $resColl["nombre"][$i];
+					echo '</td>';
+					echo '<td>';
+					echo $resColl["pcent"][$i];
+					echo '%</td>';
+					echo '<td>';
 					$idhal = $resColl["idhal"][$i];
 					$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
 					$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 					$liens .= ' - ';
 					$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
-					echo ($liens);
-					echo ('</td>');
+					echo $liens;
+					echo '</td>';
 					$chaine = str_replace(';', '-', $resColl["nom"][$i]).";".$resColl["pays"][$i].";".$resColl["type"][$i].";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";
-					echo ('</tr>');
+					echo '</tr>';
 					$chaine .= chr(13).chr(10);
 					fwrite($inF,$chaine);
 				}else{
@@ -4131,51 +4157,51 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			}
 			//Affichage en fin de tableau de la ligne des structure(s) sans pays défini(s) dans HAL
 			if ($key != -1) {
-				echo ('<tr>');
-				echo ('<td>');
-				echo ($resColl["nom"][$key]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["pays"][$key]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["type"][$key]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["nombre"][$key]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["pcent"][$key]);
-				echo ('</td>');
-				echo ('<td>');
+				echo '<tr>';
+				echo '<td>';
+				echo $resColl["nom"][$key];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["pays"][$key];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["type"][$key];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["nombre"][$key];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["pcent"][$key];
+				echo '</td>';
+				echo '<td>';
 				$idhal = $resColl["idhal"][$key];
 				$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
 				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 				$liens .= ' - ';
 				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
-				echo ($liens);
-				echo ('</td>');
+				echo $liens;
+				echo '</td>';
 				$chaine = str_replace(';', '-', $resColl["nom"][$key]).";".$resColl["pays"][$key].";".$resColl["type"][$key].";".$resColl["nombre"][$key].";".$resColl["pcent"][$key].";".$liens.";";
-				echo ('</tr>');
+				echo '</tr>';
 				$chaine .= chr(13).chr(10);
 				fwrite($inF,$chaine);
 			}
 			
-			echo ('</tbody>');
-			echo ('</table>');
-			echo ('<a href=\'./csv/req21.csv\'>Exporter le tableau au format CSV</a><br><br>');
+			echo '</tbody>';
+			echo '</table>';
+			echo '<a href=\'./csv/req21.csv\'>Exporter le tableau au format CSV</a><br><br>';
 		}else{
-			echo('<b>Aucun résultat</b><br><br>');
+			echo $cstNR;
 		}
   }
 	
 	//Tableau de résultats requête 22
   if ($reqt == "req22") {
 		//Intitulé
-		echo('<br><b>22. Collection : Collaborations internationales (institutions)</b><br><br>');
+		echo '<br><strong>22. Collection : Collaborations internationales (institutions)</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des institutions étrangères auxquelles sont affiliés des co-auteurs. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées. Les institutions dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> sont classés sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des institutions étrangères auxquelles sont affiliés des co-auteurs. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées. Les institutions dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> sont classés sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		include('./VizuHAL_codes_pays.php');
 		
@@ -4216,7 +4242,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
 			$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000";
 			//echo $url;
-			askCurl($url, $arrayCurl);
+			askCurl($url, $arrayCurl, $cstCA);
 			//var_dump($arrayCurl);
 			$totColl += $arrayCurl["response"]["numFound"];
 			$i = 0;
@@ -4359,161 +4385,161 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			//var_dump($resColl);
 			
 			//Carte mondiale
-			echo('<link href="./lib/JQVmaps/jqvmap.css" media="screen" rel="stylesheet" type="text/css">');
-			echo('<script type="text/javascript" src="./lib/JQVmaps/jquery.vmap.js"></script>');
-			echo('<script type="text/javascript" src="./lib/JQVmaps/maps/jquery.vmap.world.js" charset="utf-8"></script>');
+			echo '<link href="./lib/JQVmaps/jqvmap.css" media="screen" rel="stylesheet" type="text/css">';
+			echo '<script type="text/javascript" src="./lib/JQVmaps/jquery.vmap.js"></script>';
+			echo '<script type="text/javascript" src="./lib/JQVmaps/maps/jquery.vmap.world.js" charset="utf-8"></script>';
 			//Ajout des données
-			echo('<script>');
-			echo('    var gdpData = {');
+			echo '<script>';
+			echo '    var gdpData = {';
 			for ($i=0; $i<count($resColl["pays"]); $i++) {
 				if ($resColl["pays"][$i] != "Structure(s) sans pays défini(s) dans HAL") {
 					$key = strtolower(array_search($resColl["pays"][$i], $countries));
-					echo ('"'.$key.'":'.$resColl["nombre"][$i].', ');
+					echo '"'.$key.'":'.$resColl["nombre"][$i].', ';
 				}
 			}
-			//echo('"fr":'.$totCollStr);
-			echo('	};');
-			echo('</script>');
-			echo('<script>');
-			echo('  var max = 0,');
-			echo('        min = Number.MAX_VALUE,');
-			echo('        cc,');
-			echo('        startColor = [200, 238, 255],');
-			echo('        endColor = [0, 100, 145],');
-			echo('        colors = {},');
-			echo('        hex;');
+			//echo '"fr":'.$totCollStr);
+			echo '	};';
+			echo '</script>';
+			echo '<script>';
+			echo '  var max = 0,';
+			echo '        min = Number.MAX_VALUE,';
+			echo '        cc,';
+			echo '        startColor = [200, 238, 255],';
+			echo '        endColor = [0, 100, 145],';
+			echo '        colors = {},';
+			echo '        hex;';
 			//find maximum and minimum values
-			echo('    for (cc in gdpData)');
-			echo('    {');
-			echo('        if (parseFloat(gdpData[cc]) > max)');
-			echo('        {');
-			echo('            max = parseFloat(gdpData[cc]);');
-			echo('        }');
-			echo('        if (parseFloat(gdpData[cc]) < min)');
-			echo('        {');
-			echo('            min = parseFloat(gdpData[cc]);');
-			echo('        }');
-			echo('    }');
+			echo '    for (cc in gdpData)';
+			echo '    {';
+			echo '        if (parseFloat(gdpData[cc]) > max)';
+			echo '        {';
+			echo '            max = parseFloat(gdpData[cc]);';
+			echo '        }';
+			echo '        if (parseFloat(gdpData[cc]) < min)';
+			echo '        {';
+			echo '            min = parseFloat(gdpData[cc]);';
+			echo '        }';
+			echo '    }';
 			//set colors according to values of GDP
-			echo('    for (cc in gdpData)');
-			echo('    {');
-			echo('        if (gdpData[cc] > 0)');
-			echo('        {');
-			echo('            colors[cc] = \'#\';');
-			echo('            for (var i = 0; i<3; i++)');
-			echo('            {');
-			echo('                hex = Math.round(startColor[i]');
-			echo('                    + (endColor[i]');
-			echo('                    - startColor[i])');
-			echo('                    * (gdpData[cc] / (max - min))).toString(16);');
-			echo('                if (hex.length == 1)');
-			echo('                {');
-			echo('                    hex = \'0\'+hex;');
-			echo('                }');
-			echo('                colors[cc] += (hex.length == 1 ? \'0\' : \'\') + hex;');
-			echo('            }');
-			echo('        }');
-			echo('    }');
-			echo('</script>');
+			echo '    for (cc in gdpData)';
+			echo '    {';
+			echo '        if (gdpData[cc] > 0)';
+			echo '        {';
+			echo '            colors[cc] = \'#\';';
+			echo '            for (var i = 0; i<3; i++)';
+			echo '            {';
+			echo '                hex = Math.round(startColor[i]';
+			echo '                    + (endColor[i]';
+			echo '                    - startColor[i])';
+			echo '                    * (gdpData[cc] / (max - min))).toString(16);';
+			echo '                if (hex.length == 1)';
+			echo '                {';
+			echo '                    hex = \'0\'+hex;';
+			echo '                }';
+			echo '                colors[cc] += (hex.length == 1 ? \'0\' : \'\') + hex;';
+			echo '            }';
+			echo '        }';
+			echo '    }';
+			echo '</script>';
 
 			//Appel de la carte
-			echo('<script type="text/javascript">');
-			echo('jQuery(document).ready(function() {');
-			echo('jQuery(\'#vmap\').vectorMap({ ');
-			echo('	onLabelShow: function (event, label, code) {');
-			echo('	if(gdpData[code] > 0)');
-			echo('  	label.append(\': \'+gdpData[code]);');
-			echo('	},');
-			echo('	map: \'world_en\',');
-			echo('	colors: colors,');
-			echo('	hoverOpacity: 0.7,');
-			echo('	hoverColor: false });');
-			echo('});');
-			echo('</script>');
+			echo '<script type="text/javascript">';
+			echo 'jQuery(document).ready(function() {';
+			echo 'jQuery(\'#vmap\').vectorMap({ ';
+			echo '	onLabelShow: function (event, label, code) {';
+			echo '	if(gdpData[code] > 0)';
+			echo '  	label.append(\': \'+gdpData[code]);';
+			echo '	},';
+			echo '	map: \'world_en\',';
+			echo '	colors: colors,';
+			echo '	hoverOpacity: 0.7,';
+			echo '	hoverColor: false });';
+			echo '});';
+			echo '</script>';
 			if ($anneedeb != $anneefin) {
 				$per = "sur la période ".$anneedeb." - ".$anneefin;
 			}else{
 				$per = "en ".$anneedeb;
 			}
-			echo('<center><h3>Carte interactive du nombre de publications par pays pour la collection '.$team.' '.$per.'</h3><br><div id="vmap" style="width: 800px; height: 530px;"></div><br><br></center>');
+			echo '<center><h3>Carte interactive du nombre de publications par pays pour la collection '.$team.' '.$per.'</h3><br><div id="vmap" style="width: 800px; height: 530px;"></div><br><br></center>';
 			
 			//Affichage
 			$speTri = '<a href="?reqt=req22&team='.$team.'&anneedeb='.$anneedeb.'&anneefin='.$anneefin;
-			echo ('<br>Poucentages calculés sur le nombre total de publications de la collection sur la période concernée');
-			echo ('<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">');
-			echo ('<thead>');
-			echo ('<tr>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$payUrl.'">Pays</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$nbrUrl.'">Nombre de publications</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>%</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>ART</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>COMM</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>POSTER</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>COUV</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>OUV</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>DOUV</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>Références HAL</b></th>');
+			echo '<br>Poucentages calculés sur le nombre total de publications de la collection sur la période concernée';
+			echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">';
+			echo '<thead>';
+			echo '<tr>';
+			echo $cstTS1.$speTri.'&ordr='.$payUrl.'">'.$cstPay;
+			echo $cstTS1.$speTri.'&ordr='.$nbrUrl.'">'.$cstNbP;
+			echo $cstTS2;
+			echo '<th scope="col" style="text-align:left"><strong>ART</strong></th>';
+			echo '<th scope="col" style="text-align:left"><strong>COMM</strong></th>';
+			echo '<th scope="col" style="text-align:left"><strong>POSTER</strong></th>';
+			echo '<th scope="col" style="text-align:left"><strong>COUV</strong></th>';
+			echo '<th scope="col" style="text-align:left"><strong>OUV</strong></th>';
+			echo '<th scope="col" style="text-align:left"><strong>DOUV</strong></th>';
+			echo $cstTS3;
 			$chaine = "Pays;Code pays ISO;Nombre de publications;%;ART;COMM;POSTER;COUV;OUV;DOUV;Références HAL;";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
-			echo ('</thead>');
-			echo ('<tbody>');
+			echo '</thead>';
+			echo '<tbody>';
 			
 			//Affichage du nombre total de publications de la collection sur la période concernée
 			$chaine = "Publications de la collection sur la période concernée".";;".$totColl.";100%;";
-			echo ('<tr>');
-			echo ('<td>');
-			echo ("Publications de la collection sur la période concernée");
-			echo ('</td>');
-			echo ('<td>');
-			echo ($totColl);
-			echo ('</td>');
-			echo ('<td>');
-			echo ('100%');
-			echo ('</td>');
+			echo '<tr>';
+			echo '<td>';
+			echo "Publications de la collection sur la période concernée";
+			echo '</td>';
+			echo '<td>';
+			echo $totColl;
+			echo '</td>';
+			echo '<td>';
+			echo '100%';
+			echo '</td>';
 			foreach($docType as $type) {
 				$totType = 0;
 				if (isset($typColl[$type])) {
 					$totType = $typColl[$type];
 				}
-				echo ('<td>'.number_format($totType*100/$totColl, 2).'%</td>');
+				echo '<td>'.number_format($totType*100/$totColl, 2).'%</td>';
 				$chaine .= number_format($totType*100/$totColl, 2).";";
 			}
-			echo ('<td>');
-			echo ('-');
-			echo ('</td>');
+			echo '<td>';
+			echo '-';
+			echo '</td>';
 			$chaine .= "-;";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
 			
 			//Affichage du nombre de publications impliquant au moins un pays étranger
 			$pcentStr = ($totColl != 0) ? number_format($totCollStr*100/$totColl, 2) : 0;
 			$chaine = "Publications impliquant au moins un pays étranger".";;".$totCollStr.";".$pcentStr.";";
-			echo ('<tr>');
-			echo ('<td>');
-			echo ("Publications impliquant au moins un pays étranger");
-			echo ('</td>');
-			echo ('<td>');
-			echo ($totCollStr);
-			echo ('</td>');
-			echo ('<td>');
-			echo ($pcentStr.'%');
-			echo ('</td>');
+			echo '<tr>';
+			echo '<td>';
+			echo "Publications impliquant au moins un pays étranger";
+			echo '</td>';
+			echo '<td>';
+			echo $totCollStr;
+			echo '</td>';
+			echo '<td>';
+			echo $pcentStr.'%';
+			echo '</td>';
 			foreach($docType as $type) {
 				$totType = 0;
 				if (isset($typCollStr[$type])) {
 					$totType = $typCollStr[$type];
 				}
-				echo ('<td>'.number_format($totType*100/$totColl, 2).'%</td>');
+				echo '<td>'.number_format($totType*100/$totColl, 2).'%</td>';
 				$chaine .= number_format($totType*100/$totColl, 2).";";
 			}
-			echo ('<td>');
-			echo ('-');
-			echo ('</td>');
+			echo '<td>';
+			echo '-';
+			echo '</td>';
 			$chaine .= "-;";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
 			
@@ -4521,34 +4547,34 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			for ($i=0; $i<count($resColl["pays"]); $i++) {
 				if ($resColl["pays"][$i] != "Structure(s) sans pays défini(s) dans HAL") {
 					$chaine = $resColl["pays"][$i].";".array_search($resColl["pays"][$i], $countries).";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";";
-					echo ('<tr>');
-					echo ('<td>');
-					echo ($resColl["pays"][$i]);
-					echo ('</td>');
-					echo ('<td>');
-					echo ($resColl["nombre"][$i]);
-					echo ('</td>');
-					echo ('<td>');
-					echo ($resColl["pcent"][$i]);
-					echo ('%</td>');
+					echo '<tr>';
+					echo '<td>';
+					echo $resColl["pays"][$i];
+					echo '</td>';
+					echo '<td>';
+					echo $resColl["nombre"][$i];
+					echo '</td>';
+					echo '<td>';
+					echo $resColl["pcent"][$i];
+					echo '%</td>';
 					foreach($docType as $type) {
 						$totType = 0;
 						if (isset($resColl[$type][$i])) {
 							$totType = $resColl[$type][$i];
 						}
-						echo ('<td>'.number_format($totType*100/$totColl, 2).'%</td>');
+						echo '<td>'.number_format($totType*100/$totColl, 2).'%</td>';
 						$chaine .= number_format($totType*100/$totColl, 2).";";
 					}
-					echo ('<td>');
+					echo '<td>';
 					$idhal = $resColl["idhal"][$i];
 					$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
 					$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 					$liens .= ' - ';
 					$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
-					echo ($liens);
-					echo ('</td>');
+					echo $liens;
+					echo '</td>';
 					$chaine .= $liens.";";
-					echo ('</tr>');
+					echo '</tr>';
 					$chaine .= chr(13).chr(10);
 					fwrite($inF,$chaine);
 				}else{
@@ -4559,49 +4585,49 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			//Affichage en fin de tableau de la ligne des structure(s) sans pays défini(s) dans HAL
 			if ($key != -1) {
 				$chaine = $resColl["pays"][$key].";;".$resColl["nombre"][$key].";".$resColl["pcent"][$key].";";
-				echo ('<tr>');
-				echo ('<td>');
-				echo ($resColl["pays"][$key]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["nombre"][$key]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["pcent"][$key]);
-				echo ('</td>');
+				echo '<tr>';
+				echo '<td>';
+				echo $resColl["pays"][$key];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["nombre"][$key];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["pcent"][$key];
+				echo '</td>';
 				foreach($docType as $type) {
-					echo ('<td>-</td>');
+					echo '<td>-</td>';
 					$chaine .= "-;";
 				}
-				echo ('<td>');
+				echo '<td>';
 				$idhal = $resColl["idhal"][$key];
 				$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
 				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 				$liens .= ' - ';
 				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
-				echo ($liens);
-				echo ('</td>');
+				echo $liens;
+				echo '</td>';
 				$chaine .= $liens.";";
-				echo ('</tr>');
+				echo '</tr>';
 				$chaine .= chr(13).chr(10);
 				fwrite($inF,$chaine);
 			}
 			
-			echo ('</tbody>');
-			echo ('</table>');
-			echo ('<a href=\'./csv/req22.csv\'>Exporter le tableau au format CSV</a><br><br>');
+			echo '</tbody>';
+			echo '</table>';
+			echo '<a href=\'./csv/req22.csv\'>Exporter le tableau au format CSV</a><br><br>';
 		}else{
-			echo('<b>Aucun résultat</b><br><br>');
+			echo $cstNR;
 		}
   }
 	
 	//Tableau de résultats requête 23
   if ($reqt == "req23") {
 		//Intitulé
-		echo('<br><b>23. Collection : Collaborations internationales (pays)</b><br><br>');
+		echo '<br><strong>23. Collection : Collaborations internationales (pays)</strong><br><br>';
 		
 		//Descriptif
-		echo('<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des pays (ie. affiliation des co-auteurs) représentée sous forme de carte interactive. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées.  Les structures dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a>L (<a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/browse?critere=-country_s%3A%5B%22%22+TO+*%5D&category=*">elles sont nombreuses</a>) sont classées sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>');
+		echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des pays (ie. affiliation des co-auteurs) représentée sous forme de carte interactive. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées.  Les structures dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a>L (<a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/browse?critere=-country_s%3A%5B%22%22+TO+*%5D&category=*">elles sont nombreuses</a>) sont classées sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		include('./VizuHAL_codes_pays.php');
 		$typTab = array(
@@ -4653,8 +4679,8 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
 			$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s&rows=10000";
 			//echo $url;
-			//$totColl += askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s");
-			askCurl($url, $arrayCurl);
+			//$totColl += askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s", $cstCA);
+			askCurl($url, $arrayCurl, $cstCA);
 			//var_dump($arrayCurl);
 			$totColl += $arrayCurl["response"]["numFound"];
 			$i = 0;
@@ -4746,77 +4772,77 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			
 			//Affichage
 			$speTri = '<a href="?reqt=req23&team='.$team.'&anneedeb='.$anneedeb.'&anneefin='.$anneefin;
-			echo ('<br>Poucentages calculés sur le nombre total de publications de la collection sur la période concernée');
-			echo ('<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">');
-			echo ('<thead>');
-			echo ('<tr>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$nomUrl.'">Nom</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$payUrl.'">Pays</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$typUrl.'">Type</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>'.$speTri.'&ordr='.$nbrUrl.'">Nombre de publications</a></b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>%</b></th>');
-			echo ('<th scope="col" style="text-align:left"><b>Références HAL</b></th>');
+			echo '<br>Poucentages calculés sur le nombre total de publications de la collection sur la période concernée';
+			echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">';
+			echo '<thead>';
+			echo '<tr>';
+			echo $cstTS1.$speTri.'&ordr='.$nomUrl.'">'.$cstNom;
+			echo $cstTS1.$speTri.'&ordr='.$payUrl.'">'.$cstPay;
+			echo $cstTS1.$speTri.'&ordr='.$typUrl.'">'.$cstTyp;
+			echo $cstTS1.$speTri.'&ordr='.$nbrUrl.'">'.$cstNbP;
+			echo $cstTS2;
+			echo $cstTS3;
 			$chaine = "Nom;Pays;Type;Nombre de publications;%;Références HAL;";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
-			echo ('</thead>');
-			echo ('<tbody>');
+			echo '</thead>';
+			echo '<tbody>';
 			
 			//Affichage du nombre total de publications de la collection sur la période concernée
-			echo ('<tr>');
-			echo ('<td>');
-			echo ("Publications de la collection sur la période concernée");
-			echo ('</td>');
-			echo ('<td>');
-			echo ('-');
-			echo ('</td>');
-			echo ('<td>');
-			echo ('-');
-			echo ('</td>');
-			echo ('<td>');
-			echo ($totColl);
-			echo ('</td>');
-			echo ('<td>');
-			echo ('100%');
-			echo ('</td>');
-			echo ('<td>');
-			echo ('-');
-			echo ('</td>');
+			echo '<tr>';
+			echo '<td>';
+			echo "Publications de la collection sur la période concernée";
+			echo '</td>';
+			echo '<td>';
+			echo '-';
+			echo '</td>';
+			echo '<td>';
+			echo '-';
+			echo '</td>';
+			echo '<td>';
+			echo $totColl;
+			echo '</td>';
+			echo '<td>';
+			echo '100%';
+			echo '</td>';
+			echo '<td>';
+			echo '-';
+			echo '</td>';
 			$chaine = "Publications de la collection sur la période concernée".";-;-;".$totColl.";100%;-;";
-			echo ('</tr>');
+			echo '</tr>';
 			$chaine .= chr(13).chr(10);
 			fwrite($inF,$chaine);
 			
 			$key = -1;
 			for ($i=0; $i<count($resColl["nom"]); $i++) {
 				if ($resColl["nom"][$i] != "Structure(s) sans pays défini(s) dans HAL") {
-					echo ('<tr>');
-					echo ('<td>');
-					echo ($resColl["nom"][$i]);
-					echo ('</td>');
-					echo ('<td>');
-					echo ($resColl["pays"][$i]);
-					echo ('</td>');
-					echo ('<td>');
-					echo ($resColl["type"][$i]);
-					echo ('</td>');
-					echo ('<td>');
-					echo ($resColl["nombre"][$i]);
-					echo ('</td>');
-					echo ('<td>');
-					echo ($resColl["pcent"][$i]);
-					echo ('%</td>');
-					echo ('<td>');
+					echo '<tr>';
+					echo '<td>';
+					echo $resColl["nom"][$i];
+					echo '</td>';
+					echo '<td>';
+					echo $resColl["pays"][$i];
+					echo '</td>';
+					echo '<td>';
+					echo $resColl["type"][$i];
+					echo '</td>';
+					echo '<td>';
+					echo $resColl["nombre"][$i];
+					echo '</td>';
+					echo '<td>';
+					echo $resColl["pcent"][$i];
+					echo '%</td>';
+					echo '<td>';
 					$idhal = $resColl["idhal"][$i];
 					$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
 					$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 					$liens .= ' - ';
 					$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
-					echo ($liens);
-					echo ('</td>');
+					echo $liens;
+					echo '</td>';
 					$chaine = str_replace(';', '-', $resColl["nom"][$i]).";".$resColl["pays"][$i].";".$resColl["type"][$i].";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";
-					echo ('</tr>');
+					echo '</tr>';
 					$chaine .= chr(13).chr(10);
 					fwrite($inF,$chaine);
 				}else{
@@ -4825,41 +4851,41 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			}
 			//Affichage en fin de tableau de la ligne des structure(s) sans pays défini(s) dans HAL
 			if ($key != -1) {
-				echo ('<tr>');
-				echo ('<td>');
-				echo ($resColl["nom"][$key]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["pays"][$key]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["type"][$key]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["nombre"][$key]);
-				echo ('</td>');
-				echo ('<td>');
-				echo ($resColl["pcent"][$key]);
-				echo ('</td>');
-				echo ('<td>');
+				echo '<tr>';
+				echo '<td>';
+				echo $resColl["nom"][$key];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["pays"][$key];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["type"][$key];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["nombre"][$key];
+				echo '</td>';
+				echo '<td>';
+				echo $resColl["pcent"][$key];
+				echo '</td>';
+				echo '<td>';
 				$idhal = $resColl["idhal"][$key];
 				$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
 				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 				$liens .= ' - ';
 				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
-				echo ($liens);
-				echo ('</td>');
+				echo $liens;
+				echo '</td>';
 				$chaine = str_replace(';', '-', $resColl["nom"][$key]).";".$resColl["pays"][$key].";".$resColl["type"][$key].";".$resColl["nombre"][$key].";".$resColl["pcent"][$key].";".$liens.";";
-				echo ('</tr>');
+				echo '</tr>';
 				$chaine .= chr(13).chr(10);
 				fwrite($inF,$chaine);
 			}
 			
-			echo ('</tbody>');
-			echo ('</table>');
-			echo ('<a href=\'./csv/req23.csv\'>Exporter le tableau au format CSV</a><br><br>');
+			echo '</tbody>';
+			echo '</table>';
+			echo '<a href=\'./csv/req23.csv\'>Exporter le tableau au format CSV</a><br><br>';
 		}else{
-			echo('<b>Aucun résultat</b><br><br>');
+			echo $cstNR;
 		}
   }
 	
@@ -4900,14 +4926,14 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
         //histogramme
         $ficgraf = "./grf/grf_".$sect[$is]."_".time().".png";
         grf_histo($anneedeb, $anneefin, $tabPro, $sect[$is], $ficgraf, "port");
-        echo('<center><img alt="Productions HAL "'.$sect[$is].' src="'.$ficgraf.'"></center><br>');
+        echo '<center><img alt="Productions HAL "'.$sect[$is].' src="'.$ficgraf.'"></center><br>';
         
         //Camemberts
         if ($reqt == "req1") {
           for($year = $anneedeb; $year <= $anneefin; $year++) {
             $ficgraf = "./grf/grf_".$year."_".$sect[$is]."_".time().".png";
             grf_cbert($year, $tabPro, $sect[$is], $ficgraf, "coll");
-            echo('<center><img alt="Productions HAL "'.$year.' '.$team.' src="'.$ficgraf.'"></center><br>');
+            echo '<center><img alt="Productions HAL "'.$year.' '.$team.' src="'.$ficgraf.'"></center><br>';
           }
         }
 
@@ -4917,135 +4943,135 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
       //histogramme
       $ficgraf = "./grf/grf_".time().".png";
       grf_histo($anneedeb, $anneefin, $resHAL, $team, $ficgraf, "coll");
-      echo('<center><img alt="Productions HAL "'.$team.' src="'.$ficgraf.'"></center><br>');
+      echo '<center><img alt="Productions HAL "'.$team.' src="'.$ficgraf.'"></center><br>';
 
       //Camemberts
       for($year = $anneedeb; $year <= $anneefin; $year++) {
         $ficgraf = "./grf/grf_".$year."_".time().".png";
         grf_cbert($year, $resHAL, $team, $ficgraf, "coll");
-        echo('<center><img alt="Productions HAL "'.$year.' '.$team.' src="'.$ficgraf.'"></center><br>');
+        echo '<center><img alt="Productions HAL "'.$year.' '.$team.' src="'.$ficgraf.'"></center><br>';
       }
     }
   }
 }
 
 //Détails techniques
-echo('<a name="DT"></a>');
+echo '<a name="DT"></a>';
 
 //Requête 1
-echo('<div id="DTreq1" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
-<b>Pour les utilisateurs hors Rennes 1</b> : pour exploiter cette requête, il faut au préalable compléter la liste des codes collections des secteurs et unités dans un tableau PortHAL-UNIV-XXXXX.php, sur le modèle du fichier PortHAL-RENNES1.php. En l’absence de secteurs, il suffit de reporter le code collection (ex : UNIV-RENNES1) comme valeur des champs « secteurs » du tableau PHP.<br>
+echo '<div id="DTreq1" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
+<strong>Pour les utilisateurs hors Rennes 1</strong> : pour exploiter cette requête, il faut au préalable compléter la liste des codes collections des secteurs et unités dans un tableau PortHAL-UNIV-XXXXX.php, sur le modèle du fichier PortHAL-RENNES1.php. En l’absence de secteurs, il suffit de reporter le code collection (ex : UNIV-RENNES1) comme valeur des champs « secteurs » du tableau PHP.<br>
 <br>
-# dépôts HAL-UR1 par année de publication (= colonne « <b>Productions 2017</b> ») :<br>
+# dépôts HAL-UR1 par année de publication (= colonne « <strong>Productions 2017</strong> ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111</a><br>
 <br>
-# notices HAL-UR1 par année de publication (= colonne « <b>Productions 2017 sans texte intégral déposé dans HAL</b> ») :<br>
+# notices HAL-UR1 par année de publication (= colonne « <strong>Productions 2017 sans texte intégral déposé dans HAL</strong> ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111</a><br>
 <br>
-# manuscrits HAL-UR1 par année de publication (= colonne « <b>Productions 2017 avec texte intégral déposé dans HAL</b> ») :<br>
+# manuscrits HAL-UR1 par année de publication (= colonne « <strong>Productions 2017 avec texte intégral déposé dans HAL</strong> ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:file&fq=-status_i=111</a><br>
 <br>
-# notices HAL-UR1 avec lien open access par année de publication (= colonne « <b>Productions 2017 sans texte intégral déposé dans HAL mais avec texte intégral librement accessible hors HAL</b> ») :<br>
+# notices HAL-UR1 avec lien open access par année de publication (= colonne « <strong>Productions 2017 sans texte intégral déposé dans HAL mais avec texte intégral librement accessible hors HAL</strong> ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
 <br>
-# manuscrits et lien open access HAL-UR1 par année de publication (= colonne « <b>Productions 2017 avec texte intégral déposé dans HAL ou librement accessible hors HAL</b> ») :<br>
+# manuscrits et lien open access HAL-UR1 par année de publication (= colonne « <strong>Productions 2017 avec texte intégral déposé dans HAL ou librement accessible hors HAL</strong> ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
 <br>
-<b>Notes :</b><br>
+<strong>Notes :</strong><br>
 <ul>
 <li>Les données obtenues pour les secteurs ne sont pas la somme des données collections : certains dépôts sont en effet des co-publications et peuvent apparaître dans plusieurs collections à la fois au sein d’un même secteur. En les additionnant, on fausserait les résultats.</li>
 <li>Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).</li>
 <li>Dans les requêtes API portant sur le lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>), il faut exclure les liens ISTEX (uniquement accessibles aux membres ESR) : fq=-linkExtId_s:istex</li>
 </ul>
-');
-echo('<br></div></div>');
+';
+echo '<br></div></div>';
 
 //Requête 2
-echo('<div id="DTreq2" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
-<b>Pour les utilisateurs hors Rennes 1</b> : pour exploiter la requête portail, il faut au préalable compléter la liste des codes collections des secteurs et unités dans un tableau PortHAL-UNIV-XXXXX.php, sur le modèle du fichier PortHAL-RENNES1.php. En l’absence de secteurs, il suffit de reporter le code collection (ex : UNIV-RENNES1) comme valeur des champs « secteurs «  du tableau PHP.<br>
+echo '<div id="DTreq2" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
+<strong>Pour les utilisateurs hors Rennes 1</strong> : pour exploiter la requête portail, il faut au préalable compléter la liste des codes collections des secteurs et unités dans un tableau PortHAL-UNIV-XXXXX.php, sur le modèle du fichier PortHAL-RENNES1.php. En l’absence de secteurs, il suffit de reporter le code collection (ex : UNIV-RENNES1) comme valeur des champs « secteurs «  du tableau PHP.<br>
 <br>
 # notices et texte intégral HAL-UR1 (toutes les années de publication) :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*:*&wt=xml&rows=0&facet=true&facet.pivot=producedDateY_i,submitType_s">https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*:*&wt=xml&rows=0&facet=true&facet.pivot=producedDateY_i,submitType_s</a><br>
 <br>
-# manuscrits HAL-UR1 par année de publication (= colonne « <b>Productions avec texte intégral déposé dans HAL</b> ») :<br>
+# manuscrits HAL-UR1 par année de publication (= colonne « <strong>Productions avec texte intégral déposé dans HAL</strong> ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:file&fq=-status_i=111</a><br> 
 <br>
-# notices HAL-UR1 (= colonne « <b>Productions sans texte intégral déposé dans HAL</b> ») :<br>
+# notices HAL-UR1 (= colonne « <strong>Productions sans texte intégral déposé dans HAL</strong> ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111</a><br>
 <br>
-# notices HAL-UR1 avec lien open access par année de publication  (= colonne « <b>Productions sans texte intégral déposé dans HAL mais avec texte intégral librement accessible hors HAL</b> ») :<br>
+# notices HAL-UR1 avec lien open access par année de publication  (= colonne « <strong>Productions sans texte intégral déposé dans HAL mais avec texte intégral librement accessible hors HAL</strong> ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
 <br>
-<b>Notes :</b><br>
+<strong>Notes :</strong><br>
 <ul>
 <li>Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).</li>
 <li>Dans les requêtes API portant sur le lien vers un PDF librement disponible hors de HAL (via Unpaywall), il faut exclure les liens ISTEX (uniquement accessibles aux membres ESR) : fq=-linkExtId_s:istex</li>
 </ul>
-');
-echo('<br></div></div>');
+';
+echo '<br></div></div>';
 
 //Requête 3
-echo('<div id="DTreq3" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq3" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 Liste des portails : <a target="_blank" href="https://api.archives-ouvertes.fr/ref/instance/?wt=xml">https://api.archives-ouvertes.fr/ref/instance/?wt=xml</a><br> (un filtre interne au programme est appliqué pour n’extraire que les portails université : « université » doit figurer dans le champ « name »).<br>
 <br>
-# articles HAL-UR1 par année de publication (= colonne « <b>Articles</b> ») :<br>
+# articles HAL-UR1 par année de publication (= colonne « <strong>Articles</strong> ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111</a><br>
 <br>
-# articles HAL-UR1 sans texte intégral par année de publication (= colonne « <b>Articles 2017 sans texte intégral déposé dans HAL</b> ») :<br>
+# articles HAL-UR1 sans texte intégral par année de publication (= colonne « <strong>Articles 2017 sans texte intégral déposé dans HAL</strong> ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=submitType_s:notice&fq=-status_i=111</a><br>
 <br>
-# articles HAL-UR1 avec texte intégral par année de publication (= colonne « <b>Articles 2017 avec texte intégral déposé dans HAL</b> ») :<br>
+# articles HAL-UR1 avec texte intégral par année de publication (= colonne « <strong>Articles 2017 avec texte intégral déposé dans HAL</strong> ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=submitType_s:file&fq=-status_i=111</a><br>
 <br>
 # articles HAL-UR1 sans texte intégral déposé dans HAL mais avec texte intégral librement accessible hors HAL :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
 <br>
-# articles HAL-UR1 avec texte intégral ou texte intégral accessible hors HAL par année de publication (= colonne « <b>Articles 2017 avec texte intégral déposé dans HAL ou librement accessible hors HAL</b> ») :<br>
+# articles HAL-UR1 avec texte intégral ou texte intégral accessible hors HAL par année de publication (= colonne « <strong>Articles 2017 avec texte intégral déposé dans HAL ou librement accessible hors HAL</strong> ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
 <br>
-<b>Notes :</b><br>
+<strong>Notes :</strong><br>
 <ul>
 <li>Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).</li>
 <li>Dans les requêtes API portant sur le lien vers un PDF librement disponible hors de HAL (via Unpaywall), il faut exclure les liens ISTEX (uniquement accessibles aux membres ESR) : fq=-linkExtId_s:istex</li>
 </ul>
-');
-echo('<br></div></div>');
+';
+echo '<br></div></div>';
 
 //Requête 4
-echo('<div id="DTreq4" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
-<b>Stocks :</b><br>
+echo '<div id="DTreq4" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
+<strong>Stocks :</strong><br>
 AO1 = nombre de notices au 31/12/XXXX (remplacer par année renseignée par l’utilisateur)<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:notice&fq=-status_i=111&fq=submittedDate_s:[1600-01-01-%20TO%202017-12-31/HOUR]">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:notice&fq=-status_i=111&fq=submittedDate_s:[1600-01-01-%20TO%202017-12-31/HOUR]</a><br>
 AO2 = nombre de fichiers au 31/12/XXXX (remplacer par année renseignée par l’utilisateur)<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:file&fq=-status_i=111&fq=submittedDate_s:[1600-01-01-%20TO%202017-12-31/HOUR]">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:file&fq=-status_i=111&fq=submittedDate_s:[1600-01-01-%20TO%202017-12-31/HOUR]</a><br>
 <br>
-<b>Flux :</b><br>
+<strong>Flux :</strong><br>
 AO3 = nombre de notices ajoutées en XXXX (remplacer par année renseignée par l’utilisateur)<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:notice&fq=-status_i=111&fq=submittedDate_s:[2017-01-01-%20TO%202017-12-31/HOUR]">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:notice&fq=-status_i=111&fq=submittedDate_s:[2017-01-01-%20TO%202017-12-31/HOUR]</a><br>
 AO4 = nombre de fichiers ajoutés en XXXX (remplacer par année renseignée par l’utilisateur)<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:file&fq=-status_i=111&fq=submittedDate_s:[2017-01-01-%20TO%202017-12-31/HOUR]">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:file&fq=-status_i=111&fq=submittedDate_s:[2017-01-01-%20TO%202017-12-31/HOUR]</a><br>
 <br>
-<b>Note :</b> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
-');
-echo('<br></div></div>');
+<strong>Note :</strong> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
+';
+echo '<br></div></div>';
 
 //Requête 5
-echo('<div id="DTreq5" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq5" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 Ce chiffre n’est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n’est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d’une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l’appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs Dalloz et Lextenso qui n’ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
 <br>
 Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
@@ -5056,59 +5082,59 @@ La ligne "Hors regroupement éditorial" est calculée en retranchant le nombre t
 Lextenso : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:lextenso&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:lextenso&fq=docType_s:ART</a><br>
 Dalloz : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:dalloz&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:dalloz&fq=docType_s:ART</a><br>
 <br>
-<b>Note :</b> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
-');
-echo('<br></div></div>');
+<strong>Note :</strong> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
+';
+echo '<br></div></div>';
 
 //Requête 6
-echo('<div id="DTreq6" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq6" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 Ce chiffre n’est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n’est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d’une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l’appellation « Hors regroupement éditorial ».<br>
 <br>
 Requêtes API :<br>
 Communications 2017 (exemple pour préfixe 10.1016) : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:COMM">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:COMM</a><br>
 La ligne "Hors regroupement éditorial" est calculée en retranchant le nombre total d\'articles recensés chez les éditeurs principaux (liste abrégée) du nombre total d\'articles du portail pour 2017 : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:COMM&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:COMM&fq=-status_i=111</a><br>
 <br>
-<b>Note :</b> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
-');
-echo('<br></div></div>');
+<strong>Note :</strong> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
+';
+echo '<br></div></div>';
 
 //Requête 7
-echo('<div id="DTreq7" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq7" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 Requête API (on additionne les valeurs des balises « count » du 1er niveau) :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*%3A*&rows=0&wt=xml&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=producedDateY_i:2017&facet.limit=10000">https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*%3A*&rows=0&wt=xml&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=producedDateY_i:2017&facet.limit=10000</a><br>
 La requête n’est pas basée sur l’ISSN car certaines revues du référentiel AuréHAL n’ont pas d’ISSN. C’est donc le titre de la revue (journalTitle_s) qui est pris en compte.<br>
 <br>
-<b>Note :</b> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
-');
-echo('<br></div></div>');
+<strong>Note :</strong> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
+';
+echo '<br></div></div>';
 
 //Requête 8
-echo('<div id="DTreq8" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
-');
-echo('<br></div></div>');
+echo '<div id="DTreq8" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
+';
+echo '<br></div></div>';
 
 //Requête 9
-echo('<div id="DTreq9" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
-');
-echo('<br></div></div>');
+echo '<div id="DTreq9" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
+';
+echo '<br></div></div>';
 
 //Requête 10
-echo('<div id="DTreq10" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq10" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 Ce chiffre n’est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n’est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d’une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l’appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs Dalloz et Lextenso qui n’ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
 <br>
 Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
@@ -5117,15 +5143,15 @@ Requête API :<br>
 Nombre de notices sans texte intégral :<br>
  <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111</a><br>
 <br>
-<b>Note :</b> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
-');
-echo('<br></div></div>');
+<strong>Note :</strong> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
+';
+echo '<br></div></div>';
 
 //Requête 11
-echo('<div id="DTreq11" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq11" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 Ce chiffre n’est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n’est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d’une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l’appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs Dalloz et Lextenso qui n’ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
 Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
 <br>
@@ -5133,15 +5159,15 @@ Requête API :<br>
 Nombre de notices avec texte intégral : <br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:file&fq=-status_i=111</a><br>
 <br>
-<b>Note :</b> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
-');
-echo('<br></div></div>');
+<strong>Note :</strong> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
+';
+echo '<br></div></div>';
 
 //Requête 12
-echo('<div id="DTreq12" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq12" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 Ce chiffre n’est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n’est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d’une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l’appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs Dalloz et Lextenso qui n’ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
 Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
 <br>
@@ -5149,19 +5175,19 @@ Requête API :<br>
 Nombre de notices avec texte intégral OU lien externe : <br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
 <br>
-<b>Notes :</b><br>
+<strong>Notes :</strong><br>
 <ul>
 <li>Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).</li>
 <li>Dans les requêtes API portant sur le lien vers un PDF librement disponible hors de HAL (via Unpaywall), il faut exclure les liens ISTEX (uniquement accessibles aux membres ESR) : fq=-linkExtId_s:istex</li>
 </ul>
-');
-echo('<br></div></div>');
+';
+echo '<br></div></div>';
 
 //Requête 13
-echo('<div id="DTreq13" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq13" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 Requêtes API :<br>
 Nombre de notices sans texte intégral :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111</a><br>
@@ -5170,39 +5196,39 @@ Nombre de notices avec texte intégral :<br>
 Nombre de notices avec texte intégral OU lien externe :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
 <br>
-<b>Notes :</b><br>
+<strong>Notes :</strong><br>
 <ul>
 <li>Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).</li>
 <li>Dans les requêtes API portant sur le lien vers un PDF librement disponible hors de HAL (via Unpaywall), il faut exclure les liens ISTEX (uniquement accessibles aux membres ESR) : fq=-linkExtId_s:istex</li>
 </ul>
-');
-echo('<br></div></div>');
+';
+echo '<br></div></div>';
 
 //Requête 14
-echo('<div id="DTreq14" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq14" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 Nombre de références HAL dans la collection LTSI pour 2019 ayant un projet ANR (incluant le champ « financement ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fl=anrProjectId_i,anrProjectAcronym_s,funding_s,anrProjectId_i,anrProjectReference_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fl=anrProjectId_i,anrProjectAcronym_s,funding_s,anrProjectId_i,anrProjectReference_s&rows=10000</a><br>
-');
-echo('<br></div></div>');
+';
+echo '<br></div></div>';
 
 //Requête 15
-echo('<div id="DTreq15" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq15" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 Nombre de références HAL dans la collection LTSI pour 2019 ayant un projet européen (incluant le champ « financement ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fl= europeanProjectId_i,europeanProjectAcronym_s,funding_s,europeanProjectId_i,europeanProjectReference_s &rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fl= europeanProjectId_i,europeanProjectAcronym_s,funding_s,europeanProjectId_i,europeanProjectReference_s &rows=10000</a><br>
-');
-echo('<br></div></div>');
+';
+echo '<br></div></div>';
 
 //Requête 16
-echo('<div id="DTreq16" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq16" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/UNIV-RENNES1/?fq=producedDateY_i:2019&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s&rows=10000&sort=contributorFullName_s%20desc">https://api.archives-ouvertes.fr/search/UNIV-RENNES1/?fq=producedDateY_i:2019&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s&rows=10000&sort=contributorFullName_s%20desc</a><br>
 <br>
 Champs exploités :<br>
@@ -5212,126 +5238,126 @@ Champs exploités :<br>
 <li>submitType_s pour le type de dépôt (notice, file)</li>
 <li>sid_i : identifiant du portail de dépôt (avec <a target="_blank" href="https://api.archives-ouvertes.fr/search/?q=*%3A*&rows=0&wt=xml&indent=true&facet=true&facet.field=sid_i">une liste</a>, mais non documentée selon ticket <a target="_blank" href="https://support.ccsd.cnrs.fr/SelfService/Display.html?id=87256">HAL#87256</a> : on n’en a traduit que quelques-uns)</li>
 </ul>
-');
-echo('<br></div></div>');
+';
+echo '<br></div></div>';
 
 //Requête 17
-echo('<div id="DTreq17" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq17" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s">https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s</a><br>
 Les 3 niveaux (collCategory_s):<br>
 Laboratoires = uniquement les tampons LABO et THEME<br>
 Etablissements = uniquement les tampons INSTITUTION, UNIV et ECOLE<br>
 Autres = uniquement les tampons AUTRE<br>
-');
-echo('<br></div></div>');
+';
+echo '<br></div></div>';
 
 //Requête 18
-echo('<div id="DTreq18" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq18" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s">https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s</a><br>
 collCategory_s / Laboratoires = uniquement les tampons LABO et THEME<br>
-');
-echo('<br></div></div>');
+';
+echo '<br></div></div>';
 
 //Requête 19
-echo('<div id="DTreq19" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq19" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s">https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s</a><br>
 collCategory_s / Etablissements = uniquement les tampons INSTITUTION, UNIV et ECOLE<br>
-');
-echo('<br></div></div>');
+';
+echo '<br></div></div>';
 
 //Requête 20
-echo('<div id="DTreq20" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq20" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s">https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s</a><br>
 collCategory_s / Autres = uniquement les tampons AUTRE<br>
-');
-echo('<br></div></div>');
+';
+echo '<br></div></div>';
 
 //Requête 21
-echo('<div id="DTreq21" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq21" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
 Liens XML/JSON : l’export des références en csv n’est malheureusement pas possible (même si théoriquement proposé par le CCSD).<br>
 Sont exclus des résultats les territoires français d’outre-mer de la <a target="_blank" href="http://documentation.abes.fr/sudoc/formats/CodesPays.htm">liste ISO 3166</a> : "Martinique" MQ,"Guadeloupe" GP, etc.<br>
 <br>
-<b>Note :</b> ces résultats sont à relativiser car beaucoup de structures étrangères non valides du référentiel AuréHAL ont un code pays = France. Par ailleurs, les co-auteurs étrangers ne sont pas systématiquement affiliés dans HAL, voire ont une affiliation erronée (attribuée automatiquement par HAL).<br>
-');
-echo('<br></div></div>');
+<strong>Note :</strong> ces résultats sont à relativiser car beaucoup de structures étrangères non valides du référentiel AuréHAL ont un code pays = France. Par ailleurs, les co-auteurs étrangers ne sont pas systématiquement affiliés dans HAL, voire ont une affiliation erronée (attribuée automatiquement par HAL).<br>
+';
+echo '<br></div></div>';
 
 //Requête 22
-echo('<div id="DTreq22" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq22" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
 Liens XML/JSON : l’export des références en csv n’est malheureusement pas possible (même si théoriquement proposé par le CCSD).<br>
 Données utilisées pour le label « institution » :<br>
 structType_s = "institution", "regroupinstitution", "regrouplaboratory", "department"<br>
 Sont exclus des résultats les territoires français d’outre-mer de la <a target="_blank" href="http://documentation.abes.fr/sudoc/formats/CodesPays.htm">liste ISO 3166</a> : "Martinique" MQ,"Guadeloupe" GP, etc.<br>
 <br>
-<b>Note :</b> ces résultats sont à relativiser car beaucoup de structures étrangères non valides du référentiel AuréHAL ont un code pays = France. Par ailleurs, les co-auteurs étrangers ne sont pas systématiquement affiliés dans HAL, voire ont une affiliation erronée (attribuée automatiquement par HAL).<br>
-');
-echo('<br></div></div>');
-echo('Vous pouvez générer différents types de cartes en exportant ces données dans l\'outil open source <a target="_blank" href="https://www.sciencespo.fr/cartographie/khartis/">Khartis</a> (voir <a target="_blank" href="https://www.sciencespo.fr/cartographie/khartis/docs/premiers-pas-avec-Khartis-(1)/">documentation</a>)');
+<strong>Note :</strong> ces résultats sont à relativiser car beaucoup de structures étrangères non valides du référentiel AuréHAL ont un code pays = France. Par ailleurs, les co-auteurs étrangers ne sont pas systématiquement affiliés dans HAL, voire ont une affiliation erronée (attribuée automatiquement par HAL).<br>
+';
+echo '<br></div></div>';
+echo 'Vous pouvez générer différents types de cartes en exportant ces données dans l\'outil open source <a target="_blank" href="https://www.sciencespo.fr/cartographie/khartis/">Khartis</a> (voir <a target="_blank" href="https://www.sciencespo.fr/cartographie/khartis/docs/premiers-pas-avec-Khartis-(1)/">documentation</a>)';
 
 //Requête 23
-echo('<div id="DTreq23" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">');
-echo('<span style="color:#333333;" class="accordeon"><b>Consultez la documentation technique</b>&nbsp;<font color="#aaaaaa"><i>(Cliquez)</i></font></span>');
-echo('<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>');
-echo('
+echo '<div id="DTreq23" style="width:100%;float: left;background-color:#f5f5f5;border:1px solid #dddddd;padding: 3px;border-radius: 3px;margin-bottom: 10px;">';
+echo($cstDoc);
+echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
+echo '
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
 Liens XML/JSON : l’export des références en csv n’est malheureusement pas possible (même si théoriquement proposé par le CCSD).<br>
 Sont exclus des résultats les territoires français d’outre-mer de la <a target="_blank" href="http://documentation.abes.fr/sudoc/formats/CodesPays.htm">liste ISO 3166</a> : "Martinique" MQ,"Guadeloupe" GP, etc.<br>
 <br>
-<b>Note :</b> ces résultats sont à relativiser car beaucoup de structures étrangères non valides du référentiel AuréHAL ont un code pays = France. Par ailleurs, les co-auteurs étrangers ne sont pas systématiquement affiliés dans HAL, voire ont une affiliation erronée (attribuée automatiquement par HAL).<br>
-');
-echo('<br></div></div>');
+<strong>Note :</strong> ces résultats sont à relativiser car beaucoup de structures étrangères non valides du référentiel AuréHAL ont un code pays = France. Par ailleurs, les co-auteurs étrangers ne sont pas systématiquement affiliés dans HAL, voire ont une affiliation erronée (attribuée automatiquement par HAL).<br>
+';
+echo '<br></div></div>';
 
-echo('<script type="text/javascript" language="Javascript">');
-echo('var acc = document.getElementsByClassName("accordeon");');
-echo('var i;');
-echo('for (i = 0; i < acc.length; i++) {');
-echo('  acc[i].onclick = function() {');
-echo('    this.classList.toggle("active");');
-echo('    var panel = this.nextElementSibling;');
-echo('    if (panel.style.maxHeight){');
-echo('      panel.style.maxHeight = null;');
-echo('    } else {');
-echo('      panel.style.maxHeight = panel.scrollHeight + "px";');
-echo('    }');
-echo('  }');
-echo('}');
-echo('</script>');
+echo '<script type="text/javascript" language="Javascript">';
+echo 'var acc = document.getElementsByClassName("accordeon");';
+echo 'var i;';
+echo 'for (i = 0; i < acc.length; i++) {';
+echo '  acc[i].onclick = function() {';
+echo '    this.classList.toggle("active");';
+echo '    var panel = this.nextElementSibling;';
+echo '    if (panel.style.maxHeight){';
+echo '      panel.style.maxHeight = null;';
+echo '    } else {';
+echo '      panel.style.maxHeight = panel.scrollHeight + "px";';
+echo '    }';
+echo '  }';
+echo '}';
+echo '</script>';
 
 if (!isset($_POST["valider"]) && !isset($_GET["reqt"])) {
-	echo('<script type="text/javascript" language="Javascript">
+	echo '<script type="text/javascript" language="Javascript">
 		for(let i=1; i<=imax; i++) {
 			document.getElementById("DTreq"+i).style.display = "none";
 		}
-	</script>');
+	</script>';
 }else{
 	for ($i=1; $i<=23; $i++) { 
 		if ($reqt == "req".$i) {
-			echo('<script type="text/javascript" language="Javascript">document.getElementById("DTreq'.$i.'").style.display = "block";</script>');
+			echo '<script type="text/javascript" language="Javascript">document.getElementById("DTreq'.$i.'").style.display = "block";</script>';
 		}else{
-			echo('<script type="text/javascript" language="Javascript">document.getElementById("DTreq'.$i.'").style.display = "none";</script>');
+			echo '<script type="text/javascript" language="Javascript">document.getElementById("DTreq'.$i.'").style.display = "none";</script>';
 		}
 	}
 }
-echo('<br>');
+echo '<br>';
 ?>
 <?php
 include('./bas.php');

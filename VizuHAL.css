@@ -49,3 +49,15 @@ div.panel {
   overflow: hidden;
   transition: max-height 0.2s ease-out;
 }
+
+.red {
+	color: #ff0000;
+}
+
+.center {
+	text-align: center;
+}
+
+.table100{
+    width:100%;
+}
