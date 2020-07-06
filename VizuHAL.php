@@ -18,6 +18,30 @@ $cstPTH = "%</em></th>";
 $cstRED = "<th scope=\"col\" style=\"text-align:left;\"><strong>Regroupement éditorial</strong></th>";
 $cstPUB = "<th scope=\"col\" style=\"text-align:left;\"><strong>Publications</strong></th>";
 $cstART = "<th scope=\"col\" style=\"text-align:left;\"><strong>% articles</strong></th>";
+$cstSel = " selected";
+$cstR01 = "req1";
+$cstR02 = "req2";
+$cstR03 = "req3";
+$cstR04 = "req4";
+$cstR05 = "req5";
+$cstR06 = "req6";
+$cstR07 = "req7";
+$cstR08 = "req8";
+$cstR09 = "req9";
+$cstR10 = "req10";
+$cstR11 = "req11";
+$cstR12 = "req12";
+$cstR13 = "req13";
+$cstR14 = "req14";
+$cstR15 = "req15";
+$cstR16 = "req16";
+$cstR17 = "req17";
+$cstR18 = "req18";
+$cstR19 = "req19";
+$cstR20 = "req20";
+$cstR21 = "req21";
+$cstR22 = "req22";
+$cstR23 = "req23";
 
 
 // récupération de l'adresse IP du client (on cherche d'abord à savoir s'il est derrière un proxy)
@@ -43,14 +67,14 @@ if (!in_array($ip, $IP_aut)) {
 
 //Paramètres envoyés par l'URL
 if (isset($_GET["reqt"])) {
-	if ($_GET["reqt"] == "req16") {$reqt = "req16";$irq16 = " selected";}
-	if ($_GET["reqt"] == "req17") {$reqt = "req17";$irq17 = " selected";}
-	if ($_GET["reqt"] == "req18") {$reqt = "req18";$irq18 = " selected";}
-	if ($_GET["reqt"] == "req19") {$reqt = "req19";$irq19 = " selected";}
-	if ($_GET["reqt"] == "req20") {$reqt = "req20";$irq20 = " selected";}
-	if ($_GET["reqt"] == "req21") {$reqt = "req21";$irq21 = " selected";}
-	if ($_GET["reqt"] == "req22") {$reqt = "req22";$irq22 = " selected";}
-	if ($_GET["reqt"] == "req23") {$reqt = "req23";$irq23 = " selected";}
+	if ($_GET["reqt"] == $cstR16) {$reqt = $cstR16;$irq16 = $cstSel;}
+	if ($_GET["reqt"] == $cstR17) {$reqt = $cstR17;$irq17 = $cstSel;}
+	if ($_GET["reqt"] == $cstR18) {$reqt = $cstR18;$irq18 = $cstSel;}
+	if ($_GET["reqt"] == $cstR19) {$reqt = $cstR19;$irq19 = $cstSel;}
+	if ($_GET["reqt"] == $cstR20) {$reqt = $cstR20;$irq20 = $cstSel;}
+	if ($_GET["reqt"] == $cstR21) {$reqt = $cstR21;$irq21 = $cstSel;}
+	if ($_GET["reqt"] == $cstR22) {$reqt = $cstR22;$irq22 = $cstSel;}
+	if ($_GET["reqt"] == $cstR23) {$reqt = $cstR23;$irq23 = $cstSel;}
 	$team = $_GET["team"];
 	if (isset($_GET["port"])) {$port = $_GET["port"];}
 	$ordr = $_GET["ordr"];
@@ -104,12 +128,13 @@ function array_orderby() {
   $args = func_get_args();
   $data = array_shift($args);
   foreach ($args as $n => $field) {
-      if (is_string($field)) {
-          $tmp = array();
-          foreach ($data as $key => $row)
-              $tmp[$key] = $row[$field];
-          $args[$n] = $tmp;
-          }
+		if (is_string($field)) {
+			$tmp = array();
+			foreach ($data as $key => $row) {
+				$tmp[$key] = $row[$field];
+				$args[$n] = $tmp;
+			}
+		}
   }
   $args[] = &$data;
   call_user_func_array('array_multisort', $args);
@@ -341,80 +366,80 @@ if (isset($_POST["valider"])) {
   $team = htmlspecialchars(strtoupper($_POST["team"]));
   $port = htmlspecialchars($_POST["port"]);
   $reqt = htmlspecialchars($_POST["reqt"]);
-  if ($reqt == "req2") {
+  if ($reqt == $cstR02) {
     $anneedeb = htmlspecialchars($_POST["anneedeb2"]);
     $anneefin = htmlspecialchars($_POST["anneefin2"]);
     if ($anneefin < $anneedeb) {$anneetemp = $anneedeb; $anneedeb = $anneefin; $anneefin = $anneetemp;}
   }else{
-    if ($reqt == "req1") {
+    if ($reqt == $cstR01) {
       $annee1 = htmlspecialchars($_POST["annee1"]);
     }else{
-      if ($reqt == "req3") {
+      if ($reqt == $cstR03) {
         $annee3 = htmlspecialchars($_POST["annee3"]);
       }else{
-        if ($reqt == "req4") {
+        if ($reqt == $cstR04) {
 					$annee4 = htmlspecialchars($_POST["annee4"]);
 				}else{
-					if ($reqt == "req5") {
+					if ($reqt == $cstR05) {
 						$annee5 = htmlspecialchars($_POST["annee5"]);
 					}else{
-						if ($reqt == "req6") {
+						if ($reqt == $cstR06) {
 							$annee6 = htmlspecialchars($_POST["annee6"]);
 						}else{
-							if ($reqt == "req7") {
+							if ($reqt == $cstR07) {
 								$annee7 = htmlspecialchars($_POST["annee7"]);
 							}else{
-								if ($reqt == "req8") {
+								if ($reqt == $cstR08) {
 									$annee8 = htmlspecialchars($_POST["annee8"]);
 								}else{
-									if ($reqt == "req9") {
+									if ($reqt == $cstR09) {
 										$annee9 = htmlspecialchars($_POST["annee9"]);
 									}else{
-										if ($reqt == "req10") {
+										if ($reqt == $cstR10) {
 											$annee10 = htmlspecialchars($_POST["annee10"]);
 										}else{
-											if ($reqt == "req11") {
+											if ($reqt == $cstR11) {
 												$annee11 = htmlspecialchars($_POST["annee11"]);
 											}else{
-												if ($reqt == "req12") {
+												if ($reqt == $cstR12) {
 													$annee12 = htmlspecialchars($_POST["annee12"]);
 												}else{
-													if ($reqt == "req13") {
+													if ($reqt == $cstR13) {
 														$annee13 = htmlspecialchars($_POST["annee13"]);
 													}else{
-														if ($reqt == "req14") {
+														if ($reqt == $cstR14) {
 															$anneedeb = htmlspecialchars($_POST["anneedeb14"]);
 															$anneefin = htmlspecialchars($_POST["anneefin14"]);
 															if ($anneefin < $anneedeb) {$anneetemp = $anneedeb; $anneedeb = $anneefin; $anneefin = $anneetemp;}
 														}else{
-															if ($reqt == "req15") {
+															if ($reqt == $cstR15) {
 																$anneedeb = htmlspecialchars($_POST["anneedeb15"]);
 																$anneefin = htmlspecialchars($_POST["anneefin15"]);
 																if ($anneefin < $anneedeb) {$anneetemp = $anneedeb; $anneedeb = $anneefin; $anneefin = $anneetemp;}
 															}else{
-																if ($reqt == "req16") {
+																if ($reqt == $cstR16) {
 																	$anneedeb = htmlspecialchars($_POST["anneedeb16"]);
 																	$anneefin = htmlspecialchars($_POST["anneefin16"]);
 																	if ($anneefin < $anneedeb) {$anneetemp = $anneedeb; $anneedeb = $anneefin; $anneefin = $anneetemp;}
 																}else{
-																	if ($reqt == "req17") {
+																	if ($reqt == $cstR17) {
 																		$annee17 = htmlspecialchars($_POST["annee17"]);
 																	}else{
-																		if ($reqt == "req18") {
+																		if ($reqt == $cstR18) {
 																			$annee18 = htmlspecialchars($_POST["annee18"]);
 																		}else{
-																			if ($reqt == "req19") {
+																			if ($reqt == $cstR19) {
 																				$annee19 = htmlspecialchars($_POST["annee19"]);
 																			}else{
-																				if ($reqt == "req20") {
+																				if ($reqt == $cstR20) {
 																					$annee20 = htmlspecialchars($_POST["annee20"]);
 																				}else{
-																					if ($reqt == "req21") {
+																					if ($reqt == $cstR21) {
 																						$anneedeb = htmlspecialchars($_POST["anneedeb21"]);
 																						$anneefin = htmlspecialchars($_POST["anneefin21"]);
 																						if ($anneefin < $anneedeb) {$anneetemp = $anneedeb; $anneedeb = $anneefin; $anneefin = $anneetemp;}
 																					}else{
-																						if ($reqt == "req22") {
+																						if ($reqt == $cstR22) {
 																							$anneedeb = htmlspecialchars($_POST["anneedeb22"]);
 																							$anneefin = htmlspecialchars($_POST["anneefin22"]);
 																							if ($anneefin < $anneedeb) {$anneetemp = $anneedeb; $anneedeb = $anneefin; $anneefin = $anneetemp;}
@@ -475,60 +500,60 @@ while (false !== ($fichier = readdir($dossier))) {
 </select>
 <br><br>
 <?php
-if (isset($reqt) && $reqt == "tabg") {$itab = " selected";}else{$itab = "";}
-if (isset($reqt) && $reqt == "req1") {$irq1 = " selected";}else{$irq1 = "";}
-if (isset($reqt) && $reqt == "req2") {$irq2 = " selected";}else{$irq2 = "";}
-if (isset($reqt) && $reqt == "req3") {$irq3 = " selected";}else{$irq3 = "";}
-if (isset($reqt) && $reqt == "req4") {$irq4 = " selected";}else{$irq4 = "";}
-if (isset($reqt) && $reqt == "req5") {$irq5 = " selected";}else{$irq5 = "";}
-if (isset($reqt) && $reqt == "req6") {$irq6 = " selected";}else{$irq6 = "";}
-if (isset($reqt) && $reqt == "req7") {$irq7 = " selected";}else{$irq7 = "";}
-if (isset($reqt) && $reqt == "req8") {$irq8 = " selected";}else{$irq8 = "";}
-if (isset($reqt) && $reqt == "req9") {$irq9 = " selected";}else{$irq9 = "";}
-if (isset($reqt) && $reqt == "req10") {$irq10 = " selected";}else{$irq10 = "";}
-if (isset($reqt) && $reqt == "req11") {$irq11 = " selected";}else{$irq11 = "";}
-if (isset($reqt) && $reqt == "req12") {$irq12 = " selected";}else{$irq12 = "";}
-if (isset($reqt) && $reqt == "req13") {$irq13 = " selected";}else{$irq13 = "";}
-if (isset($reqt) && $reqt == "req14") {$irq14 = " selected";}else{$irq14 = "";}
-if (isset($reqt) && $reqt == "req15") {$irq15 = " selected";}else{$irq15 = "";}
-if (isset($reqt) && $reqt == "req16") {$irq16 = " selected";}else{$irq16 = "";}
-if (isset($reqt) && $reqt == "req17") {$irq17 = " selected";}else{$irq17 = "";}
-if (isset($reqt) && $reqt == "req18") {$irq18 = " selected";}else{$irq18 = "";}
-if (isset($reqt) && $reqt == "req19") {$irq19 = " selected";}else{$irq19 = "";}
-if (isset($reqt) && $reqt == "req20") {$irq20 = " selected";}else{$irq20 = "";}
-if (isset($reqt) && $reqt == "req21") {$irq21 = " selected";}else{$irq21 = "";}
-if (isset($reqt) && $reqt == "req22") {$irq22 = " selected";}else{$irq22 = "";}
-if (isset($reqt) && $reqt == "req23") {$irq23 = " selected";}else{$irq23 = "";}
+if (isset($reqt) && $reqt == "tabg") {$itab = $cstSel;}else{$itab = "";}
+if (isset($reqt) && $reqt == $cstR01) {$irq1 = $cstSel;}else{$irq1 = "";}
+if (isset($reqt) && $reqt == $cstR02) {$irq2 = $cstSel;}else{$irq2 = "";}
+if (isset($reqt) && $reqt == $cstR03) {$irq3 = $cstSel;}else{$irq3 = "";}
+if (isset($reqt) && $reqt == $cstR04) {$irq4 = $cstSel;}else{$irq4 = "";}
+if (isset($reqt) && $reqt == $cstR05) {$irq5 = $cstSel;}else{$irq5 = "";}
+if (isset($reqt) && $reqt == $cstR06) {$irq6 = $cstSel;}else{$irq6 = "";}
+if (isset($reqt) && $reqt == $cstR07) {$irq7 = $cstSel;}else{$irq7 = "";}
+if (isset($reqt) && $reqt == $cstR08) {$irq8 = $cstSel;}else{$irq8 = "";}
+if (isset($reqt) && $reqt == $cstR09) {$irq9 = $cstSel;}else{$irq9 = "";}
+if (isset($reqt) && $reqt == $cstR10) {$irq10 = $cstSel;}else{$irq10 = "";}
+if (isset($reqt) && $reqt == $cstR11) {$irq11 = $cstSel;}else{$irq11 = "";}
+if (isset($reqt) && $reqt == $cstR12) {$irq12 = $cstSel;}else{$irq12 = "";}
+if (isset($reqt) && $reqt == $cstR13) {$irq13 = $cstSel;}else{$irq13 = "";}
+if (isset($reqt) && $reqt == $cstR14) {$irq14 = $cstSel;}else{$irq14 = "";}
+if (isset($reqt) && $reqt == $cstR15) {$irq15 = $cstSel;}else{$irq15 = "";}
+if (isset($reqt) && $reqt == $cstR16) {$irq16 = $cstSel;}else{$irq16 = "";}
+if (isset($reqt) && $reqt == $cstR17) {$irq17 = $cstSel;}else{$irq17 = "";}
+if (isset($reqt) && $reqt == $cstR18) {$irq18 = $cstSel;}else{$irq18 = "";}
+if (isset($reqt) && $reqt == $cstR19) {$irq19 = $cstSel;}else{$irq19 = "";}
+if (isset($reqt) && $reqt == $cstR20) {$irq20 = $cstSel;}else{$irq20 = "";}
+if (isset($reqt) && $reqt == $cstR21) {$irq21 = $cstSel;}else{$irq21 = "";}
+if (isset($reqt) && $reqt == $cstR22) {$irq22 = $cstSel;}else{$irq22 = "";}
+if (isset($reqt) && $reqt == $cstR23) {$irq23 = $cstSel;}else{$irq23 = "";}
 ?>
 <!--Extraction-->
 <p class="form-inline"><label for="reqt">Extraction souhaitée :&nbsp;</label>
 <select id="reqt" class="form-control" style="margin:0px;" size="1" name="reqt" onChange="freqt();">
-<!--<option value="tabg"<?php echo($itab);?>>Tableau de bord général</option>-->
-<option value="req1"<?php echo($irq1);?>>1. Portail : production scientifique par secteur et par unité</option>
-<option value="req2"<?php echo($irq2);?>>2. Portail ou collection : évolution sur une période</option>
-<option value="req3"<?php echo($irq3);?>>3. Portail : Comparaison portails</option>
-<option value="req4"<?php echo($irq4);?>>4. Portail : ESGBU (stocks et flux)</option>
-<option value="req5"<?php echo($irq5);?>>5. Portail ou Collection : Nombre de publications de type articles par éditeur</option>
-<option value="req6"<?php echo($irq6);?>>6. Portail ou Collection : Nombre de publications de type communications par éditeur</option>
-<option value="req7"<?php echo($irq7);?>>7. Portail ou Collection : Nombre de publications (articles de revue) par revue</option>
+<!--<option value="tabg"<?php echo $itab;?>>Tableau de bord général</option>-->
+<option value="<?php echo $cstR01;?>"<?php echo $irq1;?>>1. Portail : production scientifique par secteur et par unité</option>
+<option value="<?php echo $cstR02;?>"<?php echo $irq2;?>>2. Portail ou collection : évolution sur une période</option>
+<option value="<?php echo $cstR03;?>"<?php echo $irq3;?>>3. Portail : Comparaison portails</option>
+<option value="<?php echo $cstR04;?>"<?php echo $irq4;?>>4. Portail : ESGBU (stocks et flux)</option>
+<option value="<?php echo $cstR05;?>"<?php echo $irq5;?>>5. Portail ou Collection : Nombre de publications de type articles par éditeur</option>
+<option value="<?php echo $cstR06;?>"<?php echo $irq6;?>>6. Portail ou Collection : Nombre de publications de type communications par éditeur</option>
+<option value="<?php echo $cstR07;?>"<?php echo $irq7;?>>7. Portail ou Collection : Nombre de publications (articles de revue) par revue</option>
 <!--
-<option value="req8"<?php echo($irq8);?>>8. Portail : Pourcentage par secteur des articles de tel éditeur</option>
-<option value="req9"<?php echo($irq9);?>>9. Portail : Pourcentage par éditeur des articles de tel secteur</option>
+<option value="<?php echo $cstR08;?>"<?php echo $irq8;?>>8. Portail : Pourcentage par secteur des articles de tel éditeur</option>
+<option value="<?php echo $cstR09;?>"<?php echo $irq9;?>>9. Portail : Pourcentage par éditeur des articles de tel secteur</option>
 -->
-<option value="req10"<?php echo($irq10);?>>10. Collection : Nombre d'articles sans texte intégral déposé dans HAL par éditeur</option>
-<option value="req11"<?php echo($irq11);?>>11. Collection : Nombre d'articles avec texte intégral déposé dans HAL par éditeur</option>
-<option value="req12"<?php echo($irq12);?>>12. Collection : Nombre d'articles avec texte intégral déposé dans HAL OU lien externe vers PDF en open access par éditeur</option>
-<option value="req13"<?php echo($irq13);?>>13. Portail ou collection : évolution sur une et trois années</option>
-<option value="req14"<?php echo($irq14);?>>14. Collection : Nombre de projets ANR</option>
-<option value="req15"<?php echo($irq15);?>>15. Collection : Nombre de projets européens</option>
-<option value="req16"<?php echo($irq16);?>>16. Collection : Profil des contributeurs HAL</option>
-<option value="req17"<?php echo($irq17);?>>17. Collection : Collaborations nationales</option>
-<option value="req18"<?php echo($irq18);?>>18. Collection : Collaborations nationales (laboratoires)</option>
-<option value="req19"<?php echo($irq19);?>>19. Collection : Collaborations nationales (établissements)</option>
-<option value="req20"<?php echo($irq20);?>>20. Collection : Collaborations nationales (autres)</option>
-<option value="req21"<?php echo($irq21);?>>21. Collection : Collaborations internationales (toutes structures)</option>
-<option value="req22"<?php echo($irq22);?>>22. Collection : Collaborations internationales (institutions)</option>
-<option value="req23"<?php echo($irq23);?>>23. Collection : Collaborations internationales (pays)</option>
+<option value="<?php echo $cstR10;?>"<?php echo $irq10;?>>10. Collection : Nombre d'articles sans texte intégral déposé dans HAL par éditeur</option>
+<option value="<?php echo $cstR11;?>"<?php echo $irq11;?>>11. Collection : Nombre d'articles avec texte intégral déposé dans HAL par éditeur</option>
+<option value="<?php echo $cstR12;?>"<?php echo $irq12;?>>12. Collection : Nombre d'articles avec texte intégral déposé dans HAL OU lien externe vers PDF en open access par éditeur</option>
+<option value="<?php echo $cstR13;?>"<?php echo $irq13;?>>13. Portail ou collection : évolution sur une et trois années</option>
+<option value="<?php echo $cstR14;?>"<?php echo $irq14;?>>14. Collection : Nombre de projets ANR</option>
+<option value="<?php echo $cstR15;?>"<?php echo $irq15;?>>15. Collection : Nombre de projets européens</option>
+<option value="<?php echo $cstR16;?>"<?php echo $irq16;?>>16. Collection : Profil des contributeurs HAL</option>
+<option value="<?php echo $cstR17;?>"<?php echo $irq17;?>>17. Collection : Collaborations nationales</option>
+<option value="<?php echo $cstR18;?>"<?php echo $irq18;?>>18. Collection : Collaborations nationales (laboratoires)</option>
+<option value="<?php echo $cstR19;?>"<?php echo $irq19;?>>19. Collection : Collaborations nationales (établissements)</option>
+<option value="<?php echo $cstR20;?>"<?php echo $irq20;?>>20. Collection : Collaborations nationales (autres)</option>
+<option value="<?php echo $cstR21;?>"<?php echo $irq21;?>>21. Collection : Collaborations internationales (toutes structures)</option>
+<option value="<?php echo $cstR22;?>"<?php echo $irq22;?>>22. Collection : Collaborations internationales (institutions)</option>
+<option value="<?php echo $cstR23;?>"<?php echo $irq23;?>>23. Collection : Collaborations internationales (pays)</option>
 </select>
 
 <!--Tableau général-->
@@ -537,7 +562,7 @@ if (isset($reqt) && $reqt == "req23") {$irq23 = " selected";}else{$irq23 = "";}
 </div>
 
 <!--Requête 1-->
-<div id="req1">
+<div id="<?php echo $cstR01;?>">
 <!--Paramètres :-->
 <label for="annee1">Année</label>
 <select id="annee1" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="annee1">
@@ -558,7 +583,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 2-->
-<div id="req2">
+<div id="<?php echo $cstR02;?>">
 <!--Paramètres :-->
 <table aria-describedby="Période">
 <tr><th scope="col" valign="top">Période :&nbsp;</th>
@@ -598,7 +623,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 3-->
-<div id="req3">
+<div id="<?php echo $cstR03;?>">
 <!--Paramètres :-->
 <label for="annee3">Année</label>
 <select id="annee3" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="annee3">
@@ -619,7 +644,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 4-->
-<div id="req4">
+<div id="<?php echo $cstR04;?>">
 <!--Paramètres :-->
 <label for="annee4">Année</label>
 <select id="annee4" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="annee4">
@@ -640,7 +665,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 5-->
-<div id="req5">
+<div id="<?php echo $cstR05;?>">
 <!--Paramètres :-->
 <label for="annee5">Année</label>
 <select id="annee5" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="annee5">
@@ -661,7 +686,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 6-->
-<div id="req6">
+<div id="<?php echo $cstR06;?>">
 <!--Paramètres :-->
 <label for="annee6">Année</label>
 <select id="annee6" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="annee6">
@@ -682,7 +707,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 7-->
-<div id="req7">
+<div id="<?php echo $cstR07;?>">
 <!--Paramètres :-->
 <label for="annee7">Année</label>
 <select id="annee7" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="annee7">
@@ -703,7 +728,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 8-->
-<div id="req8">
+<div id="<?php echo $cstR08;?>">
 <!--Paramètres :-->
 <label for="annee8">Année</label>
 <select id="annee8" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="annee8">
@@ -724,7 +749,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 9-->
-<div id="req9">
+<div id="<?php echo $cstR09;?>">
 <!--Paramètres :-->
 <label for="annee9">Année</label>
 <select id="annee9" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="annee9">
@@ -745,7 +770,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 10-->
-<div id="req10">
+<div id="<?php echo $cstR10;?>">
 <!--Paramètres :-->
 <label for="annee10">Année</label>
 <select id="annee10" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="annee10">
@@ -766,7 +791,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 11-->
-<div id="req11">
+<div id="<?php echo $cstR11;?>">
 <!--Paramètres :-->
 <label for="annee11">Année</label>
 <select id="annee11" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="annee11">
@@ -787,7 +812,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 12-->
-<div id="req12">
+<div id="<?php echo $cstR12;?>">
 <!--Paramètres :-->
 <label for="annee12">Année</label>
 <select id="annee12" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="annee12">
@@ -808,7 +833,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 13-->
-<div id="req13">
+<div id="<?php echo $cstR13;?>">
 <!--Paramètres :-->
 <label for="annee13">Année</label>
 <select id="annee13" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="annee13">
@@ -829,7 +854,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 14-->
-<div id="req14">
+<div id="<?php echo $cstR14;?>">
 <!--Paramètres :-->
 <table aria-describedby="Période">
 <tr><th scope="col" valign="top">Période :&nbsp;</th>
@@ -870,7 +895,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 15-->
-<div id="req15">
+<div id="<?php echo $cstR15;?>">
 <!--Paramètres :-->
 <table aria-describedby="Période">
 <tr><th scope="col" valign="top">Période :&nbsp;</th>
@@ -911,7 +936,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 16-->
-<div id="req16">
+<div id="<?php echo $cstR16;?>">
 <!--Paramètres :-->
 <table aria-describedby="Période">
 <tr><th scope="col" valign="top">Période :&nbsp;</th>
@@ -952,7 +977,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 17-->
-<div id="req17">
+<div id="<?php echo $cstR17;?>">
 <!--Paramètres :-->
 <label for="annee17">Année</label>
 <select id="annee17" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="annee17">
@@ -973,7 +998,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 18-->
-<div id="req18">
+<div id="<?php echo $cstR18;?>">
 <!--Paramètres :-->
 <label for="annee18">Année</label>
 <select id="annee18" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="annee18">
@@ -994,7 +1019,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 19-->
-<div id="req19">
+<div id="<?php echo $cstR19;?>">
 <!--Paramètres :-->
 <label for="annee19">Année</label>
 <select id="annee19" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="annee19">
@@ -1015,7 +1040,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 20-->
-<div id="req20">
+<div id="<?php echo $cstR20;?>">
 <!--Paramètres :-->
 <label for="annee20">Année</label>
 <select id="annee20" class="form-control" style="height: 25px; width: 60px; padding: 0px;" name="annee20">
@@ -1036,7 +1061,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 21-->
-<div id="req21">
+<div id="<?php echo $cstR21;?>">
 <table aria-describedby="Période">
 <tr><th scope="col" valign="top">Période :&nbsp;</th>
 <th scope="col">
@@ -1076,7 +1101,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 22-->
-<div id="req22">
+<div id="<?php echo $cstR22;?>">
 <table aria-describedby="Période">
 <tr><th scope="col" valign="top">Période :&nbsp;</th>
 <th scope="col">
@@ -1116,7 +1141,7 @@ while ($i >= date('Y', time()) - 30) {
 </div>
 
 <!--Requête 23-->
-<div id="req23">
+<div id="<?php echo $cstR23;?>">
 <table aria-describedby="Période">
 <tr><th scope="col" valign="top">Période :&nbsp;</th>
 <th scope="col">
@@ -1163,7 +1188,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   ob_flush();
 	flush();
   //Bloquer interrogation code collection labo avec requête 3, 4, 8 ou 9
-  if (($reqt == "req3" || $reqt == "req4" || $reqt == "req8" || $reqt == "req9") && isset($port) && $port == "choix") {
+  if (($reqt == $cstR03 || $reqt == $cstR04 || $reqt == $cstR08 || $reqt == $cstR09) && isset($port) && $port == "choix") {
     echo "<br><br><center><font face='Corbel'><strong>";
     echo "Cette requête n'est pas applicable à un code collection mais uniquement à un portail.";
     echo "</strong></font></center>";
@@ -1171,7 +1196,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
 	
 	//Bloquer interrogation portail avec requête 10, 11, 12, 13, 14, 15, 17, 18, 19, 20 ou 21
-  if (($reqt == "req10" || $reqt == "req11" || $reqt == "req12" || $reqt == "req13" || $reqt == "req14" || $reqt == "req15" || $reqt == "req17" || $reqt == "req18" || $reqt == "req19" || $reqt == "req20" || $reqt == "req21") && isset($port) && $port != "choix") {
+  if (($reqt == $cstR10 || $reqt == $cstR11 || $reqt == $cstR12 || $reqt == $cstR13 || $reqt == $cstR14 || $reqt == $cstR15 || $reqt == $cstR17 || $reqt == $cstR18 || $reqt == $cstR19 || $reqt == $cstR20 || $reqt == $cstR21) && isset($port) && $port != "choix") {
     echo "<br><br><center><font face='Corbel'><strong>";
     echo "Cette requête n'est pas applicable à portail mais uniquement à un code collection.";
     echo "</strong></font></center>";
@@ -1188,13 +1213,13 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 
   $tabPro = array();
   $year = 0;
-  if ($reqt == "req1") {
+  if ($reqt == $cstR01) {
     $anneedeb = $annee1;
     $anneefin = $annee1;
   }
   
   //Tableau de résultats requête 1
-  if ($reqt == "req1") {
+  if ($reqt == $cstR01) {
     //Export CSV
     $Fnm = "./csv/req1.csv";
     $inF = fopen($Fnm,"w+");
@@ -1643,7 +1668,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
   
   //Tableau de résultats requête 3
-  if ($reqt == "req3") {
+  if ($reqt == $cstR03) {
 		//Intitulé
 		echo '<br><strong>3. Portail : comparaison portailsComparaison portails</strong><br><br>';
 		
@@ -1870,7 +1895,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
   
   //Tableau de résultats requête 4
-  if ($reqt == "req4") {
+  if ($reqt == $cstR04) {
 		//Intitulé
 		echo '<br><strong>4. Portail : ESGBU (stocks et flux)</strong><br><br>';
 		
@@ -1969,7 +1994,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
   
   //Tableau de résultats requête 5
-  if ($reqt == "req5") {
+  if ($reqt == $cstR05) {
 		//Intitulé
 		echo '<br><strong>5. Portail ou Collection : Nombre de publications de type articles par éditeur</strong><br><br>';
 		
@@ -2033,7 +2058,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
 	
 	//Tableau de résultats requête 6
-  if ($reqt == "req6") {
+  if ($reqt == $cstR06) {
 		//Intitulé
 		echo '<br><strong>6. Portail ou Collection : Nombre de publications de type communications par éditeur</strong><br><br>';
 		
@@ -2098,7 +2123,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
 	
 	//Tableau de résultats requête 7
-  if ($reqt == "req7") {
+  if ($reqt == $cstR07) {
 		//Intitulé
 		echo '<br><strong>7. Portail ou Collection : Nombre de publications (articles de revue) par revue</strong><br><br>';
 		
@@ -2187,8 +2212,8 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	}
 
 	//Tableau de résultats requêtes 8 et 9 > seuls les pourcentages finaux représentent des indices différents
-  if ($reqt == "req8" || $reqt == "req9") {
-		if ($reqt == "req8") {
+  if ($reqt == $cstR08 || $reqt == $cstR09) {
+		if ($reqt == $cstR08) {
 			//Intitulé
 			echo '<br><strong>8. Portail : Pourcentage par secteur des articles de tel éditeur</strong><br><br>';
 			
@@ -2203,13 +2228,13 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		}
 		
     //Export CSV
-    ($reqt == "req8") ? $Fnm = "./csv/req8.csv" : $Fnm = "./csv/req9.csv";
+    ($reqt == $cstR08) ? $Fnm = "./csv/req8.csv" : $Fnm = "./csv/req9.csv";
     $inF = fopen($Fnm,"w+");
     fseek($inF, 0);
     $chaine = "\xEF\xBB\xBF";
     fwrite($inF,$chaine);
     
-		($reqt == "req8") ? $year = $annee8 : $year = $annee9;
+		($reqt == $cstR08) ? $year = $annee8 : $year = $annee9;
 		
 		$chaine = "";
 		echo '<table class="table table-striped table-hover table-responsive table-bordered">';
@@ -2360,9 +2385,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$chaine .= "TOTAL;";
 		foreach ($totSect as $key => $val) {
 			echo '<th scope="col">'.$val.'</th>';
-			($reqt == "req8") ? $pcent = 100 : $pcent = ($val * 100) / $totSect[$LAB_SECT[0]['secteur']];
+			($reqt == $cstR08) ? $pcent = 100 : $pcent = ($val * 100) / $totSect[$LAB_SECT[0]['secteur']];
 			echo '<th scope="col">'.number_format($pcent, 1).'%</th>';
-			($reqt == "req8") ? $chaine .= $val.";".number_format($pcent, 1).";" : $chaine .= $val.";".number_format($pcent, 1)."%;";
+			($reqt == $cstR08) ? $chaine .= $val.";".number_format($pcent, 1).";" : $chaine .= $val.";".number_format($pcent, 1)."%;";
 		}
 		echo '</th>';
 		echo '</tr>';
@@ -2379,7 +2404,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				if (isset($val1[$val2]) && $val1[$LAB_SECT[0]['secteur']] != 0) {
 					echo '<td scope="row">'.$val1[$val2].'</td>';
 					$chaine .= $val1[$val2].";";
-					($reqt == "req8") ? $pcent = ($val1[$val2] * 100) / $totSect[$val2] : $pcent = ($val1[$val2] * 100) / $val1[$LAB_SECT[0]['secteur']];
+					($reqt == $cstR08) ? $pcent = ($val1[$val2] * 100) / $totSect[$val2] : $pcent = ($val1[$val2] * 100) / $val1[$LAB_SECT[0]['secteur']];
 				}else{
 					echo '<td scope="row">0</td>';
 					$chaine .= "0;";
@@ -2394,13 +2419,13 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		}
 		
 		echo '</table>';
-    ($reqt == "req8") ? $nf = "req8" : $nf = "req9";
+    ($reqt == $cstR08) ? $nf = $cstR08 : $nf = $cstR09;
 		echo '<a href=\'./csv/'.$nf.'.csv\'>Exporter le tableau au format CSV</a><br><br>';
 		//var_dump($resHAL);	
 	}
 	
 	//Tableau de résultats requête 10
-  if ($reqt == "req10") {
+  if ($reqt == $cstR10) {
 		//Intitulé
 		echo '<br><strong>10. Collection : Nombre d\'articles sans texte intégral déposé dans HAL par éditeur</strong><br><br>';
 		
@@ -2457,7 +2482,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
 	
 	//Tableau de résultats requête 11
-  if ($reqt == "req11") {
+  if ($reqt == $cstR11) {
 		//Intitulé
 		echo '<br><strong>11. Collection : Nombre d\'articles avec texte intégral déposé dans HAL par éditeur</strong><br><br>';
 		
@@ -2514,7 +2539,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
 	
 	//Tableau de résultats requête 12
-  if ($reqt == "req12") {
+  if ($reqt == $cstR12) {
 		//Intitulé
 		echo '<br><strong>12. Collection : Nombre d\'articles avec texte intégral déposé dans HAL OU lien externe vers PDF en open access par éditeur</strong><br><br>';
 		
@@ -2571,7 +2596,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
 	
 	//Tableau de résultats requête 13
-  if ($reqt == "req13") {
+  if ($reqt == $cstR13) {
 		//Intitulé
 		echo '<br><strong>13. Portail ou collection : évolution sur une et trois années</strong><br><br>';
 		
@@ -2826,7 +2851,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   //var_dump($resHAL);
 	
 	//Tableau de résultats requête 14
-  if ($reqt == "req14") {
+  if ($reqt == $cstR14) {
 		//Intitulé
 		echo '<br><strong>14. Collection : Nombre de projets ANR</strong><br><br>';
 		
@@ -2989,7 +3014,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
 	
 	//Tableau de résultats requête 15
-  if ($reqt == "req15") {
+  if ($reqt == $cstR15) {
 		//Intitulé
 		echo '<br><strong>15. Collection : Nombre de projets européens</strong><br><br>';
 		
@@ -3132,7 +3157,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
 	
 	//Tableau de résultats requête 16
-  if ($reqt == "req16") {
+  if ($reqt == $cstR16) {
 		//Intitulé
 		echo '<br><strong>16. Collection : Profil des contributeurs HAL</strong><br><br>';
 		
@@ -3319,7 +3344,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 	}
 	
 	//Tableau de résultats requête 17
-  if ($reqt == "req17") {
+  if ($reqt == $cstR17) {
 		//Intitulé
 		echo '<br><strong>17. Collection : Collaborations nationales</strong><br><br>';
 		
@@ -3470,7 +3495,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
 	
 	//Tableau de résultats requête 18
-  if ($reqt == "req18") {
+  if ($reqt == $cstR18) {
 		//Intitulé
 		echo '<br><strong>18. Collection : Collaborations nationales (laboratoires)</strong><br><br>';
 		
@@ -3621,7 +3646,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
 	
 	//Tableau de résultats requête 19
-  if ($reqt == "req19") {
+  if ($reqt == $cstR19) {
 		//Intitulé
 		echo '<br><strong>19. Collection : Collaborations nationales (établissements)</strong><br><br>';
 		
@@ -3772,7 +3797,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
 	
 	//Tableau de résultats requête 20
-  if ($reqt == "req20") {
+  if ($reqt == $cstR20) {
 		//Intitulé
 		echo '<br><strong>20. Collection : Collaborations nationales (autres)</strong><br><br>';
 		
@@ -3923,7 +3948,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
 	
 	//Tableau de résultats requête 21
-  if ($reqt == "req21") {
+  if ($reqt == $cstR21) {
 		//Intitulé
 		echo '<br><strong>21. Collection : Collaborations internationales (toutes structures)</strong><br><br>';
 		
@@ -4196,7 +4221,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
 	
 	//Tableau de résultats requête 22
-  if ($reqt == "req22") {
+  if ($reqt == $cstR22) {
 		//Intitulé
 		echo '<br><strong>22. Collection : Collaborations internationales (institutions)</strong><br><br>';
 		
@@ -4622,7 +4647,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   }
 	
 	//Tableau de résultats requête 23
-  if ($reqt == "req23") {
+  if ($reqt == $cstR23) {
 		//Intitulé
 		echo '<br><strong>23. Collection : Collaborations internationales (pays)</strong><br><br>';
 		
@@ -4909,7 +4934,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		include("./lib/pChart/class/pPie.class.php");
 	}
 
-  if (isset($reqt) && $reqt == "req1") {
+  if (isset($reqt) && $reqt == $cstR01) {
     include("./VizuHAL_grf_histo_req1.php");
     include("./VizuHAL_grf_cbert_req1.php");
   }
@@ -4919,7 +4944,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     include("./VizuHAL_grf_cbert_req2.php");
   }
 
-  if (isset($reqt) && ($reqt == "req1" || $reqt == "req2")) {
+  if (isset($reqt) && ($reqt == $cstR01 || $reqt == "req2")) {
     if (isset($port) && $port != "choix") {
       $is = 0;
       while (isset($sect[$is]) && $sect[$is] != "") {
@@ -4929,7 +4954,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
         echo '<center><img alt="Productions HAL "'.$sect[$is].' src="'.$ficgraf.'"></center><br>';
         
         //Camemberts
-        if ($reqt == "req1") {
+        if ($reqt == $cstR01) {
           for($year = $anneedeb; $year <= $anneefin; $year++) {
             $ficgraf = "./grf/grf_".$year."_".$sect[$is]."_".time().".png";
             grf_cbert($year, $tabPro, $sect[$is], $ficgraf, "coll");
