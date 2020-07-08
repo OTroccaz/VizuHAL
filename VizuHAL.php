@@ -42,6 +42,18 @@ $cstR20 = "req20";
 $cstR21 = "req21";
 $cstR22 = "req22";
 $cstR23 = "req23";
+$cstA17 = "annee17";
+$cstA18 = "annee18";
+$cstA19 = "annee19";
+$cstA20 = "annee20";
+$cstHTS = "HTTPS";
+$cstNuF = "numFound";
+$cstAPI = "https://api.archives-ouvertes.fr/search/";
+$cstNfD = "nfDep";
+$cstNoTI = "nfPronoTI";
+$cstAvTI = "nfProavTI";
+$cstNoTIAvOA = "nfPronoTIavOA";
+$cstAvTIAvOA = "nfProavTIavOA";
 
 
 // récupération de l'adresse IP du client (on cherche d'abord à savoir s'il est derrière un proxy)
@@ -80,10 +92,10 @@ if (isset($_GET["reqt"])) {
 	$ordr = $_GET["ordr"];
 	if (isset($_GET["anneedeb"])) {$anneedeb = $_GET["anneedeb"];}
 	if (isset($_GET["anneefin"])) {$anneefin = $_GET["anneefin"];}
-	if (isset($_GET["annee17"])) {$annee17 = $_GET["annee17"];}
-	if (isset($_GET["annee18"])) {$annee18 = $_GET["annee18"];}
-	if (isset($_GET["annee19"])) {$annee19 = $_GET["annee19"];}
-	if (isset($_GET["annee20"])) {$annee20 = $_GET["annee20"];}
+	if (isset($_GET[$cstA17])) {$annee17 = $_GET[$cstA17];}
+	if (isset($_GET[$cstA18])) {$annee18 = $_GET[$cstA18];}
+	if (isset($_GET[$cstA19])) {$annee19 = $_GET[$cstA19];}
+	if (isset($_GET[$cstA20])) {$annee20 = $_GET[$cstA20];}
 }
 
 header('Content-type: text/html; charset=UTF-8');
@@ -104,7 +116,7 @@ if (isset($_GET['css']) && ($_GET['css'] != ""))
 }
 
 $root = 'http';
-if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
+if (isset ($_SERVER[$cstHTS]) && $_SERVER[$cstHTS] == "on")	{
   $root.= "s";
 }
 
@@ -212,6 +224,7 @@ function askCurlNF($url, $cstCA) {
 }
 
 function extractHAL($team, $year, $reqt, &$resHAL, $cstCA) {
+	$cstAPI = "https://api.archives-ouvertes.fr/search/";
   if ($reqt == "req3") {
     $dT = "&fq=docType_s:ART";
   }else{
@@ -219,34 +232,35 @@ function extractHAL($team, $year, $reqt, &$resHAL, $cstCA) {
   }
   
   //Dépôts par année de publication
-  $urlHALDep = "https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice OR file)".$dT."&fq=-status_i=111&rows=0";
+  $urlHALDep = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice OR file)".$dT."&fq=-status_i=111&rows=0";
   $qte = askCurlNF($urlHALDep, $cstCA);
-  $resHAL[$year][strtoupper($team)]["nfDep"] = $qte;
+  $resHAL[$year][strtoupper($team)][$cstNfD] = $qte;
   
   //notices sans TI
-  $urlHALPronoTI = "https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:notice".$dT."&fq=-status_i=111&rows=0";
+  $urlHALPronoTI = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:notice".$dT."&fq=-status_i=111&rows=0";
   $qte = askCurlNF($urlHALPronoTI, $cstCA);
-  $resHAL[$year][strtoupper($team)]["nfPronoTI"] = $qte;
+  $resHAL[$year][strtoupper($team)][$cstNoTI] = $qte;
   
   //Manuscrits plein texte avec TI
-  $urlHALProavTI = "https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:file".$dT."&fq=-status_i=111&rows=0";
+  $urlHALProavTI = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:file".$dT."&fq=-status_i=111&rows=0";
   $qte = askCurlNF($urlHALProavTI, $cstCA);
-  $resHAL[$year][strtoupper($team)]["nfProavTI"] = $qte;
+  $resHAL[$year][strtoupper($team)][$cstAvTI] = $qte;
   
   //notices avec lien open access, sans TI déposé dans HAL mais avec TI librement accessible hors HAL
-  $urlHALPronoTIavOA = "https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=linkExtId_s:*&fq=-linkExtId_s:istex".$dT."&fq=-status_i=111&rows=0";
+  $urlHALPronoTIavOA = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=linkExtId_s:*&fq=-linkExtId_s:istex".$dT."&fq=-status_i=111&rows=0";
   $qte = askCurlNF($urlHALPronoTIavOA, $cstCA);
-  $resHAL[$year][strtoupper($team)]["nfPronoTIavOA"] = $qte;
+  $resHAL[$year][strtoupper($team)][$cstNoTIAvOA] = $qte;
   
   //Manuscrits et lien open access avec TI déposé dans HAL ou librement accessible hors HAL
-  $urlHALProavTIavOA = "https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=(submitType_s:file OR linkExtId_s:*)&fq=-linkExtId_s:istex".$dT."&fq=-status_i=111&rows=0";
+  $urlHALProavTIavOA = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=(submitType_s:file OR linkExtId_s:*)&fq=-linkExtId_s:istex".$dT."&fq=-status_i=111&rows=0";
   $qte = askCurlNF($urlHALProavTIavOA, $cstCA);
-  $resHAL[$year][strtoupper($team)]["nfProavTIavOA"] = $qte;
+  $resHAL[$year][strtoupper($team)][$cstAvTIAvOA] = $qte;
 }
 
 function extractHALnbPubEd($team, $year, $type, $spefq, &$nbTotArt, &$nbPubEdRE, $cstCA) {
 	$nbPubEd = array();
 	$nbPubEdRE = array();//Regroupement éditorial
+	$cstAPI = "https://api.archives-ouvertes.fr/search/";
 	include("./Prefixe_DOI.php");
 	$i = 0;
 	//for ($i=0; $i<=10; $i++) {
@@ -254,10 +268,10 @@ function extractHALnbPubEd($team, $year, $type, $spefq, &$nbTotArt, &$nbPubEdRE,
 		$pDOI = $Prefixe_DOI[$i]["prefixe"];
 		$editeur_ng = $Prefixe_DOI[$i]["editeur_ng"];
 		if ($pDOI != "") {
-			$urlHAL = "https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year.$spefq."&fq=-status_i=111&fq=doiId_s:".$pDOI."*&fq=docType_s:".$type;
+			$urlHAL = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year.$spefq."&fq=-status_i=111&fq=doiId_s:".$pDOI."*&fq=docType_s:".$type;
 		}else{
 			if($type != "COMM") {
-				$urlHAL = "https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year.$spefq."&fq=-status_i=111&fq=journalPublisher_t:".$editeur_ng."&fq=docType_s:".$type;
+				$urlHAL = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year.$spefq."&fq=-status_i=111&fq=journalPublisher_t:".$editeur_ng."&fq=docType_s:".$type;
 			}else{
 				$urlHAL = "Passer_tour";
 			}
@@ -294,7 +308,7 @@ function extractHALnbPubEd($team, $year, $type, $spefq, &$nbTotArt, &$nbPubEdRE,
 	for ($i=0; $i<count($nbPubEdRE); $i++) {
 		$qteTotArt += $nbPubEdRE[$i]["nbArt"];
 	}
-	$urlHALTotArt = "https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year.$spefq."&fq=-status_i=111*&fq=docType_s:".$type;
+	$urlHALTotArt = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year.$spefq."&fq=-status_i=111*&fq=docType_s:".$type;
 	$nbTotArt = askCurlNF($urlHALTotArt, $cstCA);
 	$hre = $nbTotArt - $qteTotArt;//Hors regroupement éditorial
 	$i = count($nbPubEdRE);
@@ -309,7 +323,6 @@ function suppression($dossier, $age) {
     while (false !== ($fichier = readdir($repertoire)))
     {
       $chemin = $dossier."/".$fichier;
-      $infos = pathinfo($chemin);
       $age_fichier = time() - filemtime($chemin);
       if($fichier != "." && $fichier != ".." && !is_dir($fichier) && $age_fichier > $age)
       {
@@ -423,16 +436,16 @@ if (isset($_POST["valider"])) {
 																	if ($anneefin < $anneedeb) {$anneetemp = $anneedeb; $anneedeb = $anneefin; $anneefin = $anneetemp;}
 																}else{
 																	if ($reqt == $cstR17) {
-																		$annee17 = htmlspecialchars($_POST["annee17"]);
+																		$annee17 = htmlspecialchars($_POST[$cstA17]);
 																	}else{
 																		if ($reqt == $cstR18) {
-																			$annee18 = htmlspecialchars($_POST["annee18"]);
+																			$annee18 = htmlspecialchars($_POST[$cstA18]);
 																		}else{
 																			if ($reqt == $cstR19) {
-																				$annee19 = htmlspecialchars($_POST["annee19"]);
+																				$annee19 = htmlspecialchars($_POST[$cstA19]);
 																			}else{
 																				if ($reqt == $cstR20) {
-																					$annee20 = htmlspecialchars($_POST["annee20"]);
+																					$annee20 = htmlspecialchars($_POST[$cstA20]);
 																				}else{
 																					if ($reqt == $cstR21) {
 																						$anneedeb = htmlspecialchars($_POST["anneedeb21"]);
@@ -586,7 +599,7 @@ while ($i >= date('Y', time()) - 30) {
 <div id="<?php echo $cstR02;?>">
 <!--Paramètres :-->
 <table aria-describedby="Période">
-<tr><th scope="col" valign="top">Période :&nbsp;</th>
+<tr><th scope="col" class="valign">Période :&nbsp;</th>
 <th scope="col">
 <p class="form-inline">
 <label for="anneedeb2">Depuis</label>
@@ -857,7 +870,7 @@ while ($i >= date('Y', time()) - 30) {
 <div id="<?php echo $cstR14;?>">
 <!--Paramètres :-->
 <table aria-describedby="Période">
-<tr><th scope="col" valign="top">Période :&nbsp;</th>
+<tr><th scope="col" class="valign">Période :&nbsp;</th>
 <th scope="col">
 <p class="form-inline">
 <label for="anneedeb14">Depuis</label>
@@ -898,7 +911,7 @@ while ($i >= date('Y', time()) - 30) {
 <div id="<?php echo $cstR15;?>">
 <!--Paramètres :-->
 <table aria-describedby="Période">
-<tr><th scope="col" valign="top">Période :&nbsp;</th>
+<tr><th scope="col" class="valign">Période :&nbsp;</th>
 <th scope="col">
 <p class="form-inline">
 <label for="anneedeb15">Depuis</label>
@@ -939,7 +952,7 @@ while ($i >= date('Y', time()) - 30) {
 <div id="<?php echo $cstR16;?>">
 <!--Paramètres :-->
 <table aria-describedby="Période">
-<tr><th scope="col" valign="top">Période :&nbsp;</th>
+<tr><th scope="col" class="valign">Période :&nbsp;</th>
 <th scope="col">
 <p class="form-inline">
 <label for="anneedeb16">Depuis</label>
@@ -1063,7 +1076,7 @@ while ($i >= date('Y', time()) - 30) {
 <!--Requête 21-->
 <div id="<?php echo $cstR21;?>">
 <table aria-describedby="Période">
-<tr><th scope="col" valign="top">Période :&nbsp;</th>
+<tr><th scope="col" class="valign">Période :&nbsp;</th>
 <th scope="col">
 <p class="form-inline">
 <label for="anneedeb21">Depuis</label>
@@ -1103,7 +1116,7 @@ while ($i >= date('Y', time()) - 30) {
 <!--Requête 22-->
 <div id="<?php echo $cstR22;?>">
 <table aria-describedby="Période">
-<tr><th scope="col" valign="top">Période :&nbsp;</th>
+<tr><th scope="col" class="valign">Période :&nbsp;</th>
 <th scope="col">
 <p class="form-inline">
 <label for="anneedeb22">Depuis</label>
@@ -1143,7 +1156,7 @@ while ($i >= date('Y', time()) - 30) {
 <!--Requête 23-->
 <div id="<?php echo $cstR23;?>">
 <table aria-describedby="Période">
-<tr><th scope="col" valign="top">Période :&nbsp;</th>
+<tr><th scope="col" class="valign">Période :&nbsp;</th>
 <th scope="col">
 <p class="form-inline">
 <label for="anneedeb23">Depuis</label>
@@ -1294,43 +1307,43 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
             
             $sect[$is] = $sectI;
             $is++;
-            $tabPro[$year][$sectI]["nfDep"] = $resHAL[$year][$codeSI]["nfDep"];
-            echo $cstTEM.$resHAL[$year][$codeSI]["nfDep"].$cstETH;
-            $chaine .= $resHAL[$year][$codeSI]["nfDep"].";";
+            $tabPro[$year][$sectI][$cstNfD] = $resHAL[$year][$codeSI][$cstNfD];
+            echo $cstTEM.$resHAL[$year][$codeSI][$cstNfD].$cstETH;
+            $chaine .= $resHAL[$year][$codeSI][$cstNfD].";";
             $pcent = 0;
-            if ($resHAL[$year][$codeSI]["nfDep"] != 0) {$pcent = round($resHAL[$year][$codeSI]["nfDep"]*100/$resHAL[$year][$codeSI]["nfDep"]);}
+            if ($resHAL[$year][$codeSI][$cstNfD] != 0) {$pcent = round($resHAL[$year][$codeSI][$cstNfD]*100/$resHAL[$year][$codeSI][$cstNfD]);}
             echo $cstTEM.$pcent.$cstPTH;
             $chaine .= $pcent."%;";
             
-            $tabPro[$year][$sectI]["nfPronoTI"] = $resHAL[$year][$codeSI]["nfPronoTI"];
-            echo $cstTEM.$resHAL[$year][$codeSI]["nfPronoTI"].$cstETH;
-            $chaine .= $resHAL[$year][$codeSI]["nfPronoTI"].";";
+            $tabPro[$year][$sectI][$cstNoTI] = $resHAL[$year][$codeSI][$cstNoTI];
+            echo $cstTEM.$resHAL[$year][$codeSI][$cstNoTI].$cstETH;
+            $chaine .= $resHAL[$year][$codeSI][$cstNoTI].";";
             $pcent = 0;
-            if ($resHAL[$year][$codeSI]["nfPronoTI"]) {$pcent = round($resHAL[$year][$codeSI]["nfPronoTI"]*100/$resHAL[$year][$codeSI]["nfDep"]);}
+            if ($resHAL[$year][$codeSI][$cstNoTI]) {$pcent = round($resHAL[$year][$codeSI][$cstNoTI]*100/$resHAL[$year][$codeSI][$cstNfD]);}
             echo $cstTEM.$pcent.$cstPTH;
             $chaine .= $pcent."%;";
             
-            $tabPro[$year][$sectI]["nfProavTI"] = $resHAL[$year][$codeSI]["nfProavTI"];
-            echo $cstTEM.$resHAL[$year][$codeSI]["nfProavTI"].$cstETH;
-            $chaine .= $resHAL[$year][$codeSI]["nfProavTI"].";";
+            $tabPro[$year][$sectI][$cstAvTI] = $resHAL[$year][$codeSI][$cstAvTI];
+            echo $cstTEM.$resHAL[$year][$codeSI][$cstAvTI].$cstETH;
+            $chaine .= $resHAL[$year][$codeSI][$cstAvTI].";";
             $pcent = 0;
-            if ($resHAL[$year][$codeSI]["nfProavTI"] != 0) {$pcent = round($resHAL[$year][$codeSI]["nfProavTI"]*100/$resHAL[$year][$codeSI]["nfDep"]);}
+            if ($resHAL[$year][$codeSI][$cstAvTI] != 0) {$pcent = round($resHAL[$year][$codeSI][$cstAvTI]*100/$resHAL[$year][$codeSI][$cstNfD]);}
             echo $cstTEM.$pcent.$cstPTH;
             $chaine .= $pcent."%;";
             
-            $tabPro[$year][$sectI]["nfPronoTIavOA"] = $resHAL[$year][$codeSI]["nfPronoTIavOA"];
-            echo $cstTEM.$resHAL[$year][$codeSI]["nfPronoTIavOA"].$cstETH;
-            $chaine .= $resHAL[$year][$codeSI]["nfPronoTIavOA"].";";
+            $tabPro[$year][$sectI][$cstNoTIAvOA] = $resHAL[$year][$codeSI][$cstNoTIAvOA];
+            echo $cstTEM.$resHAL[$year][$codeSI][$cstNoTIAvOA].$cstETH;
+            $chaine .= $resHAL[$year][$codeSI][$cstNoTIAvOA].";";
             $pcent = 0;
-            if ($resHAL[$year][$codeSI]["nfPronoTIavOA"] != 0) {$pcent = round($resHAL[$year][$codeSI]["nfPronoTIavOA"]*100/$resHAL[$year][$codeSI]["nfDep"]);}
+            if ($resHAL[$year][$codeSI][$cstNoTIAvOA] != 0) {$pcent = round($resHAL[$year][$codeSI][$cstNoTIAvOA]*100/$resHAL[$year][$codeSI][$cstNfD]);}
             echo $cstTEM.$pcent.$cstPTH;
             $chaine .= $pcent."%;";
             
-            $tabPro[$year][$sectI]["nfProavTIavOA"] = $resHAL[$year][$codeSI]["nfProavTIavOA"];
-            echo $cstTEM.$resHAL[$year][$codeSI]["nfProavTIavOA"].$cstETH;
-            $chaine .= $resHAL[$year][$codeSI]["nfProavTIavOA"].";";
+            $tabPro[$year][$sectI][$cstAvTIAvOA] = $resHAL[$year][$codeSI][$cstAvTIAvOA];
+            echo $cstTEM.$resHAL[$year][$codeSI][$cstAvTIAvOA].$cstETH;
+            $chaine .= $resHAL[$year][$codeSI][$cstAvTIAvOA].";";
             $pcent = 0;
-            if ($resHAL[$year][$codeSI]["nfProavTIavOA"] != 0) {$pcent = round($resHAL[$year][$codeSI]["nfProavTIavOA"]*100/$resHAL[$year][$codeSI]["nfDep"]);}
+            if ($resHAL[$year][$codeSI][$cstAvTIAvOA] != 0) {$pcent = round($resHAL[$year][$codeSI][$cstAvTIAvOA]*100/$resHAL[$year][$codeSI][$cstNfD]);}
             echo $cstTEM.$pcent.$cstPTH;
             $chaine .= $pcent."%;";
             
@@ -1350,11 +1363,11 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
           echo '<tr class="warning">';
           if (isset($port) && $port != "choix") {
             $sect[0] = $LAB_SECT[$ils]["secteur"];
-            $tabPro[$year][$sect[0]]["nfDep"] = intval($resHAL[$year][$team]["nfDep"]);
-            $tabPro[$year][$sect[0]]["nfPronoTI"] = intval($resHAL[$year][$team]["nfPronoTI"]);
-            $tabPro[$year][$sect[0]]["nfProavTI"] = intval($resHAL[$year][$team]["nfProavTI"]);
-            $tabPro[$year][$sect[0]]["nfPronoTIavOA"] = intval($resHAL[$year][$team]["nfPronoTIavOA"]);
-            $tabPro[$year][$sect[0]]["nfProavTIavOA"] = intval($resHAL[$year][$team]["nfProavTIavOA"]);
+            $tabPro[$year][$sect[0]][$cstNfD] = intval($resHAL[$year][$team][$cstNfD]);
+            $tabPro[$year][$sect[0]][$cstNoTI] = intval($resHAL[$year][$team][$cstNoTI]);
+            $tabPro[$year][$sect[0]][$cstAvTI] = intval($resHAL[$year][$team][$cstAvTI]);
+            $tabPro[$year][$sect[0]][$cstNoTIAvOA] = intval($resHAL[$year][$team][$cstNoTIAvOA]);
+            $tabPro[$year][$sect[0]][$cstAvTIAvOA] = intval($resHAL[$year][$team][$cstAvTIAvOA]);
             echo '<th scope="row">Tout '.$LAB_SECT[$ils]["code_collection"].'</th>';
             $chaine .= "Tout ".$LAB_SECT[$ils]["code_collection"].";";
           }else{
@@ -1379,43 +1392,43 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
           $chaine .= $LAB_SECT[$ils]["secteur"].";";
         }
         
-        echo '<th scope="row" style="text-align:center">'.$resHAL[$year][$team]["nfDep"].'</th>';
-        if ($ils != 0) {$totDep = $resHAL[$year][$team]["nfDep"];}
-        $chaine .= $resHAL[$year][$team]["nfDep"].";";
+        echo '<th scope="row" style="text-align:center">'.$resHAL[$year][$team][$cstNfD].'</th>';
+        if ($ils != 0) {$totDep = $resHAL[$year][$team][$cstNfD];}
+        $chaine .= $resHAL[$year][$team][$cstNfD].";";
         $pcent = 0;
-        if ($resHAL[$year][$team]["nfDep"] != 0) {$pcent = round($resHAL[$year][$team]["nfDep"]*100/$resHAL[$year][$team]["nfDep"]);}
+        if ($resHAL[$year][$team][$cstNfD] != 0) {$pcent = round($resHAL[$year][$team][$cstNfD]*100/$resHAL[$year][$team][$cstNfD]);}
         echo '<th scope="row" style="text-align:center">'.$pcent.'%</th>';
         $chaine .= $pcent."%;";
         
-        echo '<th scope="row" style="text-align:center">'.$resHAL[$year][$team]["nfPronoTI"].'</th>';
-        if ($ils != 0) {$totPronoTI = $resHAL[$year][$team]["nfPronoTI"];}
-        $chaine .= $resHAL[$year][$team]["nfPronoTI"].";";
+        echo '<th scope="row" style="text-align:center">'.$resHAL[$year][$team][$cstNoTI].'</th>';
+        if ($ils != 0) {$totPronoTI = $resHAL[$year][$team][$cstNoTI];}
+        $chaine .= $resHAL[$year][$team][$cstNoTI].";";
         $pcent = 0;
-        if ($resHAL[$year][$team]["nfPronoTI"] != 0) {$pcent = round($resHAL[$year][$team]["nfPronoTI"]*100/$resHAL[$year][$team]["nfDep"]);}
+        if ($resHAL[$year][$team][$cstNoTI] != 0) {$pcent = round($resHAL[$year][$team][$cstNoTI]*100/$resHAL[$year][$team][$cstNfD]);}
         echo '<th scope="row" style="text-align:center">'.$pcent.'%</th>';
         $chaine .= $pcent."%;";
         
-        echo '<th scope="row" style="text-align:center">'.$resHAL[$year][$team]["nfProavTI"].'</th>';
-        if ($ils != 0) {$totProavTI = $resHAL[$year][$team]["nfProavTI"];}
-        $chaine .= $resHAL[$year][$team]["nfProavTI"].";";
+        echo '<th scope="row" style="text-align:center">'.$resHAL[$year][$team][$cstAvTI].'</th>';
+        if ($ils != 0) {$totProavTI = $resHAL[$year][$team][$cstAvTI];}
+        $chaine .= $resHAL[$year][$team][$cstAvTI].";";
         $pcent = 0;
-        if ($resHAL[$year][$team]["nfProavTI"] != 0) {$pcent = round($resHAL[$year][$team]["nfProavTI"]*100/$resHAL[$year][$team]["nfDep"]);}
+        if ($resHAL[$year][$team][$cstAvTI] != 0) {$pcent = round($resHAL[$year][$team][$cstAvTI]*100/$resHAL[$year][$team][$cstNfD]);}
         echo '<th scope="row" style="text-align:center">'.$pcent.'%</th>';
         $chaine .= $pcent."%;";
         
-        echo '<th scope="row" style="text-align:center">'.$resHAL[$year][$team]["nfPronoTIavOA"].'</th>';
-        if ($ils != 0) {$totPronoTIavOA = $resHAL[$year][$team]["nfPronoTIavOA"];}
-        $chaine .= $resHAL[$year][$team]["nfPronoTIavOA"].";";
+        echo '<th scope="row" style="text-align:center">'.$resHAL[$year][$team][$cstNoTIAvOA].'</th>';
+        if ($ils != 0) {$totPronoTIavOA = $resHAL[$year][$team][$cstNoTIAvOA];}
+        $chaine .= $resHAL[$year][$team][$cstNoTIAvOA].";";
         $pcent = 0;
-        if ($resHAL[$year][$team]["nfPronoTIavOA"] != 0) {$pcent = round($resHAL[$year][$team]["nfPronoTIavOA"]*100/$resHAL[$year][$team]["nfDep"]);}
+        if ($resHAL[$year][$team][$cstNoTIAvOA] != 0) {$pcent = round($resHAL[$year][$team][$cstNoTIAvOA]*100/$resHAL[$year][$team][$cstNfD]);}
         echo '<th scope="row" style="text-align:center">'.$pcent.'%</th>';
         $chaine .= $pcent."%;";
         
-        echo '<th scope="row" style="text-align:center">'.$resHAL[$year][$team]["nfProavTIavOA"].'</th>';
-        if ($ils != 0) {$totProavTIavOA = $resHAL[$year][$team]["nfProavTIavOA"];}
-        $chaine .= $resHAL[$year][$team]["nfProavTIavOA"].";";
+        echo '<th scope="row" style="text-align:center">'.$resHAL[$year][$team][$cstAvTIAvOA].'</th>';
+        if ($ils != 0) {$totProavTIavOA = $resHAL[$year][$team][$cstAvTIAvOA];}
+        $chaine .= $resHAL[$year][$team][$cstAvTIAvOA].";";
         $pcent = 0;
-        if ($resHAL[$year][$team]["nfProavTIavOA"] != 0) {$pcent = round($resHAL[$year][$team]["nfProavTIavOA"]*100/$resHAL[$year][$team]["nfDep"]);}
+        if ($resHAL[$year][$team][$cstAvTIAvOA] != 0) {$pcent = round($resHAL[$year][$team][$cstAvTIAvOA]*100/$resHAL[$year][$team][$cstNfD]);}
         echo '<th scope="row" style="text-align:center">'.$pcent.'%</th>';
         $chaine .= $pcent."%;";
         
@@ -1438,43 +1451,43 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
         
         $sect[$is] = $sectF;
         $is++;
-        $tabPro[$year][$sectF]["nfDep"] = $resHAL[$year][$codeSF]["nfDep"];
-        $chaine .= $resHAL[$year][$codeSF]["nfDep"].";";
-        echo $cstTEM.$resHAL[$year][$codeSF]["nfDep"].$cstETH;
+        $tabPro[$year][$sectF][$cstNfD] = $resHAL[$year][$codeSF][$cstNfD];
+        $chaine .= $resHAL[$year][$codeSF][$cstNfD].";";
+        echo $cstTEM.$resHAL[$year][$codeSF][$cstNfD].$cstETH;
         $pcent = 0;
-        if ($resHAL[$year][$codeSF]["nfDep"] != 0) {$pcent = round($resHAL[$year][$codeSF]["nfDep"]*100/$resHAL[$year][$codeSF]["nfDep"]);}
+        if ($resHAL[$year][$codeSF][$cstNfD] != 0) {$pcent = round($resHAL[$year][$codeSF][$cstNfD]*100/$resHAL[$year][$codeSF][$cstNfD]);}
         echo $cstTEM.$pcent.$cstPTH;
         $chaine .= $pcent."%;";
         
-        $tabPro[$year][$sectF]["nfPronoTI"] = $resHAL[$year][$codeSF]["nfPronoTI"];
-        echo $cstTEM.$resHAL[$year][$codeSF]["nfPronoTI"].$cstETH;
-        $chaine .= $resHAL[$year][$codeSF]["nfPronoTI"].";";
+        $tabPro[$year][$sectF][$cstNoTI] = $resHAL[$year][$codeSF][$cstNoTI];
+        echo $cstTEM.$resHAL[$year][$codeSF][$cstNoTI].$cstETH;
+        $chaine .= $resHAL[$year][$codeSF][$cstNoTI].";";
         $pcent = 0;
-        if ($resHAL[$year][$codeSF]["nfPronoTI"]) {$pcent = round($resHAL[$year][$codeSF]["nfPronoTI"]*100/$resHAL[$year][$codeSF]["nfDep"]);}
+        if ($resHAL[$year][$codeSF][$cstNoTI]) {$pcent = round($resHAL[$year][$codeSF][$cstNoTI]*100/$resHAL[$year][$codeSF][$cstNfD]);}
         echo $cstTEM.$pcent.$cstPTH;
         $chaine .= $pcent."%;";
         
-        $tabPro[$year][$sectF]["nfProavTI"] = $resHAL[$year][$codeSF]["nfProavTI"];
-        echo $cstTEM.$resHAL[$year][$codeSF]["nfProavTI"].$cstETH;
-        $chaine .= $resHAL[$year][$codeSF]["nfProavTI"].";";
+        $tabPro[$year][$sectF][$cstAvTI] = $resHAL[$year][$codeSF][$cstAvTI];
+        echo $cstTEM.$resHAL[$year][$codeSF][$cstAvTI].$cstETH;
+        $chaine .= $resHAL[$year][$codeSF][$cstAvTI].";";
         $pcent = 0;
-        if ($resHAL[$year][$codeSF]["nfProavTI"] != 0) {$pcent = round($resHAL[$year][$codeSF]["nfProavTI"]*100/$resHAL[$year][$codeSF]["nfDep"]);}
+        if ($resHAL[$year][$codeSF][$cstAvTI] != 0) {$pcent = round($resHAL[$year][$codeSF][$cstAvTI]*100/$resHAL[$year][$codeSF][$cstNfD]);}
         echo $cstTEM.$pcent.$cstPTH;
         $chaine .= $pcent."%;";
         
-        $tabPro[$year][$sectF]["nfPronoTIavOA"] = $resHAL[$year][$codeSF]["nfPronoTIavOA"];
-        echo $cstTEM.$resHAL[$year][$codeSF]["nfPronoTIavOA"].$cstETH;
-        $chaine .= $resHAL[$year][$codeSF]["nfPronoTIavOA"].";";
+        $tabPro[$year][$sectF][$cstNoTIAvOA] = $resHAL[$year][$codeSF][$cstNoTIAvOA];
+        echo $cstTEM.$resHAL[$year][$codeSF][$cstNoTIAvOA].$cstETH;
+        $chaine .= $resHAL[$year][$codeSF][$cstNoTIAvOA].";";
         $pcent = 0;
-        if ($resHAL[$year][$codeSF]["nfPronoTIavOA"] != 0) {$pcent = round($resHAL[$year][$codeSF]["nfPronoTIavOA"]*100/$resHAL[$year][$codeSF]["nfDep"]);}
+        if ($resHAL[$year][$codeSF][$cstNoTIAvOA] != 0) {$pcent = round($resHAL[$year][$codeSF][$cstNoTIAvOA]*100/$resHAL[$year][$codeSF][$cstNfD]);}
         echo $cstTEM.$pcent.$cstPTH;
         $chaine .= $pcent."%;";
         
-        $tabPro[$year][$sectF]["nfProavTIavOA"] = $resHAL[$year][$codeSF]["nfProavTIavOA"];
-        echo $cstTEM.$resHAL[$year][$codeSF]["nfProavTIavOA"].$cstETH;
-        $chaine .= $resHAL[$year][$codeSF]["nfProavTIavOA"].";";
+        $tabPro[$year][$sectF][$cstAvTIAvOA] = $resHAL[$year][$codeSF][$cstAvTIAvOA];
+        echo $cstTEM.$resHAL[$year][$codeSF][$cstAvTIAvOA].$cstETH;
+        $chaine .= $resHAL[$year][$codeSF][$cstAvTIAvOA].";";
         $pcent = 0;
-        if ($resHAL[$year][$codeSF]["nfProavTIavOA"] != 0) {$pcent = round($resHAL[$year][$codeSF]["nfProavTIavOA"]*100/$resHAL[$year][$codeSF]["nfDep"]);}
+        if ($resHAL[$year][$codeSF][$cstAvTIAvOA] != 0) {$pcent = round($resHAL[$year][$codeSF][$cstAvTIAvOA]*100/$resHAL[$year][$codeSF][$cstNfD]);}
         echo $cstTEM.$pcent.$cstPTH;
         $chaine .= $pcent."%;";
         
@@ -1595,17 +1608,17 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
         if ($ils == 0) {
           $team = $LAB_SECT[$ils]["code_collection"];
           extractHAL($team, $year, $reqt, $resHAL, $cstCA);
-          $tabPro[$year][$sect[$is]]["nfDep"] = intval($resHAL[$year][$team]["nfDep"]);
-          $tabPro[$year][$sect[$is]]["nfProavTI"] = intval($resHAL[$year][$team]["nfProavTI"]);
+          $tabPro[$year][$sect[$is]][$cstNfD] = intval($resHAL[$year][$team][$cstNfD]);
+          $tabPro[$year][$sect[$is]][$cstAvTI] = intval($resHAL[$year][$team][$cstAvTI]);
           $tabPro[$year][$sect[$is]]["taux"] = 0;
-          if ($resHAL[$year][$team]["nfDep"] != 0) {
-            $tabPro[$year][$sect[$is]]["taux"] = round($resHAL[$year][$team]["nfProavTI"]*100/$resHAL[$year][$team]["nfDep"]);
+          if ($resHAL[$year][$team][$cstNfD] != 0) {
+            $tabPro[$year][$sect[$is]]["taux"] = round($resHAL[$year][$team][$cstAvTI]*100/$resHAL[$year][$team][$cstNfD]);
           }
-          $tabPro[$year][$sect[$is]]["nfPronoTI"] = intval($resHAL[$year][$team]["nfPronoTI"]);
-          $tabPro[$year][$sect[$is]]["nfPronoTIavOA"] = intval($resHAL[$year][$team]["nfPronoTIavOA"]);
+          $tabPro[$year][$sect[$is]][$cstNoTI] = intval($resHAL[$year][$team][$cstNoTI]);
+          $tabPro[$year][$sect[$is]][$cstNoTIAvOA] = intval($resHAL[$year][$team][$cstNoTIAvOA]);
           $tabPro[$year][$sect[$is]]["tauxnoTIavOA"] = 0;
-          if ($resHAL[$year][$team]["nfPronoTI"] != 0) {
-            $tabPro[$year][$sect[$is]]["tauxnoTIavOA"] = round($resHAL[$year][$team]["nfPronoTIavOA"]*100/$resHAL[$year][$team]["nfPronoTI"]);
+          if ($resHAL[$year][$team][$cstNoTI] != 0) {
+            $tabPro[$year][$sect[$is]]["tauxnoTIavOA"] = round($resHAL[$year][$team][$cstNoTIAvOA]*100/$resHAL[$year][$team][$cstNoTI]);
           }
           $is++;
         }else{
@@ -1613,17 +1626,17 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
           if ($sectI != $sectF && isset($port) && $port != "choix") {//Secteur suivant
             $team = $LAB_SECT[$ils]["code_secteur"];
             extractHAL(strtoupper($team), $year, $reqt, $resHAL, $cstCA);
-            $tabPro[$year][$sect[$is]]["nfDep"] = intval($resHAL[$year][$team]["nfDep"]);
-            $tabPro[$year][$sect[$is]]["nfProavTI"] = intval($resHAL[$year][$team]["nfProavTI"]);
+            $tabPro[$year][$sect[$is]][$cstNfD] = intval($resHAL[$year][$team][$cstNfD]);
+            $tabPro[$year][$sect[$is]][$cstAvTI] = intval($resHAL[$year][$team][$cstAvTI]);
 						$tabPro[$year][$sect[$is]]["taux"] = 0;
-            if ($resHAL[$year][$team]["nfDep"] != 0) {
-              $tabPro[$year][$sect[$is]]["taux"] = round($resHAL[$year][$team]["nfProavTI"]*100/$resHAL[$year][$team]["nfDep"]);
+            if ($resHAL[$year][$team][$cstNfD] != 0) {
+              $tabPro[$year][$sect[$is]]["taux"] = round($resHAL[$year][$team][$cstAvTI]*100/$resHAL[$year][$team][$cstNfD]);
             }
-            $tabPro[$year][$sect[$is]]["nfPronoTI"] = intval($resHAL[$year][$team]["nfPronoTI"]);
-            $tabPro[$year][$sect[$is]]["nfPronoTIavOA"] = intval($resHAL[$year][$team]["nfPronoTIavOA"]);
+            $tabPro[$year][$sect[$is]][$cstNoTI] = intval($resHAL[$year][$team][$cstNoTI]);
+            $tabPro[$year][$sect[$is]][$cstNoTIAvOA] = intval($resHAL[$year][$team][$cstNoTIAvOA]);
             $tabPro[$year][$sect[$is]]["tauxnoTIavOA"] = 0;
-            if ($resHAL[$year][$team]["nfPronoTI"] != 0) {
-              $tabPro[$year][$sect[$is]]["tauxnoTIavOA"] = round($resHAL[$year][$team]["nfPronoTIavOA"]*100/$resHAL[$year][$team]["nfPronoTI"]);
+            if ($resHAL[$year][$team][$cstNoTI] != 0) {
+              $tabPro[$year][$sect[$is]]["tauxnoTIavOA"] = round($resHAL[$year][$team][$cstNoTIAvOA]*100/$resHAL[$year][$team][$cstNoTI]);
             }
             $sectI = $sectF;
             $codeSI = $codeSF;
@@ -1644,16 +1657,16 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
       $chaine = $year.";";
       $is = 0;
       while (isset($sect[$is])) {
-        echo '<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["nfDep"].'</th>';
-        $chaine .= $tabPro[$year][$sect[$is]]["nfDep"].";";
-        echo '<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["nfProavTI"].'</th>';
-        $chaine .= $tabPro[$year][$sect[$is]]["nfProavTI"].";";
+        echo '<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]][$cstNfD].'</th>';
+        $chaine .= $tabPro[$year][$sect[$is]][$cstNfD].";";
+        echo '<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]][$cstAvTI].'</th>';
+        $chaine .= $tabPro[$year][$sect[$is]][$cstAvTI].";";
         echo '<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["taux"].'%</th>';
         $chaine .= $tabPro[$year][$sect[$is]]["taux"]."%;";
-        echo '<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["nfPronoTI"].'</th>';
-        $chaine .= $tabPro[$year][$sect[$is]]["nfPronoTI"].";";
-        echo '<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["nfPronoTIavOA"].'</th>';
-        $chaine .= $tabPro[$year][$sect[$is]]["nfPronoTIavOA"].";";
+        echo '<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]][$cstNoTI].'</th>';
+        $chaine .= $tabPro[$year][$sect[$is]][$cstNoTI].";";
+        echo '<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]][$cstNoTIAvOA].'</th>';
+        $chaine .= $tabPro[$year][$sect[$is]][$cstNoTIAvOA].";";
         echo '<th scope="row" style="text-align:center">'.$tabPro[$year][$sect[$is]]["tauxnoTIavOA"].'%</th>';
         $chaine .= $tabPro[$year][$sect[$is]]["tauxnoTIavOA"]."%;";
         $is++;
@@ -1731,20 +1744,20 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     $year = $annee3;
     $sect[$is] = $team;
     extractHAL(strtolower($team), $year, $reqt, $resHAL, $cstCA);
-    $tabPro[$team]["nfDep"] = intval($resHAL[$year][$team]["nfDep"]);
-    $tabPro[$team]["nfPronoTI"] = intval($resHAL[$year][$team]["nfPronoTI"]);
+    $tabPro[$team][$cstNfD] = intval($resHAL[$year][$team][$cstNfD]);
+    $tabPro[$team][$cstNoTI] = intval($resHAL[$year][$team][$cstNoTI]);
     $tabPro[$team]["pCentnoTI"] = 0;
-    $tabPro[$team]["nfProavTI"] = intval($resHAL[$year][$team]["nfProavTI"]);
+    $tabPro[$team][$cstAvTI] = intval($resHAL[$year][$team][$cstAvTI]);
     $tabPro[$team]["pCentavTI"] = 0;
-    $tabPro[$team]["nfProavTIavOA"] = intval($resHAL[$year][$team]["nfProavTIavOA"]);
+    $tabPro[$team][$cstAvTIAvOA] = intval($resHAL[$year][$team][$cstAvTIAvOA]);
     $tabPro[$team]["pCentavTIavOA"] = 0;
-    $tabPro[$team]["nfPronoTIavOA"] = intval($resHAL[$year][$team]["nfPronoTIavOA"]);
+    $tabPro[$team][$cstNoTIAvOA] = intval($resHAL[$year][$team][$cstNoTIAvOA]);
     $tabPro[$team]["pCentnoTIavOA"] = 0;
-    if ($tabPro[$team]["nfDep"] != 0) {
-      $tabPro[$team]["pCentnoTI"] = round($tabPro[$team]["nfPronoTI"]*100/$tabPro[$team]["nfDep"]);
-      $tabPro[$team]["pCentavTI"] = round($tabPro[$team]["nfProavTI"]*100/$tabPro[$team]["nfDep"]);
-      $tabPro[$team]["pCentavTIavOA"] = round($tabPro[$team]["nfProavTIavOA"]*100/$tabPro[$team]["nfDep"]);
-      $tabPro[$team]["pCentnoTIavOA"] = round($tabPro[$team]["nfPronoTIavOA"]*100/$tabPro[$team]["nfDep"]);
+    if ($tabPro[$team][$cstNfD] != 0) {
+      $tabPro[$team]["pCentnoTI"] = round($tabPro[$team][$cstNoTI]*100/$tabPro[$team][$cstNfD]);
+      $tabPro[$team]["pCentavTI"] = round($tabPro[$team][$cstAvTI]*100/$tabPro[$team][$cstNfD]);
+      $tabPro[$team]["pCentavTIavOA"] = round($tabPro[$team][$cstAvTIAvOA]*100/$tabPro[$team][$cstNfD]);
+      $tabPro[$team]["pCentnoTIavOA"] = round($tabPro[$team][$cstNoTIAvOA]*100/$tabPro[$team][$cstNfD]);
     }
     $is++;
     
@@ -1761,26 +1774,26 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
       if (strtoupper($code) != $team && stripos($name, "université") !== false && strtoupper($code) != "UDL") {//portail univ à intégrer + ignorer UDL
         $code = strtoupper($code);
         //if (isset($LAB_SECT[$code])) {$code = $LAB_SECT[$code];}//Equivalence trouvée
-        $urlHALDep = "https://api.archives-ouvertes.fr/search/".strtolower($code)."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111&rows=0";
+        $urlHALDep = $cstAPI.strtolower($code)."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111&rows=0";
         //echo $name.' - '.$code.' : '.askCurlNF($urlHALDep, $cstCA).'<br>';
         //if (askCurlNF($urlHALDep) == 0) {echo $urlHALDep.'<br>';}
         if (askCurlNF($urlHALDep, $cstCA) != 0 && $code != "") {//Y-a-t-il des résultats pour l'extraction avec ce code et cette année ?
           $sect[$is] = $code;
           extractHAL(strtolower($code), $year, $reqt, $resHAL, $cstCA);
-          $tabPro[$code]["nfDep"] = intval($resHAL[$year][$code]["nfDep"]);
-          $tabPro[$code]["nfPronoTI"] = intval($resHAL[$year][$code]["nfPronoTI"]);
+          $tabPro[$code][$cstNfD] = intval($resHAL[$year][$code][$cstNfD]);
+          $tabPro[$code][$cstNoTI] = intval($resHAL[$year][$code][$cstNoTI]);
           $tabPro[$code]["pCentnoTI"] = 0;
-          $tabPro[$code]["nfProavTI"] = intval($resHAL[$year][$code]["nfProavTI"]);
+          $tabPro[$code][$cstAvTI] = intval($resHAL[$year][$code][$cstAvTI]);
           $tabPro[$code]["pCentavTI"] = 0;
-          $tabPro[$code]["nfProavTIavOA"] = intval($resHAL[$year][$code]["nfProavTIavOA"]);
+          $tabPro[$code][$cstAvTIAvOA] = intval($resHAL[$year][$code][$cstAvTIAvOA]);
           $tabPro[$code]["pCentavTIavOA"] = 0;
-          $tabPro[$code]["nfPronoTIavOA"] = intval($resHAL[$year][$code]["nfPronoTIavOA"]);
+          $tabPro[$code][$cstNoTIAvOA] = intval($resHAL[$year][$code][$cstNoTIAvOA]);
           $tabPro[$code]["pCentnoTIavOA"] = 0;
-          if ($tabPro[$code]["nfDep"] != 0) {
-            $tabPro[$code]["pCentnoTI"] = round($tabPro[$code]["nfPronoTI"]*100/$tabPro[$code]["nfDep"]);
-            $tabPro[$code]["pCentavTI"] = round($tabPro[$code]["nfProavTI"]*100/$tabPro[$code]["nfDep"]);
-            $tabPro[$code]["pCentavTIavOA"] = round($tabPro[$code]["nfProavTIavOA"]*100/$tabPro[$code]["nfDep"]);
-            $tabPro[$code]["pCentnoTIavOA"] = round($tabPro[$code]["nfPronoTIavOA"]*100/$tabPro[$code]["nfDep"]);
+          if ($tabPro[$code][$cstNfD] != 0) {
+            $tabPro[$code]["pCentnoTI"] = round($tabPro[$code][$cstNoTI]*100/$tabPro[$code][$cstNfD]);
+            $tabPro[$code]["pCentavTI"] = round($tabPro[$code][$cstAvTI]*100/$tabPro[$code][$cstNfD]);
+            $tabPro[$code]["pCentavTIavOA"] = round($tabPro[$code][$cstAvTIAvOA]*100/$tabPro[$code][$cstNfD]);
+            $tabPro[$code]["pCentnoTIavOA"] = round($tabPro[$code][$cstNoTIAvOA]*100/$tabPro[$code][$cstNfD]);
           }
           $is++;
           //if ($is == 3) {break;}
@@ -1857,30 +1870,30 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
       $chaine = "";
       echo '<td scope="row" style="text-align:center">'.$code.'</td>';
       $chaine .= $code.";";
-      echo '<td scope="row" style="text-align:center;'.$evd1.'">'.$tabPro[$code]["nfDep"].'</td>';
-      $chaine .= $tabPro[$code]["nfDep"].";";
+      echo '<td scope="row" style="text-align:center;'.$evd1.'">'.$tabPro[$code][$cstNfD].'</td>';
+      $chaine .= $tabPro[$code][$cstNfD].";";
       //echo '<td scope="row" style="text-align:center;'.$evd1.'">'.$tabPro[$code]["rgDep"].'</td>';
       //$chaine .= $tabPro[$code]["rgDep"].";";
-      echo '<td scope="row" style="text-align:center;'.$evd2.'">'.$tabPro[$code]["nfPronoTI"].'</td>';
-      $chaine .= $tabPro[$code]["nfPronoTI"].";";
+      echo '<td scope="row" style="text-align:center;'.$evd2.'">'.$tabPro[$code][$cstNoTI].'</td>';
+      $chaine .= $tabPro[$code][$cstNoTI].";";
       echo '<td scope="row" style="text-align:center;'.$evd2.'">'.$tabPro[$code]["pCentnoTI"].'</td>';
       $chaine .= $tabPro[$code]["pCentnoTI"].";";
       //echo '<td scope="row" style="text-align:center;'.$evd2.'">'.$tabPro[$code]["rgPronoTI"].'</td>';
       //$chaine .= $tabPro[$code]["rgPronoTI"].";";
-      echo '<td scope="row" style="text-align:center;'.$evd3.'">'.$tabPro[$code]["nfProavTI"].'</td>';
-      $chaine .= $tabPro[$code]["nfProavTI"].";";
+      echo '<td scope="row" style="text-align:center;'.$evd3.'">'.$tabPro[$code][$cstAvTI].'</td>';
+      $chaine .= $tabPro[$code][$cstAvTI].";";
       echo '<td scope="row" style="text-align:center;'.$evd3.'">'.$tabPro[$code]["pCentavTI"].'</td>';
       $chaine .= $tabPro[$code]["pCentavTI"].";";
       //echo '<td scope="row" style="text-align:center;'.$evd3.'">'.$tabPro[$code]["rgProavTI"].'</td>';
       //$chaine .= $tabPro[$code]["rgProavTI"].";";
-      echo '<td scope="row" style="text-align:center;'.$evd4.'">'.$tabPro[$code]["nfProavTIavOA"].'</td>';
-      $chaine .= $tabPro[$code]["nfProavTIavOA"].";";
+      echo '<td scope="row" style="text-align:center;'.$evd4.'">'.$tabPro[$code][$cstAvTIAvOA].'</td>';
+      $chaine .= $tabPro[$code][$cstAvTIAvOA].";";
       echo '<td scope="row" style="text-align:center;'.$evd4.'">'.$tabPro[$code]["pCentavTIavOA"].'</td>';
       $chaine .= $tabPro[$code]["pCentavTIavOA"].";";
       //echo '<td scope="row" style="text-align:center;'.$evd4.'">'.$tabPro[$code]["rgProavTIavOA"].'</td>';
       //$chaine .= $tabPro[$code]["rgProavTIavOA"].";";
-      echo '<td scope="row" style="text-align:center;'.$evd5.'">'.$tabPro[$code]["nfPronoTIavOA"].'</td>';
-      $chaine .= $tabPro[$code]["nfPronoTIavOA"].";";
+      echo '<td scope="row" style="text-align:center;'.$evd5.'">'.$tabPro[$code][$cstNoTIAvOA].'</td>';
+      $chaine .= $tabPro[$code][$cstNoTIAvOA].";";
       echo '<td scope="row" style="text-align:center;'.$evd5.'">'.$tabPro[$code]["pCentnoTIavOA"].'</td>';
       $chaine .= $tabPro[$code]["pCentnoTIavOA"].";";
       //echo '<td scope="row" style="text-align:center;'.$evd5.'">'.$tabPro[$code]["rgPronoTIavOA"].'</td>';  
@@ -1919,16 +1932,16 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     $A03 = 0;
     $A04 = 0;
     
-    $urlHALDep = "https://api.archives-ouvertes.fr/search/".strtolower($team)."/?wt=xml&fq=submitType_s:notice&fq=-status_i=111&fq=submittedDate_s:[1600-01-01-%20TO%20".$year."-12-31]&rows=0";
+    $urlHALDep = $cstAPI.strtolower($team)."/?wt=xml&fq=submitType_s:notice&fq=-status_i=111&fq=submittedDate_s:[1600-01-01-%20TO%20".$year."-12-31]&rows=0";
     $A01 = askCurlNF($urlHALDep, $cstCA);
     
-    $urlHALDep = "https://api.archives-ouvertes.fr/search/".strtolower($team)."/?wt=xml&fq=submitType_s:file&fq=-status_i=111&fq=submittedDate_s:[1600-01-01-%20TO%20".$year."-12-31]&rows=0";
+    $urlHALDep = $cstAPI.strtolower($team)."/?wt=xml&fq=submitType_s:file&fq=-status_i=111&fq=submittedDate_s:[1600-01-01-%20TO%20".$year."-12-31]&rows=0";
     $A02 = askCurlNF($urlHALDep, $cstCA);
     
-    $urlHALDep = "https://api.archives-ouvertes.fr/search/".strtolower($team)."/?wt=xml&fq=submitType_s:notice&fq=-status_i=111&fq=submittedDate_s:[".$year."-01-01-%20TO%20".$year."-12-31]&rows=0";
+    $urlHALDep = $cstAPI.strtolower($team)."/?wt=xml&fq=submitType_s:notice&fq=-status_i=111&fq=submittedDate_s:[".$year."-01-01-%20TO%20".$year."-12-31]&rows=0";
     $A03 = askCurlNF($urlHALDep, $cstCA);
     
-    $urlHALDep = "https://api.archives-ouvertes.fr/search/".strtolower($team)."/?wt=xml&fq=submitType_s:file&fq=-status_i=111&fq=submittedDate_s:[".$year."-01-01-%20TO%20".$year."-12-31]&rows=0";
+    $urlHALDep = $cstAPI.strtolower($team)."/?wt=xml&fq=submitType_s:file&fq=-status_i=111&fq=submittedDate_s:[".$year."-01-01-%20TO%20".$year."-12-31]&rows=0";
     $A04 = askCurlNF($urlHALDep, $cstCA);
     
     //Affichage
@@ -2143,9 +2156,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			$team = strtolower($LAB_SECT[0]["secteur"]);
 		}
 		
-		$urlHAL = "https://api.archives-ouvertes.fr/search/".$team."/?q=*%3A*&rows=0&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=producedDateY_i:".$year;
+		$urlHAL = $cstAPI.$team."/?q=*%3A*&rows=0&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=producedDateY_i:".$year;
 		askCurl($urlHAL, $arrayCurl, $cstCA);
-		$nbTotArt = $arrayCurl["response"]["numFound"];
+		$nbTotArt = $arrayCurl["response"][$cstNuF];
 		$pivot = "journalTitle_s,journalPublisher_s,journalValid_s";
 		
 		//Affichage
@@ -2176,7 +2189,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			if (isset($arrayCurl["facet_counts"]["facet_pivot"][$pivot][$i]["pivot"][0]["pivot"][0]["value"]) && $arrayCurl["facet_counts"]["facet_pivot"][$pivot][$i]["pivot"][0]["pivot"][0]["value"] == "VALID") {$valid = "oui";}
 			if ($valid == "oui") {
 				$nbTotArtTI = 0;
-				$urlTitle = "https://api.archives-ouvertes.fr/search/".$team."/?q=*%3A*&rows=0&indent=true&wt=xml&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=submitType_s:file&fq=docType_s:ART&fq=journalTitle_s:%22".$jTitle."%22&fq=producedDateY_i:".$year;
+				$urlTitle = $cstAPI.$team."/?q=*%3A*&rows=0&indent=true&wt=xml&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=submitType_s:file&fq=docType_s:ART&fq=journalTitle_s:%22".$jTitle."%22&fq=producedDateY_i:".$year;
 				$nbTotArtTI = askCurlNF($urlTitle, $cstCA);
 				echo '<tr>';
 				$nbTotArti = $arrayCurl["facet_counts"]["facet_pivot"][$pivot][$i]["count"];
@@ -2295,7 +2308,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		while (isset($LAB_SECT[$ils]["code_secteur"])) {
 			$team = $LAB_SECT[$ils]["code_collection"];
 			
-			$urlHAL = "https://api.archives-ouvertes.fr/search/".$team."/?q=*%3A*&fq=producedDateY_i:".$year."&indent=true&facet=true&facet.pivot=journalPublisher_s,journalValid_s,producedDateY_i&fq=docType_s:ART&fq=-status_i=111&rows=0";
+			$urlHAL = $cstAPI.$team."/?q=*%3A*&fq=producedDateY_i:".$year."&indent=true&facet=true&facet.pivot=journalPublisher_s,journalValid_s,producedDateY_i&fq=docType_s:ART&fq=-status_i=111&rows=0";
 			//echo $urlHAL.'<br>';
 			$url = str_replace(" ", "%20", $urlHAL);
 			$ch = curl_init();
@@ -2304,7 +2317,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
 			curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
-			if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
+			if (isset ($_SERVER[$cstHTS]) && $_SERVER[$cstHTS] == "on")	{
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
 				curl_setopt($ch, CURLOPT_CAINFO, $cstCA);
 			}
@@ -2352,7 +2365,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$ils = 0;
 		while (isset($LAB_SECT[$ils]["secteur"])) {
 			$code_collection = strtoupper($LAB_SECT[$ils]["code_collection"]);
-			$urlHAL = "https://api.archives-ouvertes.fr/search/".$code_collection."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:ART&fq=-status_i=111";
+			$urlHAL = $cstAPI.$code_collection."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:ART&fq=-status_i=111";
 			$qteArt = askCurlNF($urlHAL, $cstCA);
 			if (isset($resHAL["Hors regroupement éditorial"][$LAB_SECT[$ils]["secteur"]])) {
 				$resHAL["Hors regroupement éditorial"][$LAB_SECT[$ils]["secteur"]] += intval($qteArt);
@@ -2629,44 +2642,44 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			}
 		}
 		
-		if (isset($resHAL[$annee13-1][$team]["nfPronoTI"]) && isset($resHAL[$annee13-1][$team]["nfProavTI"]) && ($resHAL[$annee13-1][$team]["nfPronoTI"] + $resHAL[$annee13-1][$team]["nfProavTI"]) != 0) {
-			$pct1noavTI = round((($resHAL[$annee13][$team]["nfPronoTI"] + $resHAL[$annee13][$team]["nfProavTI"]) - ($resHAL[$annee13-1][$team]["nfPronoTI"] + $resHAL[$annee13-1][$team]["nfProavTI"]))*100/($resHAL[$annee13-1][$team]["nfPronoTI"] + $resHAL[$annee13-1][$team]["nfProavTI"]), 1);
+		if (isset($resHAL[$annee13-1][$team][$cstNoTI]) && isset($resHAL[$annee13-1][$team][$cstAvTI]) && ($resHAL[$annee13-1][$team][$cstNoTI] + $resHAL[$annee13-1][$team][$cstAvTI]) != 0) {
+			$pct1noavTI = round((($resHAL[$annee13][$team][$cstNoTI] + $resHAL[$annee13][$team][$cstAvTI]) - ($resHAL[$annee13-1][$team][$cstNoTI] + $resHAL[$annee13-1][$team][$cstAvTI]))*100/($resHAL[$annee13-1][$team][$cstNoTI] + $resHAL[$annee13-1][$team][$cstAvTI]), 1);
 		}else{
 			$pct1noavTI = 0;
 		}
-		if (isset($resHAL[$annee13-1][$team]["nfProavTI"]) && $resHAL[$annee13-1][$team]["nfProavTI"] != 0) {
-			$pct1avTI = round(($resHAL[$annee13][$team]["nfProavTI"] - $resHAL[$annee13-1][$team]["nfProavTI"])*100/$resHAL[$annee13-1][$team]["nfProavTI"], 1);
+		if (isset($resHAL[$annee13-1][$team][$cstAvTI]) && $resHAL[$annee13-1][$team][$cstAvTI] != 0) {
+			$pct1avTI = round(($resHAL[$annee13][$team][$cstAvTI] - $resHAL[$annee13-1][$team][$cstAvTI])*100/$resHAL[$annee13-1][$team][$cstAvTI], 1);
 		}else{
 			$pct1avTI = 0;
 		}
-		if (isset($resHAL[$annee13-1][$team]["nfProavTIavOA"]) && $resHAL[$annee13-1][$team]["nfProavTIavOA"] != 0) {
-			$pct1avTIavOA = round(($resHAL[$annee13][$team]["nfProavTIavOA"] - $resHAL[$annee13-1][$team]["nfProavTIavOA"])*100/$resHAL[$annee13-1][$team]["nfProavTIavOA"], 1);
+		if (isset($resHAL[$annee13-1][$team][$cstAvTIAvOA]) && $resHAL[$annee13-1][$team][$cstAvTIAvOA] != 0) {
+			$pct1avTIavOA = round(($resHAL[$annee13][$team][$cstAvTIAvOA] - $resHAL[$annee13-1][$team][$cstAvTIAvOA])*100/$resHAL[$annee13-1][$team][$cstAvTIAvOA], 1);
 		}else{
 			$pct1avTIavOA = 0;
 		}
-		if (isset($resHAL[$annee13-1][$team]["nfPronoTIavOA"]) && $resHAL[$annee13-1][$team]["nfPronoTIavOA"] != 0) {
-			$pct1noTIavOA = round(($resHAL[$annee13][$team]["nfPronoTIavOA"] - $resHAL[$annee13-1][$team]["nfPronoTIavOA"])*100/$resHAL[$annee13-1][$team]["nfPronoTIavOA"], 1);
+		if (isset($resHAL[$annee13-1][$team][$cstNoTIAvOA]) && $resHAL[$annee13-1][$team][$cstNoTIAvOA] != 0) {
+			$pct1noTIavOA = round(($resHAL[$annee13][$team][$cstNoTIAvOA] - $resHAL[$annee13-1][$team][$cstNoTIAvOA])*100/$resHAL[$annee13-1][$team][$cstNoTIAvOA], 1);
 		}else{
 			$pct1noTIavOA = 0;
 		}
 		
-		if (isset($resHAL[$annee13-3][$team]["nfPronoTI"]) && isset($resHAL[$annee13-3][$team]["nfProavTI"]) && ($resHAL[$annee13-3][$team]["nfPronoTI"] + $resHAL[$annee13-3][$team]["nfProavTI"]) != 0) {
-			$pct3noavTI = round((($resHAL[$annee13][$team]["nfPronoTI"] + $resHAL[$annee13][$team]["nfProavTI"]) - ($resHAL[$annee13-3][$team]["nfPronoTI"] + $resHAL[$annee13-3][$team]["nfProavTI"]))*100/($resHAL[$annee13-3][$team]["nfPronoTI"] + $resHAL[$annee13-3][$team]["nfProavTI"]), 1);
+		if (isset($resHAL[$annee13-3][$team][$cstNoTI]) && isset($resHAL[$annee13-3][$team][$cstAvTI]) && ($resHAL[$annee13-3][$team][$cstNoTI] + $resHAL[$annee13-3][$team][$cstAvTI]) != 0) {
+			$pct3noavTI = round((($resHAL[$annee13][$team][$cstNoTI] + $resHAL[$annee13][$team][$cstAvTI]) - ($resHAL[$annee13-3][$team][$cstNoTI] + $resHAL[$annee13-3][$team][$cstAvTI]))*100/($resHAL[$annee13-3][$team][$cstNoTI] + $resHAL[$annee13-3][$team][$cstAvTI]), 1);
 		}else{
 			$pct3noavTI = 0;
 		}
-		if (isset($resHAL[$annee13-3][$team]["nfProavTI"]) && $resHAL[$annee13-3][$team]["nfProavTI"] != 0) {
-			$pct3avTI = round(($resHAL[$annee13][$team]["nfProavTI"] - $resHAL[$annee13-3][$team]["nfProavTI"])*100/$resHAL[$annee13-3][$team]["nfProavTI"], 1);
+		if (isset($resHAL[$annee13-3][$team][$cstAvTI]) && $resHAL[$annee13-3][$team][$cstAvTI] != 0) {
+			$pct3avTI = round(($resHAL[$annee13][$team][$cstAvTI] - $resHAL[$annee13-3][$team][$cstAvTI])*100/$resHAL[$annee13-3][$team][$cstAvTI], 1);
 		}else{
 			$pct3avTI = 0;
 		}
-		if (isset($resHAL[$annee13-3][$team]["nfProavTIavOA"]) && $resHAL[$annee13-3][$team]["nfProavTIavOA"] != 0) {
-			$pct3avTIavOA = round(($resHAL[$annee13][$team]["nfProavTIavOA"] - $resHAL[$annee13-3][$team]["nfProavTIavOA"])*100/$resHAL[$annee13-3][$team]["nfProavTIavOA"], 1);
+		if (isset($resHAL[$annee13-3][$team][$cstAvTIAvOA]) && $resHAL[$annee13-3][$team][$cstAvTIAvOA] != 0) {
+			$pct3avTIavOA = round(($resHAL[$annee13][$team][$cstAvTIAvOA] - $resHAL[$annee13-3][$team][$cstAvTIAvOA])*100/$resHAL[$annee13-3][$team][$cstAvTIAvOA], 1);
 		}else{
 			$pct3avTIavOA = 0;
 		}
-		if (isset($resHAL[$annee13-3][$team]["nfPronoTIavOA"]) && $resHAL[$annee13-3][$team]["nfPronoTIavOA"] != 0) {
-			$pct3noTIavOA = round(($resHAL[$annee13][$team]["nfPronoTIavOA"] - $resHAL[$annee13-3][$team]["nfPronoTIavOA"])*100/$resHAL[$annee13-3][$team]["nfPronoTIavOA"], 1);
+		if (isset($resHAL[$annee13-3][$team][$cstNoTIAvOA]) && $resHAL[$annee13-3][$team][$cstNoTIAvOA] != 0) {
+			$pct3noTIavOA = round(($resHAL[$annee13][$team][$cstNoTIAvOA] - $resHAL[$annee13-3][$team][$cstNoTIAvOA])*100/$resHAL[$annee13-3][$team][$cstNoTIAvOA], 1);
 		}else{
 			$pct3noTIavOA = 0;
 		}
@@ -2794,12 +2807,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$chaine = "Publications avec ou sans texte intégral déposé dans HAL;";
 		echo '<tr>';
     echo '<th scope="row">Publications avec ou sans texte intégral déposé dans HAL</th>';
-		echo '<th scope="row" style="text-align:center">'.($resHAL[$annee13-3][$team]["nfPronoTI"] + $resHAL[$annee13-3][$team]["nfProavTI"]).'</th>';
-		$chaine .= ($resHAL[$annee13-3][$team]["nfPronoTI"] + $resHAL[$annee13-3][$team]["nfProavTI"]).";";
-		echo '<th scope="row" style="text-align:center">'.($resHAL[$annee13-1][$team]["nfPronoTI"] + $resHAL[$annee13-1][$team]["nfProavTI"]).'</th>';
-		$chaine .= ($resHAL[$annee13-1][$team]["nfPronoTI"] + $resHAL[$annee13-1][$team]["nfProavTI"]).";";
-		echo '<th scope="row" style="text-align:center">'.($resHAL[$annee13][$team]["nfPronoTI"] + $resHAL[$annee13][$team]["nfProavTI"]).'</th>';
-		$chaine .= ($resHAL[$annee13][$team]["nfPronoTI"] + $resHAL[$annee13][$team]["nfProavTI"]).";";
+		echo '<th scope="row" style="text-align:center">'.($resHAL[$annee13-3][$team][$cstNoTI] + $resHAL[$annee13-3][$team][$cstAvTI]).'</th>';
+		$chaine .= ($resHAL[$annee13-3][$team][$cstNoTI] + $resHAL[$annee13-3][$team][$cstAvTI]).";";
+		echo '<th scope="row" style="text-align:center">'.($resHAL[$annee13-1][$team][$cstNoTI] + $resHAL[$annee13-1][$team][$cstAvTI]).'</th>';
+		$chaine .= ($resHAL[$annee13-1][$team][$cstNoTI] + $resHAL[$annee13-1][$team][$cstAvTI]).";";
+		echo '<th scope="row" style="text-align:center">'.($resHAL[$annee13][$team][$cstNoTI] + $resHAL[$annee13][$team][$cstAvTI]).'</th>';
+		$chaine .= ($resHAL[$annee13][$team][$cstNoTI] + $resHAL[$annee13][$team][$cstAvTI]).";";
 		echo '</tr>';
 		$chaine .= chr(13).chr(10);
 		fwrite($inF,$chaine);
@@ -2807,12 +2820,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$chaine = "Publications avec texte intégral déposé dans HAL;";
 		echo '<tr>';
     echo '<th scope="row">Publications avec texte intégral déposé dans HAL</th>';		
-		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-3][$team]["nfProavTI"].'</th>';
-		$chaine .= $resHAL[$annee13-3][$team]["nfProavTI"].";";
-		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-1][$team]["nfProavTI"].'</th>';
-		$chaine .= $resHAL[$annee13-1][$team]["nfProavTI"].";";
-		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13][$team]["nfProavTI"].'</th>';
-		$chaine .= $resHAL[$annee13][$team]["nfProavTI"].";";
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-3][$team][$cstAvTI].'</th>';
+		$chaine .= $resHAL[$annee13-3][$team][$cstAvTI].";";
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-1][$team][$cstAvTI].'</th>';
+		$chaine .= $resHAL[$annee13-1][$team][$cstAvTI].";";
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13][$team][$cstAvTI].'</th>';
+		$chaine .= $resHAL[$annee13][$team][$cstAvTI].";";
 		echo '</tr>';
 		$chaine .= chr(13).chr(10);
 		fwrite($inF,$chaine);
@@ -2820,12 +2833,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$chaine = "Publications avec texte intégral déposé dans HAL + lien externe vers PDF en open access;";
 		echo '<tr>';
     echo '<th scope="row">Publications avec texte intégral déposé dans HAL + lien externe vers PDF en open access</th>';
-		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-3][$team]["nfProavTIavOA"].'</th>';
-		$chaine .= $resHAL[$annee13-3][$team]["nfProavTIavOA"].";";
-		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-1][$team]["nfProavTIavOA"].'</th>';
-		$chaine .= $resHAL[$annee13-1][$team]["nfProavTIavOA"].";";
-		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13][$team]["nfProavTIavOA"].'</th>';
-		$chaine .= $resHAL[$annee13][$team]["nfProavTIavOA"].";";
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-3][$team][$cstAvTIAvOA].'</th>';
+		$chaine .= $resHAL[$annee13-3][$team][$cstAvTIAvOA].";";
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-1][$team][$cstAvTIAvOA].'</th>';
+		$chaine .= $resHAL[$annee13-1][$team][$cstAvTIAvOA].";";
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13][$team][$cstAvTIAvOA].'</th>';
+		$chaine .= $resHAL[$annee13][$team][$cstAvTIAvOA].";";
 		echo '</tr>';
 		$chaine .= chr(13).chr(10);
 		fwrite($inF,$chaine);
@@ -2833,12 +2846,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$chaine = "Publications sans texte intégral déposé dans HAL + lien externe vers PDF en open access;";
 		echo '<tr>';
     echo '<th scope="row">Publications sans texte intégral déposé dans HAL + lien externe vers PDF en open access</th>';
-		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-3][$team]["nfPronoTIavOA"].'</th>';
-		$chaine .= $resHAL[$annee13-3][$team]["nfPronoTIavOA"].";";
-		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-1][$team]["nfPronoTIavOA"].'</th>';
-		$chaine .= $resHAL[$annee13-1][$team]["nfPronoTIavOA"].";";
-		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13][$team]["nfPronoTIavOA"].'</th>';
-		$chaine .= $resHAL[$annee13][$team]["nfPronoTIavOA"].";";
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-3][$team][$cstNoTIAvOA].'</th>';
+		$chaine .= $resHAL[$annee13-3][$team][$cstNoTIAvOA].";";
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13-1][$team][$cstNoTIAvOA].'</th>';
+		$chaine .= $resHAL[$annee13-1][$team][$cstNoTIAvOA].";";
+		echo '<th scope="row" style="text-align:center">'.$resHAL[$annee13][$team][$cstNoTIAvOA].'</th>';
+		$chaine .= $resHAL[$annee13][$team][$cstNoTIAvOA].";";
 		echo '</tr>';
 		$chaine .= chr(13).chr(10);
 		fwrite($inF,$chaine);
@@ -2870,9 +2883,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$listANRProId = "~";
 		
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
-			$urlANR = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=anrProjectId_i,anrProjectAcronym_s,funding_s,anrProjectId_i,anrProjectReference_s&rows=10000";
+			$urlANR = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=anrProjectId_i,anrProjectAcronym_s,funding_s,anrProjectId_i,anrProjectReference_s&rows=10000";
 			askCurl($urlANR, $arrayCurl, $cstCA);
-			$nbTotANR = $arrayCurl["response"]["numFound"];
+			$nbTotANR = $arrayCurl["response"][$cstNuF];
 			//echo '<br>Total potentiel de '.$nbTotANR.' projets ANR pour '.$team.' en '.$year.'.');
 			
 			$i = 0;
@@ -2892,9 +2905,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 							}
 							//Nombre total de publications pour ce projet et cette année
 							if (isset($arrayCurl["response"]["docs"][$i]["anrProjectId_i"][$k])) {
-								$urlPub = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fq=anrProjectId_i:".$arrayCurl["response"]["docs"][$i]["anrProjectId_i"][$k]."&rows=10000";
+								$urlPub = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fq=anrProjectId_i:".$arrayCurl["response"]["docs"][$i]["anrProjectId_i"][$k]."&rows=10000";
 								askCurl($urlPub, $arrayPub, $cstCA);
-								$nbTotPub = $arrayPub["response"]["numFound"];
+								$nbTotPub = $arrayPub["response"][$cstNuF];
 								$resANR["Nombre"][$nbANR] = $nbTotPub;
 								//Liste des publications
 								$j = 0;
@@ -3033,9 +3046,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$listEURProId = "~";
 		
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
-			$urlEUR = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=europeanProjectId_i,europeanProjectAcronym_s,funding_s,europeanProjectId_i,europeanProjectReference_s&rows=10000";
+			$urlEUR = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=europeanProjectId_i,europeanProjectAcronym_s,funding_s,europeanProjectId_i,europeanProjectReference_s&rows=10000";
 			askCurl($urlEUR, $arrayCurl, $cstCA);
-			$nbTotEUR = $arrayCurl["response"]["numFound"];
+			$nbTotEUR = $arrayCurl["response"][$cstNuF];
 			//echo '<br>Total potentiel de '.$nbTotEUR.' projets EUR pour '.$team.' en '.$year.'.');
 			
 			$i = 0;
@@ -3059,9 +3072,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 							}
 							//Nombre total de publications pour ce projet et cette année
 							if (isset($arrayCurl["response"]["docs"][$i]["europeanProjectId_i"][$k])) {
-								$urlPub = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fq=europeanProjectId_i:".$arrayCurl["response"]["docs"][$i]["europeanProjectId_i"][$k]."&rows=10000";
+								$urlPub = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fq=europeanProjectId_i:".$arrayCurl["response"]["docs"][$i]["europeanProjectId_i"][$k]."&rows=10000";
 								askCurl($urlPub, $arrayPub, $cstCA);
-								$nbTotPub = $arrayPub["response"]["numFound"];
+								$nbTotPub = $arrayPub["response"][$cstNuF];
 								$resEUR["Nombre"][$nbEUR] = $nbTotPub;
 								//Liste des publications
 								$j = 0;
@@ -3221,10 +3234,10 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		
 		while (isset($LAB_SECT[$col]["code_collection"])) {
 			for ($year = $anneedeb; $year <= $anneefin; $year++) {
-				$urlHAL = "https://api.archives-ouvertes.fr/search/".$LAB_SECT[$col]["code_collection"]."/?fq=producedDateY_i:".$year."&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s,sid_i&rows=10000&sort=contributorFullName_s%20desc";
+				$urlHAL = $cstAPI.$LAB_SECT[$col]["code_collection"]."/?fq=producedDateY_i:".$year."&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s,sid_i&rows=10000&sort=contributorFullName_s%20desc";
 				askCurl($urlHAL, $arrayCtb, $cstCA);
-				$nbTotCtb += $arrayCtb["response"]["numFound"];
-				for ($i=0; $i<$arrayCtb["response"]["numFound"]; $i++) {
+				$nbTotCtb += $arrayCtb["response"][$cstNuF];
+				for ($i=0; $i<$arrayCtb["response"][$cstNuF]; $i++) {
 					if (isset($arrayCtb["response"]["docs"][$i]["contributorFullName_s"])) {//Nom du contributeur parfois non renseigné
 						$ctbTot["nom"][$ctb] = $arrayCtb["response"]["docs"][$i]["contributorFullName_s"];
 						$ctbTot["typ"][$ctb] = $arrayCtb["response"]["docs"][$i]["submitType_s"];
@@ -3388,9 +3401,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$resColl = array();
 		$resColl["code"] = array();
 		$year = $annee17;
-		$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
+		$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
 		//echo $url;
-		$totColl = askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
+		$totColl = askCurlNF($cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
 		askCurl($url, $arrayCurl, $cstCA);
 		//var_dump($arrayCurl);
 		
@@ -3539,9 +3552,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$resColl = array();
 		$resColl["code"] = array();
 		$year = $annee18;
-		$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
+		$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
 		//echo $url;
-		$totColl = askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
+		$totColl = askCurlNF($cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
 		askCurl($url, $arrayCurl, $cstCA);
 		//var_dump($arrayCurl);
 		
@@ -3690,9 +3703,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$resColl = array();
 		$resColl["code"] = array();
 		$year = $annee19;
-		$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
+		$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
 		//echo $url;
-		$totColl = askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
+		$totColl = askCurlNF($cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
 		askCurl($url, $arrayCurl, $cstCA);
 		//var_dump($arrayCurl);
 
@@ -3841,9 +3854,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$resColl = array();
 		$resColl["code"] = array();
 		$year = $annee20;
-		$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
+		$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
 		//echo $url;
-		$totColl = askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
+		$totColl = askCurlNF($cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
 		askCurl($url, $arrayCurl, $cstCA);
 		//var_dump($arrayCurl);
 		
@@ -3953,7 +3966,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		echo '<br><strong>21. Collection : Collaborations internationales (toutes structures)</strong><br><br>';
 		
 		//Descriptif
-		echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des structures étrangères auxquelles sont affiliés des co-auteurs. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées.  Les structures dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> sont classés sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
+		echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des structures étrangères auxquelles sont affiliés des co-auteurs. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées. Les structures dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> (<a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/browse?critere=-country_s%3A%5B%22%22+TO+*%5D&category=*">elles sont nombreuses</a>) sont classés sous la rubrique « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		include('./VizuHAL_codes_pays.php');
 		$typTab = array(
@@ -4006,12 +4019,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$tabPaysFR = array('fr','FR','mq','MQ','gp','GP','gf','GF','yt','YT','nc','NC','pf','PF','pm','PM','tf','TF','re','RE');//Territoires français à ne pas considérer dans l'international
 		
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
-			$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s&rows=10000";
+			$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s&rows=10000";
 			//echo $url;
-			//$totColl += askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s", $cstCA);
+			//$totColl += askCurlNF($cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s", $cstCA);
 			askCurl($url, $arrayCurl, $cstCA);
 			//var_dump($arrayCurl);
-			$totColl += $arrayCurl["response"]["numFound"];
+			$totColl += $arrayCurl["response"][$cstNuF];
 			$i = 0;
 			
 			while (isset($arrayCurl["response"]["docs"][$i]["structName_s"])) {
@@ -4226,7 +4239,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		echo '<br><strong>22. Collection : Collaborations internationales (institutions)</strong><br><br>';
 		
 		//Descriptif
-		echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des institutions étrangères auxquelles sont affiliés des co-auteurs. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées. Les institutions dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> sont classés sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
+		echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des institutions étrangères auxquelles sont affiliés des co-auteurs. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées. Les institutions dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> (<a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/browse?critere=-country_s%3A%5B%22%22+TO+*%5D&category=*">elles sont nombreuses</a>) sont classés sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		include('./VizuHAL_codes_pays.php');
 		
@@ -4265,11 +4278,11 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$tabPaysFR = array('fr','FR','mq','MQ','gp','GP','gf','GF','yt','YT','nc','NC','pf','PF','pm','PM','tf','TF','re','RE');//Territoires français à ne pas considérer dans l'international
 		
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
-			$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000";
+			$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000";
 			//echo $url;
 			askCurl($url, $arrayCurl, $cstCA);
 			//var_dump($arrayCurl);
-			$totColl += $arrayCurl["response"]["numFound"];
+			$totColl += $arrayCurl["response"][$cstNuF];
 			$i = 0;
 			
 			while (isset($arrayCurl["response"]["docs"][$i]["structName_s"])) {
@@ -4652,7 +4665,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		echo '<br><strong>23. Collection : Collaborations internationales (pays)</strong><br><br>';
 		
 		//Descriptif
-		echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des pays (ie. affiliation des co-auteurs) représentée sous forme de carte interactive. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées.  Les structures dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a>L (<a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/browse?critere=-country_s%3A%5B%22%22+TO+*%5D&category=*">elles sont nombreuses</a>) sont classées sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
+		echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des pays (ie. affiliation des co-auteurs) représentée sous forme de carte interactive. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées.  Les structures dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> (<a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/browse?critere=-country_s%3A%5B%22%22+TO+*%5D&category=*">elles sont nombreuses</a>) sont classées sous la rubrique « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 		
 		include('./VizuHAL_codes_pays.php');
 		$typTab = array(
@@ -4702,12 +4715,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$tabPaysFR = array('fr','FR','mq','MQ','gp','GP','gf','GF','yt','YT','nc','NC','pf','PF','pm','PM','tf','TF','re','RE');//Territoires français à ne pas considérer dans l'international
 		
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
-			$url = "https://api.archives-ouvertes.fr/search/".$team."/?fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s&rows=10000";
+			$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s&rows=10000";
 			//echo $url;
-			//$totColl += askCurlNF("https://api.archives-ouvertes.fr/search/".$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s", $cstCA);
+			//$totColl += askCurlNF($cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s", $cstCA);
 			askCurl($url, $arrayCurl, $cstCA);
 			//var_dump($arrayCurl);
-			$totColl += $arrayCurl["response"]["numFound"];
+			$totColl += $arrayCurl["response"][$cstNuF];
 			$i = 0;
 			
 			while (isset($arrayCurl["response"]["docs"][$i]["structName_s"])) {

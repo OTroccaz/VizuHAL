@@ -58,6 +58,10 @@ div.panel {
 	text-align: center;
 }
 
+.valign {
+	vertical-align: top;
+}
+
 .table100{
     width:100%;
 }
