@@ -1,6 +1,6 @@
 document.getElementById("tabg").style.display = "none";
 
-var imax = 23;//Nombre total de requêtes
+var imax = 24;//Nombre total de requêtes
 
 for(let i=1; i<=imax; i++) {
 	document.getElementById("req"+i).style.display = "none";
