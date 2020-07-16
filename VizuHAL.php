@@ -1992,7 +1992,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
   //Tableau de résultats requête 3
   if ($reqt == $cstR03) {
 		//Intitulé
-		echo '<br><strong>3. Portail : comparaison portailsComparaison portails</strong><br><br>';
+		echo '<br><strong>3. Portail : Comparaison portails</strong><br><br>';
 		
 		//Descriptif
 		echo '<div style="background-color:#f5f5f5">Cette requête permet de situer les données d’un portail institutionnel par rapport aux données d’autres portails (d’universités). Il indique, pour une année donnée, le nombre de publications (articles de revue) référencées dans le portail, avec ou sans texte intégral, incluant ou non un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
