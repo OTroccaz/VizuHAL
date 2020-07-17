@@ -255,7 +255,7 @@ function extractHAL($team, $year, $reqt, &$resHAL, $cstCA) {
   $resHAL[$year][strtoupper($team)][$cstAvTI] = $qte;
   
   //notices avec lien open access, sans TI déposé dans HAL mais avec TI librement accessible hors HAL
-  $urlHALPronoTIavOA = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=linkExtId_s:*&fq=-linkExtId_s:istex".$dT."&fq=-status_i=111&rows=0";
+  $urlHALPronoTIavOA = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=linkExtId_s:*&fq=-linkExtId_s:istex".$dT."&fq=-status_i=111&fq=-submitType_s:file&rows=0";
   $qte = askCurlNF($urlHALPronoTIavOA, $cstCA);
   $resHAL[$year][strtoupper($team)][$cstNoTIAvOA] = $qte;
   
@@ -1243,8 +1243,8 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     die;
   }
 	
-	//Bloquer interrogation portail avec requête 10, 11, 12, 13, 14, 15, 17, 18, 19, 20 ou 21
-  if (($reqt == $cstR10 || $reqt == $cstR11 || $reqt == $cstR12 || $reqt == $cstR13 || $reqt == $cstR14 || $reqt == $cstR15 || $reqt == $cstR17 || $reqt == $cstR18 || $reqt == $cstR19 || $reqt == $cstR20 || $reqt == $cstR21) && isset($port) && $port != "choix") {
+	//Bloquer interrogation portail avec requête 10, 11, 12, 14, 15, 17, 18, 19, 20 ou 21
+  if (($reqt == $cstR10 || $reqt == $cstR11 || $reqt == $cstR12 || $reqt == $cstR14 || $reqt == $cstR15 || $reqt == $cstR17 || $reqt == $cstR18 || $reqt == $cstR19 || $reqt == $cstR20 || $reqt == $cstR21) && isset($port) && $port != "choix") {
     echo "<br><br><center><font face='Corbel'><strong>";
     echo "Cette requête n'est pas applicable à portail mais uniquement à un code collection.";
     echo "</strong></font></center>";
