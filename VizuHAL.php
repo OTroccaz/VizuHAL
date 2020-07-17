@@ -5667,6 +5667,8 @@ Nombre de notices avec texte intégral :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:file&fq=-status_i=111</a><br>
 Nombre de notices avec texte intégral OU lien externe :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
+Nombre de notices sans texte intégral déposé dans HAL + lien externe vers PDF en open access :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111&fq=-submitType_s:file">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111&fq=-submitType_s:file</a><br>
 <br>
 <strong>Notes :</strong><br>
 <ul>
