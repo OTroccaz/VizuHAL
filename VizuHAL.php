@@ -240,27 +240,27 @@ function extractHAL($team, $year, $reqt, &$resHAL, $cstCA) {
   }
   
   //Dépôts par année de publication
-  $urlHALDep = $cstAPI.$team."/?wt=xml&fq=publicationDateY_i:".$year."&fq=submitType_s:(notice OR file)".$dT."&fq=-status_i=111&rows=0";
+  $urlHALDep = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice OR file)".$dT."&fq=-status_i=111&rows=0";
   $qte = askCurlNF($urlHALDep, $cstCA);
   $resHAL[$year][strtoupper($team)][$cstNfD] = $qte;
   
   //notices sans TI
-  $urlHALPronoTI = $cstAPI.$team."/?wt=xml&fq=publicationDateY_i:".$year."&fq=submitType_s:notice".$dT."&fq=-status_i=111&rows=0";
+  $urlHALPronoTI = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:notice".$dT."&fq=-status_i=111&rows=0";
   $qte = askCurlNF($urlHALPronoTI, $cstCA);
   $resHAL[$year][strtoupper($team)][$cstNoTI] = $qte;
   
   //Manuscrits plein texte avec TI
-  $urlHALProavTI = $cstAPI.$team."/?wt=xml&fq=publicationDateY_i:".$year."&fq=submitType_s:file".$dT."&fq=-status_i=111&rows=0";
+  $urlHALProavTI = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:file".$dT."&fq=-status_i=111&rows=0";
   $qte = askCurlNF($urlHALProavTI, $cstCA);
   $resHAL[$year][strtoupper($team)][$cstAvTI] = $qte;
   
   //notices avec lien open access, sans TI déposé dans HAL mais avec TI librement accessible hors HAL
-  $urlHALPronoTIavOA = $cstAPI.$team."/?wt=xml&fq=publicationDateY_i:".$year."&fq=linkExtId_s:*&fq=-linkExtId_s:istex".$dT."&fq=-status_i=111&rows=0";
+  $urlHALPronoTIavOA = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=linkExtId_s:*&fq=-linkExtId_s:istex".$dT."&fq=-status_i=111&rows=0";
   $qte = askCurlNF($urlHALPronoTIavOA, $cstCA);
   $resHAL[$year][strtoupper($team)][$cstNoTIAvOA] = $qte;
   
   //Manuscrits et lien open access avec TI déposé dans HAL ou librement accessible hors HAL
-  $urlHALProavTIavOA = $cstAPI.$team."/?wt=xml&fq=publicationDateY_i:".$year."&fq=(submitType_s:file OR linkExtId_s:*)&fq=-linkExtId_s:istex".$dT."&fq=-status_i=111&rows=0";
+  $urlHALProavTIavOA = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=(submitType_s:file OR linkExtId_s:*)&fq=-linkExtId_s:istex".$dT."&fq=-status_i=111&rows=0";
   $qte = askCurlNF($urlHALProavTIavOA, $cstCA);
   $resHAL[$year][strtoupper($team)][$cstAvTIAvOA] = $qte;
 }
@@ -276,10 +276,10 @@ function extractHALnbPubEd($team, $year, $type, $spefq, &$nbTotArt, &$nbPubEdRE,
 		$pDOI = $Prefixe_DOI[$i]["prefixe"];
 		$editeur_ng = $Prefixe_DOI[$i]["editeur_ng"];
 		if ($pDOI != "") {
-			$urlHAL = $cstAPI.$team."/?wt=xml&fq=publicationDateY_i:".$year.$spefq."&fq=-status_i=111&fq=doiId_s:".$pDOI."*&fq=docType_s:".$type;
+			$urlHAL = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year.$spefq."&fq=-status_i=111&fq=doiId_s:".$pDOI."*&fq=docType_s:".$type;
 		}else{
 			if($type != "COMM") {
-				$urlHAL = $cstAPI.$team."/?wt=xml&fq=publicationDateY_i:".$year.$spefq."&fq=-status_i=111&fq=journalPublisher_t:".$editeur_ng."&fq=docType_s:".$type;
+				$urlHAL = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year.$spefq."&fq=-status_i=111&fq=journalPublisher_t:".$editeur_ng."&fq=docType_s:".$type;
 			}else{
 				$urlHAL = "Passer_tour";
 			}
@@ -316,7 +316,7 @@ function extractHALnbPubEd($team, $year, $type, $spefq, &$nbTotArt, &$nbPubEdRE,
 	for ($i=0; $i<count($nbPubEdRE); $i++) {
 		$qteTotArt += $nbPubEdRE[$i]["nbArt"];
 	}
-	$urlHALTotArt = $cstAPI.$team."/?wt=xml&fq=publicationDateY_i:".$year.$spefq."&fq=-status_i=111*&fq=docType_s:".$type;
+	$urlHALTotArt = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year.$spefq."&fq=-status_i=111*&fq=docType_s:".$type;
 	$nbTotArt = askCurlNF($urlHALTotArt, $cstCA);
 	$hre = $nbTotArt - $qteTotArt;//Hors regroupement éditorial
 	$i = count($nbPubEdRE);
@@ -2115,7 +2115,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
       if (strtoupper($code) != $team && stripos($name, "université") !== false && strtoupper($code) != "UDL") {//portail univ à intégrer + ignorer UDL
         $code = strtoupper($code);
         //if (isset($LAB_SECT[$code])) {$code = $LAB_SECT[$code];}//Equivalence trouvée
-        $urlHALDep = $cstAPI.strtolower($code)."/?wt=xml&fq=publicationDateY_i:".$year."&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111&rows=0";
+        $urlHALDep = $cstAPI.strtolower($code)."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111&rows=0";
         //echo $name.' - '.$code.' : '.askCurlNF($urlHALDep, $cstCA).'<br>';
         //if (askCurlNF($urlHALDep) == 0) {echo $urlHALDep.'<br>';}
         if (askCurlNF($urlHALDep, $cstCA) != 0 && $code != "") {//Y-a-t-il des résultats pour l'extraction avec ce code et cette année ?
@@ -2559,7 +2559,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			$team = strtolower($LAB_SECT[0]["secteur"]);
 		}
 		
-		$urlHAL = $cstAPI.$team."/?q=*%3A*&rows=0&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=publicationDateY_i:".$year;
+		$urlHAL = $cstAPI.$team."/?q=*%3A*&rows=0&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=producedDateY_i:".$year;
 		askCurl($urlHAL, $arrayCurl, $cstCA);
 		$nbTotArt = $arrayCurl["response"][$cstNuF];
 		$pivot = "journalTitle_s,journalPublisher_s,journalValid_s";
@@ -2592,7 +2592,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			if (isset($arrayCurl["facet_counts"]["facet_pivot"][$pivot][$i]["pivot"][0]["pivot"][0]["value"]) && $arrayCurl["facet_counts"]["facet_pivot"][$pivot][$i]["pivot"][0]["pivot"][0]["value"] == "VALID") {$valid = "oui";}
 			if ($valid == "oui") {
 				$nbTotArtTI = 0;
-				$urlTitle = $cstAPI.$team."/?q=*%3A*&rows=0&indent=true&wt=xml&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=submitType_s:file&fq=docType_s:ART&fq=journalTitle_s:%22".$jTitle."%22&fq=publicationDateY_i:".$year;
+				$urlTitle = $cstAPI.$team."/?q=*%3A*&rows=0&indent=true&wt=xml&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=submitType_s:file&fq=docType_s:ART&fq=journalTitle_s:%22".$jTitle."%22&fq=producedDateY_i:".$year;
 				$nbTotArtTI = askCurlNF($urlTitle, $cstCA);
 				echo '<tr>';
 				$nbTotArti = $arrayCurl["facet_counts"]["facet_pivot"][$pivot][$i]["count"];
@@ -2711,7 +2711,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		while (isset($LAB_SECT[$ils]["code_secteur"])) {
 			$team = $LAB_SECT[$ils]["code_collection"];
 			
-			$urlHAL = $cstAPI.$team."/?q=*%3A*&fq=publicationDateY_i:".$year."&indent=true&facet=true&facet.pivot=journalPublisher_s,journalValid_s,publicationDateY_i&fq=docType_s:ART&fq=-status_i=111&rows=0";
+			$urlHAL = $cstAPI.$team."/?q=*%3A*&fq=producedDateY_i:".$year."&indent=true&facet=true&facet.pivot=journalPublisher_s,journalValid_s,producedDateY_i&fq=docType_s:ART&fq=-status_i=111&rows=0";
 			//echo $urlHAL.'<br>';
 			$url = str_replace(" ", "%20", $urlHAL);
 			$ch = curl_init();
@@ -2730,7 +2730,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 			if (!empty($json)) {
 				$parsed_json = json_decode($json, true);
 				$arrayCurl = objectToArray($parsed_json);
-				$cTab = $arrayCurl['facet_counts']['facet_pivot']['journalPublisher_s,journalValid_s,publicationDateY_i'];
+				$cTab = $arrayCurl['facet_counts']['facet_pivot']['journalPublisher_s,journalValid_s,producedDateY_i'];
 				$i = 0;
 				while (isset($cTab[$i])) {
 					if ($cTab[$i]['pivot'][0]['value'] == "VALID") {
@@ -2768,7 +2768,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$ils = 0;
 		while (isset($LAB_SECT[$ils]["secteur"])) {
 			$code_collection = strtoupper($LAB_SECT[$ils]["code_collection"]);
-			$urlHAL = $cstAPI.$code_collection."/?wt=xml&fq=publicationDateY_i:".$year."&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:ART&fq=-status_i=111";
+			$urlHAL = $cstAPI.$code_collection."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:ART&fq=-status_i=111";
 			$qteArt = askCurlNF($urlHAL, $cstCA);
 			if (isset($resHAL["Hors regroupement éditorial"][$LAB_SECT[$ils]["secteur"]])) {
 				$resHAL["Hors regroupement éditorial"][$LAB_SECT[$ils]["secteur"]] += intval($qteArt);
@@ -3286,7 +3286,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$listANRProId = "~";
 		
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
-			$urlANR = $cstAPI.$team."/?fq=publicationDateY_i:".$year."&fl=anrProjectId_i,anrProjectAcronym_s,funding_s,anrProjectId_i,anrProjectReference_s&rows=10000";
+			$urlANR = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=anrProjectId_i,anrProjectAcronym_s,funding_s,anrProjectId_i,anrProjectReference_s&rows=10000";
 			askCurl($urlANR, $arrayCurl, $cstCA);
 			$nbTotANR = $arrayCurl["response"][$cstNuF];
 			//echo '<br>Total potentiel de '.$nbTotANR.' projets ANR pour '.$team.' en '.$year.'.');
@@ -3308,7 +3308,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 							}
 							//Nombre total de publications pour ce projet et cette année
 							if (isset($arrayCurl["response"]["docs"][$i]["anrProjectId_i"][$k])) {
-								$urlPub = $cstAPI.$team."/?fq=publicationDateY_i:".$year."&fq=anrProjectId_i:".$arrayCurl["response"]["docs"][$i]["anrProjectId_i"][$k]."&rows=10000";
+								$urlPub = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fq=anrProjectId_i:".$arrayCurl["response"]["docs"][$i]["anrProjectId_i"][$k]."&rows=10000";
 								askCurl($urlPub, $arrayPub, $cstCA);
 								$nbTotPub = $arrayPub["response"][$cstNuF];
 								$resANR["Nombre"][$nbANR] = $nbTotPub;
@@ -3449,7 +3449,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$listEURProId = "~";
 		
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
-			$urlEUR = $cstAPI.$team."/?fq=publicationDateY_i:".$year."&fl=europeanProjectId_i,europeanProjectAcronym_s,funding_s,europeanProjectId_i,europeanProjectReference_s&rows=10000";
+			$urlEUR = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=europeanProjectId_i,europeanProjectAcronym_s,funding_s,europeanProjectId_i,europeanProjectReference_s&rows=10000";
 			askCurl($urlEUR, $arrayCurl, $cstCA);
 			$nbTotEUR = $arrayCurl["response"][$cstNuF];
 			//echo '<br>Total potentiel de '.$nbTotEUR.' projets EUR pour '.$team.' en '.$year.'.');
@@ -3475,7 +3475,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 							}
 							//Nombre total de publications pour ce projet et cette année
 							if (isset($arrayCurl["response"]["docs"][$i]["europeanProjectId_i"][$k])) {
-								$urlPub = $cstAPI.$team."/?fq=publicationDateY_i:".$year."&fq=europeanProjectId_i:".$arrayCurl["response"]["docs"][$i]["europeanProjectId_i"][$k]."&rows=10000";
+								$urlPub = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fq=europeanProjectId_i:".$arrayCurl["response"]["docs"][$i]["europeanProjectId_i"][$k]."&rows=10000";
 								askCurl($urlPub, $arrayPub, $cstCA);
 								$nbTotPub = $arrayPub["response"][$cstNuF];
 								$resEUR["Nombre"][$nbEUR] = $nbTotPub;
@@ -3637,7 +3637,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		
 		while (isset($LAB_SECT[$col]["code_collection"])) {
 			for ($year = $anneedeb; $year <= $anneefin; $year++) {
-				$urlHAL = $cstAPI.$LAB_SECT[$col]["code_collection"]."/?fq=publicationDateY_i:".$year."&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s,sid_i&rows=10000&sort=contributorFullName_s%20desc";
+				$urlHAL = $cstAPI.$LAB_SECT[$col]["code_collection"]."/?fq=producedDateY_i:".$year."&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s,sid_i&rows=10000&sort=contributorFullName_s%20desc";
 				askCurl($urlHAL, $arrayCtb, $cstCA);
 				$nbTotCtb += $arrayCtb["response"][$cstNuF];
 				for ($i=0; $i<$arrayCtb["response"][$cstNuF]; $i++) {
@@ -3804,9 +3804,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$resColl = array();
 		$resColl["code"] = array();
 		$year = $annee17;
-		$url = $cstAPI.$team."/?fq=publicationDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
+		$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
 		//echo $url;
-		$totColl = askCurlNF($cstAPI.$team."/?wt=xml&fq=publicationDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
+		$totColl = askCurlNF($cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
 		askCurl($url, $arrayCurl, $cstCA);
 		//var_dump($arrayCurl);
 		
@@ -3891,9 +3891,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				echo '<td>';
 				$idhal = $resColl["idhal"][$i];
 				$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
-				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
+				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 				$liens .= ' - ';
-				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
+				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
 				echo $liens;
 				echo '</td>';
 				$chaine = $resColl["nom"][$i].";".$resColl["type"][$i].";".$resColl["code"][$i].";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";
@@ -3955,9 +3955,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$resColl = array();
 		$resColl["code"] = array();
 		$year = $annee18;
-		$url = $cstAPI.$team."/?fq=publicationDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
+		$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
 		//echo $url;
-		$totColl = askCurlNF($cstAPI.$team."/?wt=xml&fq=publicationDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
+		$totColl = askCurlNF($cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
 		askCurl($url, $arrayCurl, $cstCA);
 		//var_dump($arrayCurl);
 		
@@ -4042,9 +4042,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				echo '<td>';
 				$idhal = $resColl["idhal"][$i];
 				$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
-				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
+				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 				$liens .= ' - ';
-				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
+				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
 				echo $liens;
 				echo '</td>';
 				$chaine = $resColl["nom"][$i].";".$resColl["type"][$i].";".$resColl["code"][$i].";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";
@@ -4106,9 +4106,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$resColl = array();
 		$resColl["code"] = array();
 		$year = $annee19;
-		$url = $cstAPI.$team."/?fq=publicationDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
+		$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
 		//echo $url;
-		$totColl = askCurlNF($cstAPI.$team."/?wt=xml&fq=publicationDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
+		$totColl = askCurlNF($cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
 		askCurl($url, $arrayCurl, $cstCA);
 		//var_dump($arrayCurl);
 
@@ -4193,9 +4193,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				echo '<td>';
 				$idhal = $resColl["idhal"][$i];
 				$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
-				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
+				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 				$liens .= ' - ';
-				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
+				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
 				echo $liens;
 				echo '</td>';
 				$chaine = $resColl["nom"][$i].";".$resColl["type"][$i].";".$resColl["code"][$i].";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";
@@ -4257,9 +4257,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$resColl = array();
 		$resColl["code"] = array();
 		$year = $annee20;
-		$url = $cstAPI.$team."/?fq=publicationDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
+		$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
 		//echo $url;
-		$totColl = askCurlNF($cstAPI.$team."/?wt=xml&fq=publicationDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
+		$totColl = askCurlNF($cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
 		askCurl($url, $arrayCurl, $cstCA);
 		//var_dump($arrayCurl);
 		
@@ -4344,9 +4344,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				echo '<td>';
 				$idhal = $resColl["idhal"][$i];
 				$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
-				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
+				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 				$liens .= ' - ';
-				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
+				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
 				echo $liens;
 				echo '</td>';
 				$chaine = $resColl["nom"][$i].";".$resColl["type"][$i].";".$resColl["code"][$i].";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";
@@ -4422,9 +4422,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$tabPaysFR = array('fr','FR','mq','MQ','gp','GP','gf','GF','yt','YT','nc','NC','pf','PF','pm','PM','tf','TF','re','RE');//Territoires français à ne pas considérer dans l'international
 		
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
-			$url = $cstAPI.$team."/?fq=publicationDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s&rows=10000";
+			$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s&rows=10000";
 			//echo $url;
-			//$totColl += askCurlNF($cstAPI.$team."/?wt=xml&fq=publicationDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s", $cstCA);
+			//$totColl += askCurlNF($cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s", $cstCA);
 			askCurl($url, $arrayCurl, $cstCA);
 			//var_dump($arrayCurl);
 			$totColl += $arrayCurl["response"][$cstNuF];
@@ -4583,9 +4583,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 					echo '<td>';
 					$idhal = $resColl["idhal"][$i];
 					$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
-					$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
+					$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 					$liens .= ' - ';
-					$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
+					$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
 					echo $liens;
 					echo '</td>';
 					$chaine = str_replace(';', '-', $resColl["nom"][$i]).";".$resColl["pays"][$i].";".$resColl["type"][$i].";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";
@@ -4617,9 +4617,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				echo '<td>';
 				$idhal = $resColl["idhal"][$key];
 				$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
-				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
+				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 				$liens .= ' - ';
-				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
+				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
 				echo $liens;
 				echo '</td>';
 				$chaine = str_replace(';', '-', $resColl["nom"][$key]).";".$resColl["pays"][$key].";".$resColl["type"][$key].";".$resColl["nombre"][$key].";".$resColl["pcent"][$key].";".$liens.";";
@@ -4681,7 +4681,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$tabPaysFR = array('fr','FR','mq','MQ','gp','GP','gf','GF','yt','YT','nc','NC','pf','PF','pm','PM','tf','TF','re','RE');//Territoires français à ne pas considérer dans l'international
 		
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
-			$url = $cstAPI.$team."/?fq=publicationDateY_i:".$year."&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000";
+			$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000";
 			//echo $url;
 			askCurl($url, $arrayCurl, $cstCA);
 			//var_dump($arrayCurl);
@@ -5009,9 +5009,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 					echo '<td>';
 					$idhal = $resColl["idhal"][$i];
 					$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
-					$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
+					$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 					$liens .= ' - ';
-					$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
+					$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
 					echo $liens;
 					echo '</td>';
 					$chaine .= $liens.";";
@@ -5043,9 +5043,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				echo '<td>';
 				$idhal = $resColl["idhal"][$key];
 				$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
-				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
+				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 				$liens .= ' - ';
-				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
+				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
 				echo $liens;
 				echo '</td>';
 				$chaine .= $liens.";";
@@ -5118,9 +5118,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 		$tabPaysFR = array('fr','FR','mq','MQ','gp','GP','gf','GF','yt','YT','nc','NC','pf','PF','pm','PM','tf','TF','re','RE');//Territoires français à ne pas considérer dans l'international
 		
 		for ($year = $anneedeb; $year <= $anneefin; $year++) {
-			$url = $cstAPI.$team."/?fq=publicationDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s&rows=10000";
+			$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s&rows=10000";
 			//echo $url;
-			//$totColl += askCurlNF($cstAPI.$team."/?wt=xml&fq=publicationDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s", $cstCA);
+			//$totColl += askCurlNF($cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=structName_s,structType_s,halId_s,structCountry_s", $cstCA);
 			askCurl($url, $arrayCurl, $cstCA);
 			//var_dump($arrayCurl);
 			$totColl += $arrayCurl["response"][$cstNuF];
@@ -5277,9 +5277,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 					echo '<td>';
 					$idhal = $resColl["idhal"][$i];
 					$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
-					$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
+					$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 					$liens .= ' - ';
-					$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
+					$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
 					echo $liens;
 					echo '</td>';
 					$chaine = str_replace(';', '-', $resColl["nom"][$i]).";".$resColl["pays"][$i].";".$resColl["type"][$i].";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";
@@ -5311,9 +5311,9 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
 				echo '<td>';
 				$idhal = $resColl["idhal"][$key];
 				$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
-				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
+				$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 				$liens .= ' - ';
-				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=publicationDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
+				$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
 				echo $liens;
 				echo '</td>';
 				$chaine = str_replace(';', '-', $resColl["nom"][$key]).";".$resColl["pays"][$key].";".$resColl["type"][$key].";".$resColl["nombre"][$key].";".$resColl["pcent"][$key].";".$liens.";";
@@ -5407,19 +5407,19 @@ echo '
 <strong>Pour les utilisateurs hors Rennes 1</strong> : pour exploiter cette requête, il faut au préalable compléter la liste des codes collections des secteurs et unités dans un tableau PortHAL-UNIV-XXXXX.php, sur le modèle du fichier PortHAL-RENNES1.php. En l’absence de secteurs, il suffit de reporter le code collection (ex : UNIV-RENNES1) comme valeur des champs « secteurs » du tableau PHP.<br>
 <br>
 # dépôts HAL-UR1 par année de publication (= colonne « <strong>Productions 2017</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111</a><br>
 <br>
 # notices HAL-UR1 par année de publication (= colonne « <strong>Productions 2017 sans texte intégral déposé dans HAL</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111</a><br>
 <br>
 # manuscrits HAL-UR1 par année de publication (= colonne « <strong>Productions 2017 avec texte intégral déposé dans HAL</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:file&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:file&fq=-status_i=111</a><br>
 <br>
 # notices HAL-UR1 avec lien open access par année de publication (= colonne « <strong>Productions 2017 sans texte intégral déposé dans HAL mais avec texte intégral librement accessible hors HAL</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
 <br>
 # manuscrits et lien open access HAL-UR1 par année de publication (= colonne « <strong>Productions 2017 avec texte intégral déposé dans HAL ou librement accessible hors HAL</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
 <br>
 <strong>Notes :</strong><br>
 <ul>
@@ -5438,19 +5438,19 @@ echo '
 <strong>Pour les utilisateurs hors Rennes 1</strong> : pour exploiter cette requête, il faut au préalable compléter la liste des codes collections des secteurs et unités dans un tableau PortHAL-UNIV-XXXXX.php, sur le modèle du fichier PortHAL-RENNES1.php. En l’absence de secteurs, il suffit de reporter le code collection (ex : UNIV-RENNES1) comme valeur des champs « secteurs » du tableau PHP.<br>
 <br>
 # dépôts HAL-UR1 par année de publication (= colonne « <strong>Productions 2017</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=docType_s:ART</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=docType_s:ART</a><br>
 <br>
 # notices HAL-UR1 par année de publication (= colonne « <strong>Productions 2017 sans texte intégral déposé dans HAL</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111&fq=docType_s:ART</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111&fq=docType_s:ART</a><br>
 <br>
 # manuscrits HAL-UR1 par année de publication (= colonne « <strong>Productions 2017 avec texte intégral déposé dans HAL</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:file&fq=-status_i=111&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:file&fq=-status_i=111&fq=docType_s:ART</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:file&fq=-status_i=111&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:file&fq=-status_i=111&fq=docType_s:ART</a><br>
 <br>
 # notices HAL-UR1 avec lien open access par année de publication (= colonne « <strong>Productions 2017 sans texte intégral déposé dans HAL mais avec texte intégral librement accessible hors HAL</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111&fq=docType_s:ART</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111&fq=docType_s:ART</a><br>
 <br>
 # manuscrits et lien open access HAL-UR1 par année de publication (= colonne « <strong>Productions 2017 avec texte intégral déposé dans HAL ou librement accessible hors HAL</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111&fq=docType_s:ART</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111&fq=docType_s:ART</a><br>
 <br>
 <strong>Notes :</strong><br>
 <ul>
@@ -5469,16 +5469,16 @@ echo '
 <strong>Pour les utilisateurs hors Rennes 1</strong> : pour exploiter la requête portail, il faut au préalable compléter la liste des codes collections des secteurs et unités dans un tableau PortHAL-UNIV-XXXXX.php, sur le modèle du fichier PortHAL-RENNES1.php. En l’absence de secteurs, il suffit de reporter le code collection (ex : UNIV-RENNES1) comme valeur des champs « secteurs «  du tableau PHP.<br>
 <br>
 # notices et texte intégral HAL-UR1 (toutes les années de publication) :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*:*&wt=xml&rows=0&facet=true&facet.pivot=publicationDateY_i,submitType_s">https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*:*&wt=xml&rows=0&facet=true&facet.pivot=publicationDateY_i,submitType_s</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*:*&wt=xml&rows=0&facet=true&facet.pivot=producedDateY_i,submitType_s">https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*:*&wt=xml&rows=0&facet=true&facet.pivot=producedDateY_i,submitType_s</a><br>
 <br>
 # manuscrits HAL-UR1 par année de publication (= colonne « <strong>Productions avec texte intégral déposé dans HAL</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:file&fq=-status_i=111</a><br> 
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:file&fq=-status_i=111</a><br> 
 <br>
 # notices HAL-UR1 (= colonne « <strong>Productions sans texte intégral déposé dans HAL</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:notice&fq=-status_i=111</a><br>
 <br>
 # notices HAL-UR1 avec lien open access par année de publication  (= colonne « <strong>Productions sans texte intégral déposé dans HAL mais avec texte intégral librement accessible hors HAL</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
 <br>
 <strong>Notes :</strong><br>
 <ul>
@@ -5496,19 +5496,19 @@ echo '
 Liste des portails : <a target="_blank" href="https://api.archives-ouvertes.fr/ref/instance/?wt=xml">https://api.archives-ouvertes.fr/ref/instance/?wt=xml</a><br> (un filtre interne au programme est appliqué pour n’extraire que les portails université : « université » doit figurer dans le champ « name »).<br>
 <br>
 # articles HAL-UR1 par année de publication (= colonne « <strong>Articles</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111</a><br>
 <br>
 # articles HAL-UR1 sans texte intégral par année de publication (= colonne « <strong>Articles 2017 sans texte intégral déposé dans HAL</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=docType_s:ART&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=docType_s:ART&fq=submitType_s:notice&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=submitType_s:notice&fq=-status_i=111</a><br>
 <br>
 # articles HAL-UR1 avec texte intégral par année de publication (= colonne « <strong>Articles 2017 avec texte intégral déposé dans HAL</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=docType_s:ART&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=docType_s:ART&fq=submitType_s:file&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=submitType_s:file&fq=-status_i=111</a><br>
 <br>
 # articles HAL-UR1 sans texte intégral déposé dans HAL mais avec texte intégral librement accessible hors HAL :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=docType_s:ART&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=docType_s:ART&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=linkExtId_s:*&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
 <br>
 # articles HAL-UR1 avec texte intégral ou texte intégral accessible hors HAL par année de publication (= colonne « <strong>Articles 2017 avec texte intégral déposé dans HAL ou librement accessible hors HAL</strong> ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=docType_s:ART&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=docType_s:ART&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=docType_s:ART&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
 <br>
 <strong>Notes :</strong><br>
 <ul>
@@ -5549,10 +5549,10 @@ Ce chiffre n’est pas calculé à partir de la métadonnée « éditeur » (jou
 Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
 <br>
 Requêtes API :<br>
-Articles 2017 (exemple pour préfixe 10.1016) : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:ART</a><br>
-La ligne "Hors regroupement éditorial" est calculée en retranchant le nombre total d\'articles recensés chez les éditeurs principaux (liste abrégée) du nombre total d\'articles du portail pour 2017 : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:ART&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:ART&fq=-status_i=111</a><br>
-Lextenso : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:lextenso&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:lextenso&fq=docType_s:ART</a><br>
-Dalloz : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:dalloz&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:dalloz&fq=docType_s:ART</a><br>
+Articles 2017 (exemple pour préfixe 10.1016) : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:ART</a><br>
+La ligne "Hors regroupement éditorial" est calculée en retranchant le nombre total d\'articles recensés chez les éditeurs principaux (liste abrégée) du nombre total d\'articles du portail pour 2017 : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:ART&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:ART&fq=-status_i=111</a><br>
+Lextenso : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:lextenso&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:lextenso&fq=docType_s:ART</a><br>
+Dalloz : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:dalloz&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:dalloz&fq=docType_s:ART</a><br>
 <br>
 <strong>Note :</strong> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
 ';
@@ -5566,8 +5566,8 @@ echo '
 Ce chiffre n’est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n’est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d’une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l’appellation « Hors regroupement éditorial ».<br>
 <br>
 Requêtes API :<br>
-Communications 2017 (exemple pour préfixe 10.1016) : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:COMM">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:COMM</a><br>
-La ligne "Hors regroupement éditorial" est calculée en retranchant le nombre total d\'articles recensés chez les éditeurs principaux (liste abrégée) du nombre total d\'articles du portail pour 2017 : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:COMM&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=publicationDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:COMM&fq=-status_i=111</a><br>
+Communications 2017 (exemple pour préfixe 10.1016) : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:COMM">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:COMM</a><br>
+La ligne "Hors regroupement éditorial" est calculée en retranchant le nombre total d\'articles recensés chez les éditeurs principaux (liste abrégée) du nombre total d\'articles du portail pour 2017 : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:COMM&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:COMM&fq=-status_i=111</a><br>
 <br>
 <strong>Note :</strong> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
 ';
@@ -5579,7 +5579,7 @@ echo($cstDoc);
 echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
 echo '
 Requête API (on additionne les valeurs des balises « count » du 1er niveau) :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*%3A*&rows=0&wt=xml&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=publicationDateY_i:2017&facet.limit=10000">https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*%3A*&rows=0&wt=xml&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=publicationDateY_i:2017&facet.limit=10000</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*%3A*&rows=0&wt=xml&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=producedDateY_i:2017&facet.limit=10000">https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*%3A*&rows=0&wt=xml&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=producedDateY_i:2017&facet.limit=10000</a><br>
 La requête n’est pas basée sur l’ISSN car certaines revues du référentiel AuréHAL n’ont pas d’ISSN. C’est donc le titre de la revue (journalTitle_s) qui est pris en compte.<br>
 <br>
 <strong>Note :</strong> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
@@ -5613,7 +5613,7 @@ Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.
 <br>
 Requête API :<br>
 Nombre de notices sans texte intégral :<br>
- <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111</a><br>
+ <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111</a><br>
 <br>
 <strong>Note :</strong> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
 ';
@@ -5629,7 +5629,7 @@ Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.
 <br>
 Requête API :<br>
 Nombre de notices avec texte intégral : <br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2019&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2019&fq=submitType_s:file&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:file&fq=-status_i=111</a><br>
 <br>
 <strong>Note :</strong> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c’est-à-dire portant la mention d’un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s’écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
 ';
@@ -5645,7 +5645,7 @@ Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.
 <br>
 Requête API :<br>
 Nombre de notices avec texte intégral OU lien externe : <br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
 <br>
 <strong>Notes :</strong><br>
 <ul>
@@ -5662,11 +5662,11 @@ echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
 echo '
 Requêtes API :<br>
 Nombre de notices sans texte intégral :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111</a><br>
 Nombre de notices avec texte intégral :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2019&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2019&fq=submitType_s:file&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:file&fq=-status_i=111</a><br>
 Nombre de notices avec texte intégral OU lien externe :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
 <br>
 <strong>Notes :</strong><br>
 <ul>
@@ -5682,7 +5682,7 @@ echo($cstDoc);
 echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
 echo '
 Nombre de références HAL dans la collection LTSI pour 2019 ayant un projet ANR (incluant le champ « financement ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2019&fl=anrProjectId_i,anrProjectAcronym_s,funding_s,anrProjectId_i,anrProjectReference_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2019&fl=anrProjectId_i,anrProjectAcronym_s,funding_s,anrProjectId_i,anrProjectReference_s&rows=10000</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fl=anrProjectId_i,anrProjectAcronym_s,funding_s,anrProjectId_i,anrProjectReference_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fl=anrProjectId_i,anrProjectAcronym_s,funding_s,anrProjectId_i,anrProjectReference_s&rows=10000</a><br>
 ';
 echo '<br></div></div>';
 
@@ -5692,7 +5692,7 @@ echo($cstDoc);
 echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
 echo '
 Nombre de références HAL dans la collection LTSI pour 2019 ayant un projet européen (incluant le champ « financement ») :<br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2019&fl= europeanProjectId_i,europeanProjectAcronym_s,funding_s,europeanProjectId_i,europeanProjectReference_s &rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2019&fl= europeanProjectId_i,europeanProjectAcronym_s,funding_s,europeanProjectId_i,europeanProjectReference_s &rows=10000</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fl= europeanProjectId_i,europeanProjectAcronym_s,funding_s,europeanProjectId_i,europeanProjectReference_s &rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fl= europeanProjectId_i,europeanProjectAcronym_s,funding_s,europeanProjectId_i,europeanProjectReference_s &rows=10000</a><br>
 ';
 echo '<br></div></div>';
 
@@ -5701,7 +5701,7 @@ echo '<div id="DTreq16" style="width:100%;float: left;background-color:#f5f5f5;b
 echo($cstDoc);
 echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
 echo '
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/UNIV-RENNES1/?fq=publicationDateY_i:2019&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s&rows=10000&sort=contributorFullName_s%20desc">https://api.archives-ouvertes.fr/search/UNIV-RENNES1/?fq=publicationDateY_i:2019&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s&rows=10000&sort=contributorFullName_s%20desc</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/UNIV-RENNES1/?fq=producedDateY_i:2019&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s&rows=10000&sort=contributorFullName_s%20desc">https://api.archives-ouvertes.fr/search/UNIV-RENNES1/?fq=producedDateY_i:2019&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s&rows=10000&sort=contributorFullName_s%20desc</a><br>
 <br>
 Champs exploités :<br>
 <ul>
@@ -5718,7 +5718,7 @@ echo '<div id="DTreq17" style="width:100%;float: left;background-color:#f5f5f5;b
 echo($cstDoc);
 echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
 echo '
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/ECOBIO/?fq=publicationDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s">https://api.archives-ouvertes.fr/search/ECOBIO/?fq=publicationDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s">https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s</a><br>
 Les 3 niveaux (collCategory_s):<br>
 Laboratoires = uniquement les tampons LABO et THEME<br>
 Etablissements = uniquement les tampons INSTITUTION, UNIV et ECOLE<br>
@@ -5731,7 +5731,7 @@ echo '<div id="DTreq18" style="width:100%;float: left;background-color:#f5f5f5;b
 echo($cstDoc);
 echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
 echo '
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/ECOBIO/?fq=publicationDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s">https://api.archives-ouvertes.fr/search/ECOBIO/?fq=publicationDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s">https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s</a><br>
 collCategory_s / Laboratoires = uniquement les tampons LABO et THEME<br>
 ';
 echo '<br></div></div>';
@@ -5741,7 +5741,7 @@ echo '<div id="DTreq19" style="width:100%;float: left;background-color:#f5f5f5;b
 echo($cstDoc);
 echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
 echo '
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/ECOBIO/?fq=publicationDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s">https://api.archives-ouvertes.fr/search/ECOBIO/?fq=publicationDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s">https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s</a><br>
 collCategory_s / Etablissements = uniquement les tampons INSTITUTION, UNIV et ECOLE<br>
 ';
 echo '<br></div></div>';
@@ -5751,7 +5751,7 @@ echo '<div id="DTreq20" style="width:100%;float: left;background-color:#f5f5f5;b
 echo($cstDoc);
 echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
 echo '
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/ECOBIO/?fq=publicationDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s">https://api.archives-ouvertes.fr/search/ECOBIO/?fq=publicationDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s">https://api.archives-ouvertes.fr/search/ECOBIO/?fq=producedDateY_i:2019&fl=collName_s,collCategory_s,collCode_s,halId_s</a><br>
 collCategory_s / Autres = uniquement les tampons AUTRE<br>
 ';
 echo '<br></div></div>';
@@ -5761,7 +5761,7 @@ echo '<div id="DTreq21" style="width:100%;float: left;background-color:#f5f5f5;b
 echo($cstDoc);
 echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
 echo '
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
 Liens XML/JSON : l’export des références en csv n’est malheureusement pas possible (même si théoriquement proposé par le CCSD).<br>
 Sont exclus des résultats les territoires français d’outre-mer de la <a target="_blank" href="http://documentation.abes.fr/sudoc/formats/CodesPays.htm">liste ISO 3166</a> : "Martinique" MQ,"Guadeloupe" GP, etc.<br>
 <br>
@@ -5774,7 +5774,7 @@ echo '<div id="DTreq22" style="width:100%;float: left;background-color:#f5f5f5;b
 echo($cstDoc);
 echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
 echo '
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
 Liens XML/JSON : l’export des références en csv n’est malheureusement pas possible (même si théoriquement proposé par le CCSD).<br>
 Données utilisées pour le label « institution » :<br>
 structType_s = "institution", "regroupinstitution", "regrouplaboratory", "department"<br>
@@ -5790,7 +5790,7 @@ echo '<div id="DTreq23" style="width:100%;float: left;background-color:#f5f5f5;b
 echo($cstDoc);
 echo '<div class="panel" style="margin-bottom: 0px; border: 0px;"><br>';
 echo '
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=publicationDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
 Liens XML/JSON : l’export des références en csv n’est malheureusement pas possible (même si théoriquement proposé par le CCSD).<br>
 Sont exclus des résultats les territoires français d’outre-mer de la <a target="_blank" href="http://documentation.abes.fr/sudoc/formats/CodesPays.htm">liste ISO 3166</a> : "Martinique" MQ,"Guadeloupe" GP, etc.<br>
 <br>
