@@ -91,7 +91,7 @@ if (isset($_GET["reqt"])) {
 	if ($_GET["reqt"] == $cstR23) {$reqt = $cstR23;$irq23 = $cstSel;}
 	if (isset($_GET["team"])) {$team = $_GET["team"];}
 	if (isset($_GET["port"])) {$port = $_GET["port"];}
-	$ordr = $_GET["ordr"];
+	if (isset($_GET["ordr"])) {$ordr = $_GET["ordr"];}
 	if (isset($_GET["anneedeb"])) {$anneedeb = $_GET["anneedeb"];}
 	if (isset($_GET["anneefin"])) {$anneefin = $_GET["anneefin"];}
 	if (isset($_GET["annee3"])) {$annee3 = $_GET["annee3"];}
@@ -383,7 +383,9 @@ Exemple : IPR-MOL est le code de la collection http://hal.archives-ouvertes.fr/<
 de l’unité IPR UMR CNRS 6251</span></a> :
 
 <?php
+session_start();
 if (isset($_POST["valider"])) {
+	if (isset($_SESSION['datPro'])) {unset($_SESSION['datPro']);}
   $team = htmlspecialchars(strtoupper($_POST["team"]));
   $port = htmlspecialchars($_POST["port"]);
   $reqt = htmlspecialchars($_POST["reqt"]);
@@ -2078,113 +2080,120 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     $sect = array();
     $is = 0;
     
-    //Résultats
-    
-    //Portail demandé
-    $team = $LAB_SECT[0]["code_collection"];
-    $year = $annee3;
-    $sect[$is] = $team;
-    extractHAL(strtolower($team), $year, $reqt, $resHAL, $cstCA);
-    $tabPro[$team][$cstNfD] = intval($resHAL[$year][$team][$cstNfD]);
-    $tabPro[$team][$cstNoTI] = intval($resHAL[$year][$team][$cstNoTI]);
-    $tabPro[$team]["pCentnoTI"] = 0;
-    $tabPro[$team][$cstAvTI] = intval($resHAL[$year][$team][$cstAvTI]);
-    $tabPro[$team]["pCentavTI"] = 0;
-    $tabPro[$team][$cstAvTIAvOA] = intval($resHAL[$year][$team][$cstAvTIAvOA]);
-    $tabPro[$team]["pCentavTIavOA"] = 0;
-    $tabPro[$team][$cstNoTIAvOA] = intval($resHAL[$year][$team][$cstNoTIAvOA]);
-    $tabPro[$team]["pCentnoTIavOA"] = 0;
-    if ($tabPro[$team][$cstNfD] != 0) {
-      $tabPro[$team]["pCentnoTI"] = round($tabPro[$team][$cstNoTI]*100/$tabPro[$team][$cstNfD]);
-      $tabPro[$team]["pCentavTI"] = round($tabPro[$team][$cstAvTI]*100/$tabPro[$team][$cstNfD]);
-      $tabPro[$team]["pCentavTIavOA"] = round($tabPro[$team][$cstAvTIAvOA]*100/$tabPro[$team][$cstNfD]);
-      $tabPro[$team]["pCentnoTIavOA"] = round($tabPro[$team][$cstNoTIAvOA]*100/$tabPro[$team][$cstNfD]);
-    }
-    $is++;
-    
-    //Autres portails
-    include("./Portails-HAL.php");
-    $urlHAL = "https://api.archives-ouvertes.fr/ref/instance/";
-    askCurl($urlHAL, $arrayHAL, $cstCA);
-    //var_dump($arrayHAL);
-    $iHAL = 0;
-    while (isset($arrayHAL["response"]["docs"][$iHAL]["code"])) {
-    //while ($iHAL < 30) {
-      $code = $arrayHAL["response"]["docs"][$iHAL]["code"];
-      $name = $arrayHAL["response"]["docs"][$iHAL]["name"];
-      if (strtoupper($code) != $team && stripos($name, "université") !== false && strtoupper($code) != "UDL") {//portail univ à intégrer + ignorer UDL
-        $code = strtoupper($code);
-        //if (isset($LAB_SECT[$code])) {$code = $LAB_SECT[$code];}//Equivalence trouvée
-        $urlHALDep = $cstAPI.strtolower($code)."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111&rows=0";
-        //echo $name.' - '.$code.' : '.askCurlNF($urlHALDep, $cstCA).'<br>';
-        //if (askCurlNF($urlHALDep) == 0) {echo $urlHALDep.'<br>';}
-        if (askCurlNF($urlHALDep, $cstCA) != 0 && $code != "") {//Y-a-t-il des résultats pour l'extraction avec ce code et cette année ?
-          $sect[$is] = $code;
-          extractHAL(strtolower($code), $year, $reqt, $resHAL, $cstCA);
-          $tabPro[$code][$cstNfD] = intval($resHAL[$year][$code][$cstNfD]);
-          $tabPro[$code][$cstNoTI] = intval($resHAL[$year][$code][$cstNoTI]);
-          $tabPro[$code]["pCentnoTI"] = 0;
-          $tabPro[$code][$cstAvTI] = intval($resHAL[$year][$code][$cstAvTI]);
-          $tabPro[$code]["pCentavTI"] = 0;
-          $tabPro[$code][$cstAvTIAvOA] = intval($resHAL[$year][$code][$cstAvTIAvOA]);
-          $tabPro[$code]["pCentavTIavOA"] = 0;
-          $tabPro[$code][$cstNoTIAvOA] = intval($resHAL[$year][$code][$cstNoTIAvOA]);
-          $tabPro[$code]["pCentnoTIavOA"] = 0;
-          if ($tabPro[$code][$cstNfD] != 0) {
-            $tabPro[$code]["pCentnoTI"] = round($tabPro[$code][$cstNoTI]*100/$tabPro[$code][$cstNfD]);
-            $tabPro[$code]["pCentavTI"] = round($tabPro[$code][$cstAvTI]*100/$tabPro[$code][$cstNfD]);
-            $tabPro[$code]["pCentavTIavOA"] = round($tabPro[$code][$cstAvTIAvOA]*100/$tabPro[$code][$cstNfD]);
-            $tabPro[$code]["pCentnoTIavOA"] = round($tabPro[$code][$cstNoTIAvOA]*100/$tabPro[$code][$cstNfD]);
-          }
-          $is++;
-          //if ($is == 3) {break;}
-        }
-      }
-      $iHAL++;
-    }
-    //var_dump($tabPro);
-    
-    //Calcul des rangs > ne doit plus être affiché ni servir au classement
+		//Portail demandé
+		$team = $LAB_SECT[0]["code_collection"];
+			
+		//Résultats
+		if (!isset($_SESSION['datPro'])) {
+			$year = $annee3;
+			$sect[$is] = $team;
+			extractHAL(strtolower($team), $year, $reqt, $resHAL, $cstCA);
+			$tabPro[$team][$cstNfD] = intval($resHAL[$year][$team][$cstNfD]);
+			$tabPro[$team][$cstNoTI] = intval($resHAL[$year][$team][$cstNoTI]);
+			$tabPro[$team]["pCentnoTI"] = 0;
+			$tabPro[$team][$cstAvTI] = intval($resHAL[$year][$team][$cstAvTI]);
+			$tabPro[$team]["pCentavTI"] = 0;
+			$tabPro[$team][$cstAvTIAvOA] = intval($resHAL[$year][$team][$cstAvTIAvOA]);
+			$tabPro[$team]["pCentavTIavOA"] = 0;
+			$tabPro[$team][$cstNoTIAvOA] = intval($resHAL[$year][$team][$cstNoTIAvOA]);
+			$tabPro[$team]["pCentnoTIavOA"] = 0;
+			if ($tabPro[$team][$cstNfD] != 0) {
+				$tabPro[$team]["pCentnoTI"] = round($tabPro[$team][$cstNoTI]*100/$tabPro[$team][$cstNfD]);
+				$tabPro[$team]["pCentavTI"] = round($tabPro[$team][$cstAvTI]*100/$tabPro[$team][$cstNfD]);
+				$tabPro[$team]["pCentavTIavOA"] = round($tabPro[$team][$cstAvTIAvOA]*100/$tabPro[$team][$cstNfD]);
+				$tabPro[$team]["pCentnoTIavOA"] = round($tabPro[$team][$cstNoTIAvOA]*100/$tabPro[$team][$cstNfD]);
+			}
+			$is++;
+			
+			//Autres portails
+			include("./Portails-HAL.php");
+			$urlHAL = "https://api.archives-ouvertes.fr/ref/instance/";
+			askCurl($urlHAL, $arrayHAL, $cstCA);
+			//var_dump($arrayHAL);
+			$iHAL = 0;
+			while (isset($arrayHAL["response"]["docs"][$iHAL]["code"])) {
+			//while ($iHAL < 30) {
+				$code = $arrayHAL["response"]["docs"][$iHAL]["code"];
+				$name = $arrayHAL["response"]["docs"][$iHAL]["name"];
+				if (strtoupper($code) != $team && stripos($name, "université") !== false && strtoupper($code) != "UDL") {//portail univ à intégrer + ignorer UDL
+					$code = strtoupper($code);
+					//if (isset($LAB_SECT[$code])) {$code = $LAB_SECT[$code];}//Equivalence trouvée
+					$urlHALDep = $cstAPI.strtolower($code)."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111&rows=0";
+					//echo $name.' - '.$code.' : '.askCurlNF($urlHALDep, $cstCA).'<br>';
+					//if (askCurlNF($urlHALDep) == 0) {echo $urlHALDep.'<br>';}
+					if (askCurlNF($urlHALDep, $cstCA) != 0 && $code != "") {//Y-a-t-il des résultats pour l'extraction avec ce code et cette année ?
+						$sect[$is] = $code;
+						extractHAL(strtolower($code), $year, $reqt, $resHAL, $cstCA);
+						$tabPro[$code][$cstNfD] = intval($resHAL[$year][$code][$cstNfD]);
+						$tabPro[$code][$cstNoTI] = intval($resHAL[$year][$code][$cstNoTI]);
+						$tabPro[$code]["pCentnoTI"] = 0;
+						$tabPro[$code][$cstAvTI] = intval($resHAL[$year][$code][$cstAvTI]);
+						$tabPro[$code]["pCentavTI"] = 0;
+						$tabPro[$code][$cstAvTIAvOA] = intval($resHAL[$year][$code][$cstAvTIAvOA]);
+						$tabPro[$code]["pCentavTIavOA"] = 0;
+						$tabPro[$code][$cstNoTIAvOA] = intval($resHAL[$year][$code][$cstNoTIAvOA]);
+						$tabPro[$code]["pCentnoTIavOA"] = 0;
+						if ($tabPro[$code][$cstNfD] != 0) {
+							$tabPro[$code]["pCentnoTI"] = round($tabPro[$code][$cstNoTI]*100/$tabPro[$code][$cstNfD]);
+							$tabPro[$code]["pCentavTI"] = round($tabPro[$code][$cstAvTI]*100/$tabPro[$code][$cstNfD]);
+							$tabPro[$code]["pCentavTIavOA"] = round($tabPro[$code][$cstAvTIAvOA]*100/$tabPro[$code][$cstNfD]);
+							$tabPro[$code]["pCentnoTIavOA"] = round($tabPro[$code][$cstNoTIAvOA]*100/$tabPro[$code][$cstNfD]);
+						}
+						$is++;
+						//if ($is == 3) {break;}
+					}
+				}
+				$iHAL++;
+			}
+			//var_dump($tabPro);
+			
+			//Calcul des rangs > ne doit plus être affiché ni servir au classement
 
-    //noTIavOA
-    $tabPro = array_orderby($tabPro, 'nfPronoTIavOA', SORT_DESC);
-    $is = 1;
-    foreach ($tabPro as $code => $t) {
-      $tabPro[$code]["rgPronoTIavOA"] = $is;
-      $is++;
-    }
-    
-    //avTIavOA
-    $tabPro = array_orderby($tabPro, 'nfProavTIavOA', SORT_DESC);
-    $is = 1;
-    foreach ($tabPro as $code => $t) {
-      $tabPro[$code]["rgProavTIavOA"] = $is;
-      $is++;
-    }
-    
-    //avTI
-    $tabPro = array_orderby($tabPro, 'nfProavTI', SORT_DESC);
-    $is = 1;
-    foreach ($tabPro as $code => $t) {
-      $tabPro[$code]["rgProavTI"] = $is;
-      $is++;
-    }
-    
-    //noTI
-    $tabPro = array_orderby($tabPro, 'nfPronoTI', SORT_DESC);
-    $is = 1;
-    foreach ($tabPro as $code => $t) {
-      $tabPro[$code]["rgPronoTI"] = $is;
-      $is++;
-    }
-        
-    //nfDep
-    $tabPro = array_orderby($tabPro, 'nfDep', SORT_DESC);
-    $is = 1;
-    foreach ($tabPro as $code => $t) {
-      $tabPro[$code]["rgDep"] = $is;
-      $is++;
-    }
+			//noTIavOA
+			$tabPro = array_orderby($tabPro, 'nfPronoTIavOA', SORT_DESC);
+			$is = 1;
+			foreach ($tabPro as $code => $t) {
+				$tabPro[$code]["rgPronoTIavOA"] = $is;
+				$is++;
+			}
+			
+			//avTIavOA
+			$tabPro = array_orderby($tabPro, 'nfProavTIavOA', SORT_DESC);
+			$is = 1;
+			foreach ($tabPro as $code => $t) {
+				$tabPro[$code]["rgProavTIavOA"] = $is;
+				$is++;
+			}
+			
+			//avTI
+			$tabPro = array_orderby($tabPro, 'nfProavTI', SORT_DESC);
+			$is = 1;
+			foreach ($tabPro as $code => $t) {
+				$tabPro[$code]["rgProavTI"] = $is;
+				$is++;
+			}
+			
+			//noTI
+			$tabPro = array_orderby($tabPro, 'nfPronoTI', SORT_DESC);
+			$is = 1;
+			foreach ($tabPro as $code => $t) {
+				$tabPro[$code]["rgPronoTI"] = $is;
+				$is++;
+			}
+					
+			//nfDep
+			$tabPro = array_orderby($tabPro, 'nfDep', SORT_DESC);
+			$is = 1;
+			foreach ($tabPro as $code => $t) {
+				$tabPro[$code]["rgDep"] = $is;
+				$is++;
+			}
+			
+			//Stockage du tableau dans la session
+			$_SESSION['datPro'] = $tabPro;
+		}else{
+			$tabPro = $_SESSION['datPro'];
+		}
 		
     //Initialement, classement du tableau par le nom du portail ordre alphabétique puis affichage
 		if ($prtTri == "SORT_ASC") {ksort($tabPro);}
@@ -2212,11 +2221,12 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
     //Affichage
 		$speTri = '<a href="?reqt=req3&port='.$port.'&annee3='.$annee3;
 		
-		echo '<table class="table table-striped table-hover table-responsive table-bordered">';
+		echo '<span id="reqt3"><table class="table table-striped table-hover table-responsive table-bordered">';
     echo '<thead>';
     echo '<tr>';
     $chaine = "";
     echo '<th scope="col" style="text-align:center">'.$speTri.'&ordr='.$prtUrl.'">Articles dans une revue publiés en '.$annee3.' et référencés dans le portail HAL</a></th>';
+		//echo '<th scope="col" style="text-align:center"><a style="cursor:pointer;" onclick="$.post(\'VizuHAL_liste_actions.php\', {reqt : \''.$cstR03.'\', port : \''.$port.'\', annee: \''.$annee3.'\', ordr : \''.$prtUrl.'\'});">Articles dans une revue publiés en '.$annee3.' et référencés dans le portail HAL</a></th>';
     $chaine .= "Articles dans une revue publiés en ".$annee3." et référencés dans le portail HAL;";
     echo '<th scope="col" style="text-align:center;background-color:#F2F2F2;">'.$speTri.'&ordr='.$artUrl.'">Articles</a></th>';
     $chaine .= "Articles;";
@@ -2306,7 +2316,7 @@ if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
       fwrite($inF,$chaine);
     }
     echo '</tbody>';
-    echo '</table>';
+    echo '</table></span>';
     echo '<a href=\'./csv/req3.csv\'>Exporter le tableau au format CSV</a><br><br>';
   }
   
