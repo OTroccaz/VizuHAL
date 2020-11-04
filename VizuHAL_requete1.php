@@ -1,9 +1,9 @@
 <?php
 //Intitulé
-echo '<br><strong>1. Portail : production scientifique par secteur et par unité</strong><br><br>';
+echo '<span class="btn btn-secondary mt-2"><strong>1. Portail : production scientifique par secteur et par unité</strong></span><br><br>';
 
 //Descriptif
-echo '<div style="background-color:#f5f5f5">Cette requête présente, pour une année donnée, le nombre de publications référencées dans le portail HAL institutionnel, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Les résultats sont déclinés par secteurs (le cas échéant), et par unités ou structures de recherche. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
+echo '<div class="alert alert-secondary">Cette requête présente, pour une année donnée, le nombre de publications référencées dans le portail HAL institutionnel, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Les résultats sont déclinés par secteurs (le cas échéant), et par unités ou structures de recherche. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 
 //Export CSV
 $Fnm = "./csv/req1.csv";
@@ -25,8 +25,8 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 	
 	$ils = 0;
 	$chaine = "";
-	echo '<table class="table table-striped table-hover table-responsive table-bordered">';
-	echo '<thead>';
+	echo '<table class="table table-hover table-bordered">';
+	echo '<thead class="thead-dark">';
 	echo '<tr>';
 	echo '<th scope="col">Unité</th>';
 	echo '<th scope="col">Secteur</th>';
@@ -41,7 +41,7 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 	echo '<th scope="col">Productions '.$year.' avec texte intégral déposé dans HAL ou librement accessible hors HAL</th>';
 	echo '<th scope="col"></th>';
 	echo '</tr>';
-	echo '</thead>';
+	echo '</thead><tbody>';
 	
 	if (isset($port) && $port != "choix") {
 		$sectI = $LAB_SECT[1]["secteur"];
@@ -65,7 +65,7 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 			if ($sectI != $sectF && isset($port) && $port != "choix") {//Total secteur à inclure
 				extractHAL(strtoupper($codeSI), $year, $reqt, $resHAL, $cstCA);
 				$chaine = "";
-				echo '<tr class="info">';
+				echo '<tr class="table-info">';
 				echo '<th scope="row"><em>Secteur '.$sectI.$cstETH;
 				$chaine .= "Secteur ".$sectI.";";
 				echo '<th scope="row"><em>'.$sectI.$cstETH;
@@ -114,7 +114,6 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 				$chaine .= $pcent."%;";
 				
 				echo '</tr>';
-				echo '</tbody>';
 				$chaine .= chr(13).chr(10);
 				fwrite($inF,$chaine);
 				
@@ -124,9 +123,8 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 		}
 		$chaine = "";
 		extractHAL($team, $year, $reqt, $resHAL, $cstCA);
-		echo '<tbody>';    
 		if ($ils == 0) {
-			echo '<tr class="warning">';
+			echo '<tr class="table-warning">';
 			if (isset($port) && $port != "choix") {
 				$sect[0] = $LAB_SECT[$ils]["secteur"];
 				$tabPro[$year][$sect[0]][$cstNfD] = intval($resHAL[$year][$team][$cstNfD]);
@@ -141,7 +139,7 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 				$chaine .= $LAB_SECT[$ils]["code_collection"].";";
 			}
 		}else{
-			echo '<tr class="active">';
+			echo '<tr class="table-light">';
 			echo '<th scope="row">'.$LAB_SECT[$ils]["unite"].'</th>';
 			$chaine .= $LAB_SECT[$ils]["unite"].";";
 		}
@@ -199,7 +197,6 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 		$chaine .= $pcent."%;";
 		
 		echo '</tr>';
-		echo '</tbody>';
 		$chaine .= chr(13).chr(10);
 		fwrite($inF,$chaine);
 		$atester = $LAB_SECT[$ils]["code_collection"];
@@ -209,7 +206,7 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 	if (isset($port) && $port != "choix") {
 		$chaine = "";
 		extractHAL(strtoupper($codeSF), $year, $reqt, $resHAL, $cstCA);
-		echo '<tr class="info">';
+		echo '<tr class="table-info">';
 		echo '<th scope="row"><em>Secteur '.$sectF.$cstETH;
 		$chaine .= "Secteur ".$sectF.";";
 		echo '<th scope="row"><em>'.$sectF.$cstETH;
@@ -263,6 +260,7 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 		fwrite($inF,$chaine);
 	}
 	echo '</table>';
-	echo '<a href=\'./csv/req1.csv\'>Exporter le tableau au format CSV</a><br><br>';
+	
+	echo '<a class="btn btn-secondary mt-2" href="./csv/req1.csv">Exporter le tableau au format CSV</a><br><br>';
 }
 ?>

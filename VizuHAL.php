@@ -1,5 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <?php
+session_start();
 include "./VizuHAL_constantes.php";
 include "./VizuHAL_fonctions.php";
 
@@ -28,170 +29,327 @@ if (isset($_GET["reqt"])) {
 
 header('Content-type: text/html; charset=UTF-8');
 
-if (isset($_GET['css']) && ($_GET['css'] != ""))
-{
-  $css = $_GET['css'];
-}else{
-  $css = "https://ecobio.univ-rennes1.fr/HAL_SCD.css";
-}
-
 $root = 'http';
 if (isset ($_SERVER[$cstHTS]) && $_SERVER[$cstHTS] == "on")	{
   $root.= "s";
 }
 
-suppression("./grf", 3600);//Suppression des graphes du dossier grf créés il y a plus d'une heure
 suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y a plus d'une heure
 
 ?>
 <html lang="fr">
 <head>
-  <title>VizuHAL</title>
-  <meta name="Description" content="VizuHAL">
-  <link href="bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="<?php echo $css;?>" type="text/css">
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-  <link rel="icon" type="type/ico" href="favicon.ico">
-  <link rel="stylesheet" href="./VizuHAL.css">
+	<meta charset="utf-8" />
+	<title>VizuHAL - HAL - UR1</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta content="" name="description" />
+	<meta content="Coderthemes + Lizuka" name="author" />
+	<!-- App favicon -->
+	<link rel="shortcut icon" href="favicon.ico">
+
+	<!-- third party css -->
+	<!-- <link href="./assets/css/vendor/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css" /> -->
+	<!-- third party css end -->
+
+	<!-- App css -->
+	<link href="./assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+	<link href="./assets/css/app-hal-ur1.min.css" rel="stylesheet" type="text/css" id="light-style" />
+	<!-- <link href="./assets/css/app-creative-dark.min.css" rel="stylesheet" type="text/css" id="dark-style" /> -->
+	
+	<!-- third party js -->
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script> -->
+	<!-- third party js end -->
+	
+	<!-- bundle -->
+	<script src="./assets/js/vendor.min.js"></script>
+	<script src="./assets/js/app.min.js"></script>
+
+	<!-- third party js -->
+	<script src="./assets/js/vendor/Chart.bundle.min.js"></script>
+	<!-- third party js ends -->
+	<script src="./assets/js/pages/hal-ur1.chartjs.js"></script>
+	
+	<!-- Datatables css -->
+	<link href="./assets/css/vendor/dataTables.bootstrap4.css" rel="stylesheet" type="text/css" />
+	<link href="./assets/css/vendor/responsive.bootstrap4.css" rel="stylesheet" type="text/css" />
+                                                
+					
 </head>
-<body style="font-family: Corbel;" onload="freqt();">
+
+<body class="loading" data-layout="topnav" onload="freqt();">
 
 <noscript>
-<div class='center, red' id='noscript'><strong>ATTENTION !!! JavaScript est désactivé ou non pris en charge par votre navigateur : cette procédure ne fonctionnera pas correctement.</strong><br>
+<div class='text-primary' id='noscript'><strong>ATTENTION !!! JavaScript est désactivé ou non pris en charge par votre navigateur : cette procédure ne fonctionnera pas correctement.</strong><br>
 <strong>Pour modifier cette option, voir <a target='_blank' rel='noopener noreferrer' href='http://www.libellules.ch/browser_javascript_activ.php'>ce lien</a>.</strong></div><br>
 </noscript>
 
-<table class="table100" aria-describedby="Entêtes">
-<tr>
-<th scope="col" style="text-align: left;"><img alt="VizuHAL" title="VizuHAL" width="250px" src="./img/logo_Vizuhal.png"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Générez des stats HAL</th>
-<th scope="col" style="text-align: right;"><img alt="Université de Rennes 1" title="Université de Rennes 1" width="150px" src="./img/logo_UR1_gris_petit.jpg"></th>
-</tr>
-</table>
-<hr style="color: #467666; height: 1px; border-width: 1px; border-top-color: #467666; border-style: inset;">
+        <!-- Begin page -->
+        <div class="wrapper">
 
-<p>VizuHAL permet de générer des tableaux et graphes statistiques à partir de HAL (collection ou portail).<br>
-<br>
-Entrez un code collection OU sélectionnez un portail dans la liste déroulante, puis sélectionnez votre requête.<br>
-<u>Attention :</u> certaines requêtes ne sont valides que pour une collection ou un portail.<br>
-</p>
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
 
-<?php
-include "./VizuHAL_formulaire.php";
+            <div class="content-page">
+                <div class="content">
+								
+								<?php
+								include "./Glob_haut.php";
+								?>
+								
+								<!-- Start Content-->
+                    <div class="container-fluid">
 
-echo '<script type="text/javascript" language="Javascript" src="./VizuHAL.js"></script>';
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <nav aria-label="breadcrumb">
+                                            <ol class="breadcrumb bg-light-lighten p-2">
+                                                <li class="breadcrumb-item"><a href="index.php"><i class="uil-home-alt"></i> Accueil HALUR1</a></li>
+                                                <li class="breadcrumb-item active" aria-current="page">Vizu<span class="font-weight-bold">HAL</span></li>
+                                            </ol>
+                                        </nav>
+                                    </div>
+                                    <h4 class="page-title">Générez des stats HAL</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
 
-if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
-  ob_flush();
-	flush();
-  //Bloquer interrogation code collection labo avec requête 3, 4, 8 ou 9
-  if (($reqt == $cstR03 || $reqt == $cstR04 || $reqt == $cstR08 || $reqt == $cstR09) && isset($port) && $port == "choix") {
-    echo "<br><br><center><font face='Corbel'><strong>";
-    echo "Cette requête n'est pas applicable à un code collection mais uniquement à un portail.";
-    echo "</strong></font></center>";
-    die;
-  }
-	
-	//Bloquer interrogation portail avec requête 10, 11, 12, 14, 15, 17, 18, 19, 20 ou 21
-  if (($reqt == $cstR10 || $reqt == $cstR11 || $reqt == $cstR12 || $reqt == $cstR14 || $reqt == $cstR15 || $reqt == $cstR17 || $reqt == $cstR18 || $reqt == $cstR19 || $reqt == $cstR20 || $reqt == $cstR21) && isset($port) && $port != "choix") {
-    echo "<br><br><center><font face='Corbel'><strong>";
-    echo "Cette requête n'est pas applicable à portail mais uniquement à un code collection.";
-    echo "</strong></font></center>";
-    die;
-  }
-  
-  $LAB_SECT = array();
-  
-  if (isset($port) && $port != "choix") {
-    include('./Port'.$port.'.php');
-  }else{
-    $LAB_SECT[0]["code_collection"] = $team;
-  }
+                        <div class="row">
+                            <div class="col-xl-8 col-lg-6 d-flex">
+                                <!-- project card -->
+                                <div class="card d-block w-100 shadow-lg">
+                                    <div class="card-body">
+                                        
+                                        <!-- project title-->
+                                        <h2 class="h1 mt-0">
+                                            <i class="mdi mdi-chart-bar-stacked text-primary"></i>
+                                            <span class="font-weight-light">Vizu</span><span class="text-primary">HAL</span>
+                                        </h2>
+                                        <h5 class="badge badge-primary badge-pill">Présentation</h5>
+																				
+																				<img src="./img/anders-ipsen-9XhgZmrvCEU-unsplash.png" alt="Accueil VizuHAL" class="img-fluid"><br>
+																				<p class="font-italic">Photo : Anders Ipsen on Unsplash (détail)</p>
 
-  $tabPro = array();
-  $year = 0;
-	
-  if ($reqt == $cstR01) {
-    $anneedeb = $annee1;
-    $anneefin = $annee1;
-  }
-	if ($reqt == $cstR24) {
-    $anneedeb = $annee24;
-    $anneefin = $annee24;
-  }
-  
-	 //Tableau de résultats de la requête
-	 include "./VizuHAL_requete".str_replace("req", "", $reqt).".php";
-	
-  //Création de graphes
-  //Librairies pChart
-	if (strpos(phpversion(), "7") !== false) {//PHP7 > pChart2
-		//Librairies pChart
-		include_once("./lib/pChart2/pChart/pDraw.php");
-		include_once("./lib/pChart2/pChart/pException.php");
-		include_once("./lib/pChart2/pChart/pColor.php");
-		include_once("./lib/pChart2/pChart/pColorGradient.php");
-		include_once("./lib/pChart2/pChart/pData.php");
-		include_once("./lib/pChart2/pChart/pCharts.php");
-		include_once("./lib/pChart2/pChart/pPie.php");
-	}else{//PHP 5 > pChart
-		//Librairies pChart
-		include("./lib/pChart/class/pData.class.php");
-		include("./lib/pChart/class/pDraw.class.php");
-		include("./lib/pChart/class/pImage.class.php");
-		include("./lib/pChart/class/pPie.class.php");
-	}
+                                        <p class=" mb-2 text-justify">
+                                           VizuHAL permet de générer des tableaux et graphes statistiques à partir de HAL (collection ou portail). Il a été créé par Olivier Troccaz (conception-développement) et Laurent Jonchère (conception).
+                                       </p>
+																			 
+																			 <p class="mb-4">
+                                            Contacts : <a target='_blank' rel='noopener noreferrer' href="https://openaccess.univ-rennes1.fr/interlocuteurs/laurent-jonchere">Laurent Jonchère</a> (Université de Rennes 1) / <a target='_blank' rel='noopener noreferrer' href="https://ecobio.univ-rennes1.fr/personnel.php?qui=Olivier_Troccaz">Olivier Troccaz</a> (CNRS ECOBIO/OSUR).
+                                        </p>
+																				
+                                       <p class=" mb-2">
+                                        Entrez un code collection OU sélectionnez un portail dans la liste déroulante, puis sélectionnez votre requête.<br>
+                                                            Attention : certaines requêtes ne sont valides que pour une collection ou un portail.
+                                        </p>
 
-  if (isset($reqt) && $reqt == $cstR01) {
-    include("./VizuHAL_grf_histo_req1.php");
-    include("./VizuHAL_grf_cbert_req1.php");
-  }
-  
-  if (isset($reqt) && $reqt == "req2") {
-    include("./VizuHAL_grf_histo_req2.php");
-    include("./VizuHAL_grf_cbert_req2.php");
-  }
 
-  if (isset($reqt) && ($reqt == $cstR01 || $reqt == "req2")) {
-    if (isset($port) && $port != "choix") {
-      $is = 0;
-      while (isset($sect[$is]) && $sect[$is] != "") {
-        //histogramme
-        $ficgraf = "./grf/grf_".$sect[$is]."_".time().".png";
-        grf_histo($anneedeb, $anneefin, $tabPro, $sect[$is], $ficgraf, "port");
-        echo '<center><img alt="Productions HAL "'.$sect[$is].' src="'.$ficgraf.'"></center><br>';
+                                    </div> <!-- end card-body-->
+                                    
+                                </div> <!-- end card-->
+
+                            </div> <!-- end col -->
+                            <div class="col-lg-6 col-xl-4 d-flex">
+                                <div class="card shadow-lg w-100">
+                                    <div class="card-body">
+                                        <h5 class="badge badge-primary badge-pill">Mode d'emploi</h5>
+																				<div class=" mb-2">
+                                            <ul class="list-group">
+                                                <li class="list-group-item">
+                                                    En préparation
+                                                </li>
+                                            </ul> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end card-->
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+                        <div class="row">
+                            <div class="col-12 d-flex">
+                                <!-- project card -->
+                                <div class="card w-100 d-block shadow-lg">
+                                    <div class="card-body">
+                                        
+                                        <h5 class="badge badge-primary badge-pill">Paramétrage</h5>
+																				
+																				<?php
+																				include "./VizuHAL_formulaire.php";
+																				?>
+																				
+																		</div> <!-- end card-body-->
+                                    
+                                </div> <!-- end card-->
+
+                            </div> <!-- end col -->
+                        
+												</div> <!-- end row -->
+
+																				<?php
+																				echo '<script src="./VizuHAL.js"></script>';
+																				
+																				if (isset($_POST["valider"]) || isset($_GET["reqt"])) {
+																					echo '<div class="row">';
+																					echo '		<div class="col-12 d-flex">';
+																					echo '				<div class="card shadow-lg w-100">';
+																					echo '						<div class="card-body">';
+																		
+																					ob_flush();
+																					flush();
+																					//Bloquer interrogation code collection labo avec requête 3, 4, 8 ou 9
+																					if (($reqt == $cstR03 || $reqt == $cstR04 || $reqt == $cstR08 || $reqt == $cstR09) && isset($port) && $port == "choix") {
+																						echo "<br><br><center><font face='Corbel'><strong>";
+																						echo "Cette requête n'est pas applicable à un code collection mais uniquement à un portail.";
+																						echo "</strong></font></center>";
+																						die;
+																					}
+																					
+																					//Bloquer interrogation portail avec requête 10, 11, 12, 14, 15, 17, 18, 19, 20 ou 21
+																					if (($reqt == $cstR10 || $reqt == $cstR11 || $reqt == $cstR12 || $reqt == $cstR14 || $reqt == $cstR15 || $reqt == $cstR17 || $reqt == $cstR18 || $reqt == $cstR19 || $reqt == $cstR20 || $reqt == $cstR21) && isset($port) && $port != "choix") {
+																						echo "<br><br><center><font face='Corbel'><strong>";
+																						echo "Cette requête n'est pas applicable à portail mais uniquement à un code collection.";
+																						echo "</strong></font></center>";
+																						die;
+																					}
+																					
+																					$LAB_SECT = array();
+																					
+																					if (isset($port) && $port != "choix") {
+																						include('./VizuHAL_Port'.$port.'.php');
+																					}else{
+																						$LAB_SECT[0]["code_collection"] = $team;
+																					}
+
+																					$tabPro = array();
+																					$year = 0;
+																					
+																					if ($reqt == $cstR01) {
+																						$anneedeb = $annee1;
+																						$anneefin = $annee1;
+																					}
+																					if ($reqt == $cstR24) {
+																						$anneedeb = $annee24;
+																						$anneefin = $annee24;
+																					}
+																					
+																				  //Tableau de résultats de la requête
+																				  include "./VizuHAL_requete".str_replace("req", "", $reqt).".php";
+																				 
+																				  //Création de graphes
+																				  if (isset($reqt) && $reqt == $cstR01) {
+																					  include("./VizuHAL_grf_histo_req1.php");
+																					  include("./VizuHAL_grf_cbert_req1.php");
+																					}
+																					
+																					if (isset($reqt) && $reqt == "req2") {
+																						include("./VizuHAL_grf_histo_req2.php");
+																						include("./VizuHAL_grf_cbert_req2.php");
+																					}
+																					
+																					if (isset($reqt) && ($reqt == $cstR01 || $reqt == "req2")) {
+																						if (isset($port) && $port != "choix") {
+																							$is = 0;
+																							while (isset($sect[$is]) && $sect[$is] != "") {
+																								//histogramme
+																								grf_histo($anneedeb, $anneefin, $tabPro, $sect[$is], "port");
+																								echo '<div class="form-group row mb-1">&nbsp;</div>';
+																								//Camemberts
+																								if ($reqt == $cstR01) {
+																									for($year = $anneedeb; $year <= $anneefin; $year++) {
+																										grf_cbert($year, $tabPro, $sect[$is], "coll");
+																										echo '<div class="form-group row mb-1">&nbsp;</div>';
+																									}
+																								}
+																								$is++;
+																							}
+																						}else{
+																							//histogramme
+																							grf_histo($anneedeb, $anneefin, $resHAL, $team, "coll");
+																							echo '<div class="form-group row mb-1">&nbsp;</div>';
+																							//Camemberts
+																							for($year = $anneedeb; $year <= $anneefin; $year++) {
+																								grf_cbert($year, $resHAL, $team, "coll");
+																								echo '<div class="form-group row mb-1">&nbsp;</div>';
+																							}
+																						}
+																					}
+																					include "./VizuHAL_details_techniques.php";
+																				
+																					echo '								</div> <!-- end card-body-->';
+																					echo '				</div> <!-- end card-->';
+																					echo '		</div> <!-- end col -->';
+																					echo '</div> <!-- end row -->';
+																				}
+																				?>
+
+                    </div> <!-- container -->
+
+                </div> <!-- content -->
+								
+								<?php
+								include "./Glob_bas.php";
+								?>
+								
+								</div>
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+        </div>
+				
+				<button id="scrollBackToTop" class="btn btn-primary"><i class="mdi mdi-24px text-white mdi-chevron-double-up"></i></button>
+        <!-- END wrapper -->
+
+        <!-- bundle -->
+        <!-- <script src="./assets/js/vendor.min.js"></script> -->
+        <script src="./assets/js/app.min.js"></script>
+
+        <!-- third party js -->
+        <script src="./assets/js/vendor/Chart.bundle.min.js"></script>
+        <!-- third party js ends -->
+        <script src="./assets/js/pages/hal-ur1.chartjs.js"></script>
+				
+				<script>
+            (function($) {
+                'use strict';
+                $('#warning-alert-modal').modal(
+                    {'show': true, 'backdrop': 'static'}    
+                    
+                        );
+                $(document).scroll(function() {
+                  var y = $(this).scrollTop();
+                  if (y > 200) {
+                    $('#scrollBackToTop').fadeIn();
+                  } else {
+                    $('#scrollBackToTop').fadeOut();
+                  }
+                });
+                $('#scrollBackToTop').each(function(){
+                    $(this).click(function(){ 
+                        $('html,body').animate({ scrollTop: 0 }, 'slow');
+                        return false; 
+                    });
+                });
+            })(window.jQuery)
+        </script>
         
-        //Camemberts
-        if ($reqt == $cstR01) {
-          for($year = $anneedeb; $year <= $anneefin; $year++) {
-            $ficgraf = "./grf/grf_".$year."_".$sect[$is]."_".time().".png";
-            grf_cbert($year, $tabPro, $sect[$is], $ficgraf, "coll");
-            echo '<center><img alt="Productions HAL "'.$year.' '.$team.' src="'.$ficgraf.'"></center><br>';
-          }
-        }
+    </body>
+		
+		<!-- Datatables js -->
+		<script src="assets/js/vendor/jquery.dataTables.min.js"></script>
+		<script src="assets/js/vendor/dataTables.bootstrap4.js"></script>
+		<script src="assets/js/vendor/dataTables.responsive.min.js"></script>
+		<script src="assets/js/vendor/responsive.bootstrap4.min.js"></script>
 
-        $is++;
-      }
-    }else{
-      //histogramme
-      $ficgraf = "./grf/grf_".time().".png";
-      grf_histo($anneedeb, $anneefin, $resHAL, $team, $ficgraf, "coll");
-      echo '<center><img alt="Productions HAL "'.$team.' src="'.$ficgraf.'"></center><br>';
-
-      //Camemberts
-      for($year = $anneedeb; $year <= $anneefin; $year++) {
-        $ficgraf = "./grf/grf_".$year."_".time().".png";
-        grf_cbert($year, $resHAL, $team, $ficgraf, "coll");
-        echo '<center><img alt="Productions HAL "'.$year.' '.$team.' src="'.$ficgraf.'"></center><br>';
-      }
-    }
-  }
-}
-include "./VizuHAL_details_techniques.php";
-?>
-<?php
-include "./bas.php";
-?>
-</body>
+		<!-- Datatable Init js -->
+		<script src="assets/js/pages/demo.datatable-init.js"></script>
+                                                
 </html>

@@ -1,9 +1,9 @@
 <?php
 //Intitulé
-echo '<br><strong>4. Portail : ESGBU (stocks et flux)</strong><br><br>';
+echo '<span class="btn btn-secondary mt-2"><strong>4. Portail : ESGBU (stocks et flux)</strong></span><br><br>';
 
 //Descriptif
-echo '<div style="background-color:#f5f5f5">Cette requête fournit les 4 premiers indicateurs (stocks et flux) demandés dans l’enquête annuelle ESGBU pour l’archive ouverte. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
+echo '<div class="alert alert-secondary">Cette requête fournit les 4 premiers indicateurs (stocks et flux) demandés dans l’enquête annuelle ESGBU pour l’archive ouverte. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 
 //Export CSV
 $Fnm = "./csv/req4.csv";
@@ -35,7 +35,8 @@ $urlHALDep = $cstAPI.strtolower($team)."/?wt=xml&fq=submitType_s:file&fq=-status
 $A04 = askCurlNF($urlHALDep, $cstCA);
 
 //Affichage
-echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:70%;">';
+echo '<br>';
+echo '<table class="table table-striped table-hover table-responsive table-bordered" style="width:70%;">';
 echo '<thead>';
 echo '<tr>';
 echo '<th scope="col" colspan="2" style="text-align:left"><strong>STOCKS '.$team.' au 31.12.'.$year.'</strong></th>';
@@ -92,5 +93,8 @@ fwrite($inF,$chaine);
 echo '</tbody>';
 
 echo '</table>';
-echo '<a href=\'./csv/req4.csv\'>Exporter le tableau au format CSV</a><br><br>';
+echo '<br>';
+echo 'Pour les consultations de notices et les téléchargements de fichiers, qu\'on ne peut pas interroger directement via une API, utilisez votre dashboard <a target="_blank" rel="noopener noreferrer" href="https://halstats.archives-ouvertes.fr/app/kibana#/home">Kibana</a> ou le dashboard générique CCSD en recherchant votre portail ("ESGBU 2020 sur les chiffres de l\'année 2019 : Consultations ("Usages"))"';
+echo '<br><br>';
+echo '<a class="btn btn-secondary mt-2" href="./csv/req4.csv">Exporter le tableau au format CSV</a><br><br>';
 ?>

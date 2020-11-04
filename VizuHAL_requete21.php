@@ -1,9 +1,9 @@
 <?php
 //Intitulé
-echo '<br><strong>21. Collection : Collaborations internationales (toutes structures)</strong><br><br>';
+echo '<span class="btn btn-secondary mt-2"><strong>21. Collection : Collaborations internationales (toutes structures)</strong></span><br><br>';
 
 //Descriptif
-echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des structures étrangères auxquelles sont affiliés des co-auteurs. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées. Les structures dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> (<a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/browse?critere=-country_s%3A%5B%22%22+TO+*%5D&category=*">elles sont nombreuses</a>) sont classés sous la rubrique « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
+echo '<div class="alert alert-secondary">Cette requête affiche, pour une collection, la liste des structures étrangères auxquelles sont affiliés des co-auteurs. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées. Les structures dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> (<a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/browse?critere=-country_s%3A%5B%22%22+TO+*%5D&category=*">elles sont nombreuses</a>) sont classés sous la rubrique « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 
 include('./VizuHAL_codes_pays.php');
 $typTab = array(
@@ -15,6 +15,7 @@ $typTab = array(
 'institution' => 'Institution'
 );
 
+/*
 //Tri par défaut
 $nomTri = "";
 $payTri = "";
@@ -41,6 +42,7 @@ if ($ordr != "") {
 		if ($ordr == "nbrAsc") {$nbrTri = "SORT_ASC"; $nbrUrl = "nbrDes";}else{$nbrTri = "SORT_DESC"; $nbrUrl = "nbrAsc";}
 	}
 }
+*/
 
 //Export CSV
 $Fnm = "./csv/req21.csv";
@@ -138,6 +140,7 @@ if ($k != 0) {//Au moins 1 résultat
 		}
 	}
 
+	/*
 	//Initialement, classement du tableau par le nombre de publications ordre décroissant puis affichage
 	if ($nomTri == "SORT_ASC") {array_multisort($resColl["nom"], SORT_ASC, SORT_STRING, $resColl["type"], $resColl["nombre"], $resColl["pcent"], $resColl["idhal"], $resColl["pays"]);}
 	if ($nomTri == "SORT_DESC") {array_multisort($resColl["nom"], SORT_DESC, SORT_STRING, $resColl["type"], $resColl["nombre"], $resColl["pcent"], $resColl["idhal"], $resColl["pays"]);}
@@ -147,20 +150,26 @@ if ($k != 0) {//Au moins 1 résultat
 	if ($typTri == "SORT_DESC") {array_multisort($resColl["type"], SORT_DESC, SORT_STRING, $resColl["nom"], $resColl["nombre"], $resColl["pcent"], $resColl["idhal"], $resColl["pays"]);}
 	if ($nbrTri == "SORT_ASC") {array_multisort($resColl["nombre"], SORT_ASC, SORT_NUMERIC, $resColl["nom"], $resColl["type"], $resColl["pcent"], $resColl["idhal"], $resColl["pays"]);}
 	if ($nbrTri == "SORT_DESC") {array_multisort($resColl["nombre"], SORT_DESC, SORT_NUMERIC, $resColl["nom"], $resColl["type"], $resColl["pcent"], $resColl["idhal"], $resColl["pays"]);}
+	*/
 	
 	//echo $totColl;
 	//var_dump($resColl);
 	
 	//Affichage
-	$speTri = '<a href="?reqt=req21&team='.$team.'&anneedeb='.$anneedeb.'&anneefin='.$anneefin;
+	//$speTri = '<a href="?reqt=req21&team='.$team.'&anneedeb='.$anneedeb.'&anneefin='.$anneefin;
 	echo '<br>Poucentages calculés sur le nombre total de publications de la collection sur la période concernée';
-	echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">';
-	echo '<thead>';
+	echo '<br>';
+	echo '<table id="basic-datatable" class="table table-hover table-striped table-bordered col-12">';
+	echo '<thead class="thead-dark">';
 	echo '<tr>';
-	echo $cstTS1.$speTri.'&ordr='.$nomUrl.'">'.$cstNom;
-	echo $cstTS1.$speTri.'&ordr='.$payUrl.'">'.$cstPay;
-	echo $cstTS1.$speTri.'&ordr='.$typUrl.'">'.$cstTyp;
-	echo $cstTS1.$speTri.'&ordr='.$nbrUrl.'">'.$cstNbP;
+	//echo $cstTS1.$speTri.'&ordr='.$nomUrl.'">'.$cstNom;
+	echo $cstTS1.$cstNom;
+	//echo $cstTS1.$speTri.'&ordr='.$typUrl.'">'.$cstPay;
+	echo $cstTS1.$cstPay;
+	//echo $cstTS1.$speTri.'&ordr='.$codUrl.'">'.$cstTyp;
+	echo $cstTS1.$cstTyp;
+	//echo $cstTS1.$speTri.'&ordr='.$nbrUrl.'">'.$cstNbP;
+	echo $cstTS1.$cstNbP;
 	echo $cstTS2;
 	echo $cstTS3;
 	$chaine = "Nom;Pays;Type;Nombre de publications;%;Références HAL;";
@@ -232,7 +241,8 @@ if ($k != 0) {//Au moins 1 résultat
 	
 	echo '</tbody>';
 	echo '</table>';
-	echo '<a href=\'./csv/req21.csv\'>Exporter le tableau au format CSV</a><br><br>';
+	
+	echo '<a class="btn btn-secondary mt-2" href="./csv/req21.csv">Exporter le tableau au format CSV</a><br><br>';
 }else{
 	echo $cstNR;
 }

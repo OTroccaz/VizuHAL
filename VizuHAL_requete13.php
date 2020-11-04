@@ -1,9 +1,9 @@
 <?php
 //Intitulé
-echo '<br><strong>13. Portail ou collection : évolution sur une et trois années</strong><br><br>';
+echo '<span class="btn btn-secondary mt-2"><strong>13. Portail ou collection : évolution sur une et trois années</strong></span><br><br>';
 
 //Descriptif
-echo '<div style="background-color:#f5f5f5">Cette requête mesure la progression du nombre de dépôts, avec ou sans texte intégral ou avec un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>), sur 1 et 3 années, à partir de l’année de référence saisie par l’utilisateur. La comparaison 1 / 3 ans permet le cas échéant de relativiser une baisse ou une augmentation sur 1 an, afin de vérifier s’il s’agit d’une tendance de fond, ou au contraire d’un changement circonstanciel. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
+echo '<div class="alert alert-secondary">Cette requête mesure la progression du nombre de dépôts, avec ou sans texte intégral ou avec un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>), sur 1 et 3 années, à partir de l’année de référence saisie par l’utilisateur. La comparaison 1 / 3 ans permet le cas échéant de relativiser une baisse ou une augmentation sur 1 an, afin de vérifier s’il s’agit d’une tendance de fond, ou au contraire d’un changement circonstanciel. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 
 function signe($int)
 {
@@ -79,10 +79,10 @@ $chaine = $team." - ".$annee13.";Sur 1 an;Sur 3 ans;";
 $chaine .= chr(13).chr(10);
 fwrite($inF,$chaine);
 
-echo '<table class="table table-striped table-hover table-responsive table-bordered">';
-echo '<thead>';
+echo '<table id="basic-datatable" class="table table-hover table-striped table-bordered">';
+echo '<thead class="thead-dark">';
 echo '<tr>';
-echo '<th scope="col"><font color="red">'.$team.' - '.$annee13.'</font></th>';
+echo '<th scope="col">'.$team.' - '.$annee13.'</th>';
 echo '<th scope="col" colspan="2" style="text-align:center">Sur 1 an</th>';
 echo '<th scope="col" colspan="2" style="text-align:center">Sur 3 ans</th>';
 echo '</tr>';
@@ -92,7 +92,7 @@ echo '<tbody>';
 
 $chaine = "Publications avec ou sans texte intégral déposé dans HAL;";
 echo '<tr>';
-echo '<th scope="row">Publications avec ou sans texte intégral déposé dans HAL <a class=info onclick=\'return false\' href="#"><img src="./img/pdi.jpg"><span>Nombre total de publications référencées dans HAL. Une baisse peut signaler soit une baisse de la production, soit une baisse du référencement (dépôt par les auteurs et/ou des intermédiaires), soit le cas échéant un problème de <strong>visibilité</strong> de la production dans les bases bibliographiques (WoS, Pubmed, Scopus…), qui peut aussi être lié à un problème de <strong>signature</strong> (affiliation insuffisante ou erronée).</span></a></th>';
+echo '<th scope="row">Publications avec ou sans texte intégral déposé dans HAL <button type="button" tabindex="0" class="btn btn-info btn-sm" data-html="true" data-toggle="popover" data-trigger="focus" title="" data-content="Nombre total de publications référencées dans HAL. Une baisse peut signaler soit une baisse de la production, soit une baisse du référencement (dépôt par les auteurs et/ou des intermédiaires), soit le cas échéant un problème de <strong>visibilité</strong> de la production dans les bases bibliographiques (WoS, Pubmed, Scopus…), qui peut aussi être lié à un problème de <strong>signature</strong> (affiliation insuffisante ou erronée)." data-original-title=""><i class="mdi mdi-comment-question text-white"></i></button></th>';
 ($pct1noavTI > 0) ? $img = './img/hausse.png' : (($pct1noavTI < 0) ? $img = './img/baisse.png' : $img = './img/zero.png');
 echo '<th scope="row" style="text-align:center"><img src='.$img.'></th>';
 echo '<th scope="row" style="text-align:center">'.signe($pct1noavTI).' %</th>';
@@ -122,7 +122,7 @@ fwrite($inF,$chaine);
 
 $chaine = "Publications avec texte intégral déposé dans HAL + lien externe vers PDF en open access;";
 echo '<tr>';
-echo '<th scope="row">Publications avec texte intégral déposé dans HAL + lien externe vers PDF en open access <a class=info onclick=\'return false\' href="#"><img src="./img/pdi.jpg"><span>Taux global d’open access : texte intégral déposé dans HAL ou référence HAL avec un lien vers un PDF librement disponible hors de HAL (via Unpaywall > https://unpaywall.org/). </span></a></th>';
+echo '<th scope="row">Publications avec texte intégral déposé dans HAL + lien externe vers PDF en open access <button type="button" tabindex="0" class="btn btn-info btn-sm" data-html="true" data-toggle="popover" data-trigger="focus" title="" data-content="Taux global d’open access : texte intégral déposé dans HAL ou référence HAL avec un lien vers un PDF librement disponible hors de HAL (via Unpaywall > https://unpaywall.org/)." data-original-title=""><i class="mdi mdi-comment-question text-white"></i></button></th>';
 ($pct1avTIavOA > 0) ? $img = './img/hausse.png' : (($pct1avTIavOA < 0) ? $img = './img/baisse.png' : $img = './img/zero.png');
 echo '<th scope="row" style="text-align:center"><img src='.$img.'></th>';
 echo '<th scope="row" style="text-align:center">'.signe($pct1avTIavOA).' %</th>';
@@ -137,7 +137,7 @@ fwrite($inF,$chaine);
 
 $chaine = "Publications sans texte intégral déposé dans HAL + lien externe vers PDF en open access;";
 echo '<tr>';
-echo '<th scope="row">Publications sans texte intégral déposé dans HAL + lien externe vers PDF en open access <a class=info onclick=\'return false\' href="#"><img src="./img/pdi.jpg"><span>Références HAL sans texte intégral, mais avec un lien vers l’article en open access sur le site de la revue. Une baisse peut simplement signifier que les auteurs ont ajouté massivement dans HAL le PDF de ces articles. Une hausse peut également signifier un recours accru à la publication dans des revues en open access, et/ou au paiement de frais de mise en open access des articles.</span></a></th>';
+echo '<th scope="row">Publications sans texte intégral déposé dans HAL + lien externe vers PDF en open access <button type="button" tabindex="0" class="btn btn-info btn-sm" data-html="true" data-toggle="popover" data-trigger="focus" title="" data-content="Références HAL sans texte intégral, mais avec un lien vers l’article en open access sur le site de la revue. Une baisse peut simplement signifier que les auteurs ont ajouté massivement dans HAL le PDF de ces articles. Une hausse peut également signifier un recours accru à la publication dans des revues en open access, et/ou au paiement de frais de mise en open access des articles." data-original-title=""><i class="mdi mdi-comment-question text-white"></i></button></th>';
 ($pct1noTIavOA > 0) ? $img = './img/hausse.png' : (($pct1noTIavOA < 0) ? $img = './img/baisse.png' : $img = './img/zero.png');
 echo '<th scope="row" style="text-align:center"><img src='.$img.'></th>';
 echo '<th scope="row" style="text-align:center">'.signe($pct1noTIavOA).' %</th>';
@@ -153,7 +153,7 @@ fwrite($inF,$chaine);
 echo '</tbody>';
 echo '</table>';
 
-echo '<a href=\'./csv/req13a.csv\'>Exporter le tableau au format CSV</a><br><br>';
+echo '<a class="btn btn-secondary mt-2" href="./csv/req13a.csv">Exporter le tableau au format CSV</a><br><br>';
 
 
 //Valeurs
@@ -181,10 +181,10 @@ $chaine = $team." - ".$annee13.";Sur 1 an;Sur 3 ans;";
 $chaine .= chr(13).chr(10);
 fwrite($inF,$chaine);
 
-echo '<table class="table table-striped table-hover table-responsive table-bordered">';
-echo '<thead>';
+echo '<table id="basic-datatable" class="table table-hover table-striped table-bordered col-12">';
+echo '<thead class="thead-dark">';
 echo '<tr>';
-echo '<th scope="col"><font color="red">'.$team.' - '.$annee13.'</font></th>';
+echo '<th scope="col">'.$team.' - '.$annee13.'</th>';
 echo '<th scope="col" style="text-align:center">'.($annee13 - 3).'</th>';
 echo '<th scope="col" style="text-align:center">'.($annee13 - 1).'</th>';
 echo '<th scope="col" style="text-align:center">'.$annee13.'</th>';
@@ -248,5 +248,5 @@ fwrite($inF,$chaine);
 echo '</tbody>';
 echo '</table>';
 
-echo '<a href=\'./csv/req13b.csv\'>Exporter le tableau au format CSV</a><br><br>';
+echo '<a class="btn btn-secondary mt-2" href="./csv/req13b.csv">Exporter le tableau au format CSV</a><br><br>';
 ?>

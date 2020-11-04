@@ -1,9 +1,9 @@
 <?php
 //Intitulé
-echo '<br><strong>14. Collection : Nombre de projets ANR</strong><br><br>';
+echo '<span class="btn btn-secondary mt-2"><strong>14. Collection : Nombre de projets ANR</strong></span><br><br>';
 
 //Descriptif
-echo '<div style="background-color:#f5f5f5">Cette requête présente la liste des projets ANR d’une collection, avec pour chaque projet le nombre et la liste des publications HAL. En fin de tableau figurent sous la mention « à compléter » les projets mentionnés dans le champ « financement » des dépôts HAL mais pour lesquels il manque la forme validée du référentiel*. Cette requête ne prend en effet en compte que les projets référencés dans le champ ANR des dépôts HAL. <a href="#DT">Voir détails techniques en bas de page</a>.<br><br><em>(*) : Vous pouvez ainsi rechercher dans la collection HAL les notices concernées (recherche avancée dans le champ « financement »), et compléter les projets manquants dans le champ ANR.</em></div><br>';
+echo '<div class="alert alert-secondary">Cette requête présente la liste des projets ANR d’une collection, avec pour chaque projet le nombre et la liste des publications HAL. En fin de tableau figurent sous la mention « à compléter » les projets mentionnés dans le champ « financement » des dépôts HAL mais pour lesquels il manque la forme validée du référentiel*. Cette requête ne prend en effet en compte que les projets référencés dans le champ ANR des dépôts HAL. <a href="#DT">Voir détails techniques en bas de page</a>.<br><br><em>(*) : Vous pouvez ainsi rechercher dans la collection HAL les notices concernées (recherche avancée dans le champ « financement »), et compléter les projets manquants dans le champ ANR.</em></div><br>';
 
 //Export CSV
 $Fnm = "./csv/req14.csv";
@@ -94,8 +94,8 @@ echo '<tbody>';
 //var_dump($resANR);
 if (count($resANR) > 0) {//Au moins 1 résultat
 	//Début de l'affichage
-	echo '<br><table class="table table-striped table-hover table-responsive table-bordered">';
-	echo '<thead>';
+	echo '<table id="basic-datatable" class="table table-hover table-striped table-bordered">';
+	echo '<thead class="thead-dark">';
 	echo '<tr>';
 	echo '<th scope="col" style="text-align:left"></th>';
 	echo '<th scope="col" style="text-align:left"><strong>Acronyme</strong></th>';
@@ -154,7 +154,7 @@ if (count($resANR) > 0) {//Au moins 1 résultat
 	echo '</tbody>';
 	echo '</table><br>';
 	
-	echo '<a href=\'./csv/req14.csv\'>Exporter le tableau au format CSV</a><br><br>';
+	echo '<a class="btn btn-secondary mt-2" href="./csv/req14.csv">Exporter le tableau au format CSV</a><br><br>';
 }else{
 	echo $cstNR;
 }

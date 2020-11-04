@@ -1,9 +1,9 @@
 <?php
 //Intitulé
-echo '<br><strong>6. Portail ou Collection : Nombre de publications de type communications par éditeur</strong><br><br>';
+echo '<span class="btn btn-secondary mt-2"><strong>6. Portail ou Collection : Nombre de publications de type communications par éditeur</strong></span><br><br>';
 
 //Descriptif
-echo '<div style="background-color:#f5f5f5">Cette requête présente le nombre de communications par éditeur pour une année donnée. Ne sont représentés que les principaux éditeurs et les dépôts HAL ayant un DOI. Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ». <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
+echo '<div class="alert alert-secondary">Cette requête présente le nombre de communications par éditeur pour une année donnée. Ne sont représentés que les principaux éditeurs et les dépôts HAL ayant un DOI. Les autres éditeurs sont rassemblés sous l’appellation « Hors regroupement éditorial ». <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 
 //Export CSV
 $Fnm = "./csv/req6.csv";
@@ -20,8 +20,9 @@ $spefq = "&fq=-submitType_s:annex";
 extractHALnbPubEd($team, $year, "COMM", $spefq, $nbTotArt, $nbPubEdRE, $cstCA);
 //var_dump($nbPubEdRE);
 //Affichage
-echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:70%;">';
-echo '<thead>';
+echo '<br>';
+echo '<table id="basic-datatable" class="table table-hover table-striped table-bordered col-9">';
+echo '<thead class="thead-dark">';
 echo '<tr>';
 echo $cstRED;
 echo $cstPUB;
@@ -59,5 +60,6 @@ for ($i=0; $i<count($nbPubEdRE); $i++) {
 }
 echo '</tbody>';
 echo '</table>';
-echo '<a href=\'./csv/req6.csv\'>Exporter le tableau au format CSV</a><br><br>';
+
+echo '<a class="btn btn-secondary mt-2" href="./csv/req6.csv">Exporter le tableau au format CSV</a><br><br>';
 ?>

@@ -1,10 +1,11 @@
 <?php
 //Intitulé
-echo '<br><strong>19. Collection : Collaborations nationales (établissements)</strong><br><br>';
+echo '<span class="btn btn-secondary mt-2"><strong></strong>19. Collection : Collaborations nationales (établissements)</span><br><br>';
 
 //Descriptif
-echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des institutions françaises auxquelles sont affiliés des co-auteurs. La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
+echo '<div class="alert alert-secondary">Cette requête affiche, pour une collection, la liste des institutions françaises auxquelles sont affiliés des co-auteurs. La requête est basée sur les tampons de collections (collCode_s). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 
+/*
 //Tri par défaut
 $nomTri = "";
 $typTri = "";
@@ -31,6 +32,7 @@ if ($ordr != "") {
 		if ($ordr == "nbrAsc") {$nbrTri = "SORT_ASC"; $nbrUrl = "nbrDes";}else{$nbrTri = "SORT_DESC"; $nbrUrl = "nbrAsc";}
 	}
 }
+*/
 
 //Export CSV
 $Fnm = "./csv/req19.csv";
@@ -78,6 +80,7 @@ if ($totColl != 0) {//Au moins 1 résultat
 		$resColl["pcent"][$i] = ($totColl != 0) ? number_format($resColl["nombre"][$i]*100/$totColl, 1) : 0;
 	}
 	
+	/*
 	//Initialement, classement du tableau par le nombre de publications ordre décroissant puis affichage
 	if ($nomTri == "SORT_ASC") {array_multisort($resColl["nom"], SORT_ASC, SORT_STRING, $resColl["type"], $resColl["code"], $resColl["nombre"], $resColl["pcent"], $resColl["idhal"]);}
 	if ($nomTri == "SORT_DESC") {array_multisort($resColl["nom"], SORT_DESC, SORT_STRING, $resColl["type"], $resColl["code"], $resColl["nombre"], $resColl["pcent"], $resColl["idhal"]);}
@@ -87,19 +90,25 @@ if ($totColl != 0) {//Au moins 1 résultat
 	if ($codTri == "SORT_DESC") {array_multisort($resColl["code"], SORT_DESC, SORT_STRING, $resColl["nom"], $resColl["type"], $resColl["nombre"], $resColl["pcent"], $resColl["idhal"]);}
 	if ($nbrTri == "SORT_ASC") {array_multisort($resColl["nombre"], SORT_ASC, SORT_NUMERIC, $resColl["nom"], $resColl["type"], $resColl["code"], $resColl["pcent"], $resColl["idhal"]);}
 	if ($nbrTri == "SORT_DESC") {array_multisort($resColl["nombre"], SORT_DESC, SORT_NUMERIC, $resColl["nom"], $resColl["type"], $resColl["code"], $resColl["pcent"], $resColl["idhal"]);}
+	*/
 	
 	//echo $totColl;
 	//var_dump($resColl);
 	
 	//Affichage
-	$speTri = '<a href="?reqt=req19&team='.$team.'&annee19='.$annee19;
-	echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">';
-	echo '<thead>';
+	//$speTri = '<a href="?reqt=req19&team='.$team.'&annee19='.$annee19;
+	echo '<br>';
+	echo '<table id="basic-datatable" class="table table-hover table-striped table-bordered col-12">';
+	echo '<thead class="thead-dark">';
 	echo '<tr>';
-	echo $cstTS1.$speTri.'&ordr='.$nomUrl.'">'.$cstNom;
-	echo $cstTS1.$speTri.'&ordr='.$typUrl.'">'.$cstTyp;
-	echo $cstTS1.$speTri.'&ordr='.$codUrl.'">'.$cstCod;
-	echo $cstTS1.$speTri.'&ordr='.$nbrUrl.'">'.$cstNbP;
+	//echo $cstTS1.$speTri.'&ordr='.$nomUrl.'">'.$cstNom;
+	echo $cstTS1.$cstNom;
+	//echo $cstTS1.$speTri.'&ordr='.$typUrl.'">'.$cstTyp;
+	echo $cstTS1.$cstTyp;
+	//echo $cstTS1.$speTri.'&ordr='.$codUrl.'">'.$cstCod;
+	echo $cstTS1.$cstCod;
+	//echo $cstTS1.$speTri.'&ordr='.$nbrUrl.'">'.$cstNbP;
+	echo $cstTS1.$cstNbP;
 	echo $cstTS2;
 	echo $cstTS3;
 	$chaine = "Nom;Type;Code HAL;Nombre de publications;%;Références HAL;";
@@ -142,7 +151,8 @@ if ($totColl != 0) {//Au moins 1 résultat
 	
 	echo '</tbody>';
 	echo '</table>';
-	echo '<a href=\'./csv/req19.csv\'>Exporter le tableau au format CSV</a><br><br>';
+	
+	echo '<a class="btn btn-secondary mt-2" href="./csv/req19.csv">Exporter le tableau au format CSV</a><br><br>';
 }else{
 	echo $cstNR;
 }

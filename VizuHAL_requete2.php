@@ -1,9 +1,9 @@
 <?php
 //Intitulé
-echo '<br><strong>2. Portail ou collection : évolution sur une période</strong><br><br>';
+echo '<span class="btn btn-secondary mt-2"><strong>2. Portail ou collection : évolution sur une période</strong></span><br><br>';
 
 //Descriptif
-echo '<div style="background-color:#f5f5f5">Cette requête présente, sur une période donnée, le nombre de publications référencées dans le portail HAL institutionnel (secteurs disciplinaires, le cas échéant) ou une collection, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Pour le portail, les résultats sont déclinés par secteurs (le cas échéant). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
+echo '<div class="alert alert-secondary">Cette requête présente, sur une période donnée, le nombre de publications référencées dans le portail HAL institutionnel (secteurs disciplinaires, le cas échéant) ou une collection, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Pour le portail, les résultats sont déclinés par secteurs (le cas échéant). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 
 //Export CSV
 $Fnm = "./csv/req2.csv";
@@ -12,8 +12,8 @@ fseek($inF, 0);
 $chaine = "\xEF\xBB\xBF";
 fwrite($inF,$chaine);
 
-echo '<table class="table table-striped table-hover table-responsive table-bordered">';
-echo '<thead>';
+echo '<table id="basic-datatable" class="table table-hover table-bordered table-responsive">';
+echo '<thead class="thead-dark">';
 echo '<tr>';
 echo '<th scope="col">&nbsp;</th>';
 $chaine = ";";
@@ -147,7 +147,7 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 //Affichage
 echo '<tbody>';
 for($year = $anneedeb; $year <= $anneefin; $year++) {
-	echo '<tr class="active">';
+	echo '<tr class="table-light">';
 	echo '<th scope="row">'.$year.'</th>';
 	$chaine = $year.";";
 	$is = 0;
@@ -172,5 +172,6 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 }
 echo '</tbody>';
 echo '</table>';
-echo '<a href=\'./csv/req2.csv\'>Exporter le tableau au format CSV</a><br><br>';
+
+echo '<a class="btn btn-secondary mt-2" href="./csv/req2.csv">Exporter le tableau au format CSV</a><br><br>';
 ?>

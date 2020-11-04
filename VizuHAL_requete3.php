@@ -1,10 +1,11 @@
 <?php
 //Intitulé
-echo '<br><strong>3. Portail : Comparaison portails</strong><br><br>';
+echo '<span class="btn btn-secondary mt-2"><strong>3. Portail : Comparaison portails</strong></span><br><br>';
 
 //Descriptif
-echo '<div style="background-color:#f5f5f5">Cette requête permet de situer les données d’un portail institutionnel par rapport aux données d’autres portails (d’universités). Il indique, pour une année donnée, le nombre de publications (articles de revue) référencées dans le portail, avec ou sans texte intégral, incluant ou non un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
+echo '<div class="alert alert-secondary">Cette requête permet de situer les données d’un portail institutionnel par rapport aux données d’autres portails (d’universités). Il indique, pour une année donnée, le nombre de publications (articles de revue) référencées dans le portail, avec ou sans texte intégral, incluant ou non un lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 
+/*
 //Tri par défaut
 $prtTri = "SORT_ASC";
 $artTri = "";
@@ -72,7 +73,8 @@ if ($ordr != "") {
 	if (strpos($ordr, "PavTi2avOa") !== false) {//Sur le pourcentage d'articles avec texte intégral et open access
 		if ($ordr == "PavTi2avOaAsc") {$PavTiavOaTri = "SORT_ASC"; $PavTiavOaUrl = "PavTi2avOaDes";}else{$PavTiavOaTri = "SORT_DESC";	$PavTiavOaUrl = "PavTi2avOaAsc";}
 	}
-}	
+}
+*/	
 
 //Export CSV
 $Fnm = "./csv/req3.csv";
@@ -110,7 +112,7 @@ if (!isset($_SESSION['datPro'])) {
 	$is++;
 	
 	//Autres portails
-	include("./Portails-HAL.php");
+	include("./VizuHAL_Portails-HAL.php");
 	$urlHAL = "https://api.archives-ouvertes.fr/ref/instance/";
 	askCurl($urlHAL, $arrayHAL, $cstCA);
 	//var_dump($arrayHAL);
@@ -119,7 +121,7 @@ if (!isset($_SESSION['datPro'])) {
 	//while ($iHAL < 30) {
 		$code = $arrayHAL["response"]["docs"][$iHAL]["code"];
 		$name = $arrayHAL["response"]["docs"][$iHAL]["name"];
-		if (strtoupper($code) != $team && stripos($name, "université") !== false && strtoupper($code) != "UDL") {//portail univ à intégrer + ignorer UDL
+		if (strtoupper($code) != $team && stripos($name, "université") !== false && strtoupper($code) != "UDL" && strtoupper($code) != "USJ" && strtoupper($code) != "UNIV-LILLE3") {//portail univ à intégrer + ignorer UDL, USJ et UNIV-LILLE3
 			$code = strtoupper($code);
 			//if (isset($LAB_SECT[$code])) {$code = $LAB_SECT[$code];}//Equivalence trouvée
 			$urlHALDep = $cstAPI.strtolower($code)."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111&rows=0";
@@ -199,6 +201,7 @@ if (!isset($_SESSION['datPro'])) {
 	$tabPro = $_SESSION['datPro'];
 }
 
+/*
 //Initialement, classement du tableau par le nom du portail ordre alphabétique puis affichage
 if ($prtTri == "SORT_ASC") {ksort($tabPro);}
 if ($prtTri == "SORT_DESC") {krsort($tabPro);}
@@ -220,43 +223,54 @@ if ($AavTiavOaTri == "SORT_ASC") {$tabPro = array_orderby($tabPro, 'nfProavTIavO
 if ($AavTiavOaTri == "SORT_DESC") {$tabPro = array_orderby($tabPro, 'nfProavTIavOA', SORT_DESC);}
 if ($PavTiavOaTri == "SORT_ASC") {$tabPro = array_orderby($tabPro, 'pCentavTIavOA', SORT_ASC);}
 if ($PavTiavOaTri == "SORT_DESC") {$tabPro = array_orderby($tabPro, 'pCentavTIavOA', SORT_DESC);}
-
+*/
 
 //Affichage
-$speTri = '<a href="?reqt=req3&port='.$port.'&annee3='.$annee3;
+//$speTri = '<a href="?reqt=req3&port='.$port.'&annee3='.$annee3;
 
-echo '<span id="reqt3"><table class="table table-striped table-hover table-responsive table-bordered">';
-echo '<thead>';
+echo '<span id="reqt3">';
+echo '<table id="basic-datatable" class="table table-hover table-bordered table-responsive">';
+echo '<thead class="thead-dark">';
 echo '<tr>';
 $chaine = "";
-echo '<th scope="col" style="text-align:center">'.$speTri.'&ordr='.$prtUrl.'">Articles dans une revue publiés en '.$annee3.' et référencés dans le portail HAL</a></th>';
+//echo '<th scope="col" style="text-align:center">'.$speTri.'&ordr='.$prtUrl.'">Articles dans une revue publiés en '.$annee3.' et référencés dans le portail HAL</a></th>';
+echo '<th scope="col" style="text-align:center">Articles dans une revue publiés en '.$annee3.' et référencés dans le portail HAL</th>';
 //echo '<th scope="col" style="text-align:center"><a style="cursor:pointer;" onclick="$.post(\'VizuHAL_liste_actions.php\', {reqt : \''.$cstR03.'\', port : \''.$port.'\', annee: \''.$annee3.'\', ordr : \''.$prtUrl.'\'});">Articles dans une revue publiés en '.$annee3.' et référencés dans le portail HAL</a></th>';
 $chaine .= "Articles dans une revue publiés en ".$annee3." et référencés dans le portail HAL;";
-echo '<th scope="col" style="text-align:center;background-color:#F2F2F2;">'.$speTri.'&ordr='.$artUrl.'">Articles</a></th>';
+//echo '<th scope="col" style="text-align:center;background-color:#F2F2F2;">'.$speTri.'&ordr='.$artUrl.'">Articles</a></th>';
+echo '<th scope="col">Articles</th>';
 $chaine .= "Articles;";
 //echo '<th scope="col" style="text-align:center;background-color:#F2F2F2;">Rang</th>';
 //$chaine .= "Rang;";
-echo '<th scope="col" style="text-align:center;background-color:#DDEBF7;">'.$speTri.'&ordr='.$AnoTiUrl.'">Articles '.$annee3.' sans texte intégral déposé dans HAL</a></th>';
+//echo '<th scope="col" style="text-align:center;background-color:#DDEBF7;">'.$speTri.'&ordr='.$AnoTiUrl.'">Articles '.$annee3.' sans texte intégral déposé dans HAL</a></th>';
+echo '<th scope="col">Articles '.$annee3.' sans texte intégral déposé dans HAL</th>';
 $chaine .= "Articles ".$annee3." sans texte intégral déposé dans HAL;";
-echo '<th scope="col" style="text-align:center;background-color:#DDEBF7;">'.$speTri.'&ordr='.$PnoTiUrl.'">%</a></th>';
+//echo '<th scope="col" style="text-align:center;background-color:#DDEBF7;">'.$speTri.'&ordr='.$PnoTiUrl.'">%</a></th>';
+echo '<th scope="col">%</th>';
 $chaine .= "%;";
 //echo '<th scope="col" style="text-align:center;background-color:#DDEBF7;">Rang</th>';
 //$chaine .= "Rang;";
-echo '<th scope="col" style="text-align:center;background-color:#E2EFDA;">'.$speTri.'&ordr='.$AavTiUrl.'">Articles '.$annee3.' avec texte intégral déposé dans HAL</a></th>';
+//echo '<th scope="col" style="text-align:center;background-color:#E2EFDA;">'.$speTri.'&ordr='.$AavTiUrl.'">Articles '.$annee3.' avec texte intégral déposé dans HAL</a></th>';
+echo '<th scope="col">Articles '.$annee3.' avec texte intégral déposé dans HAL</th>';
 $chaine .= "Articles ".$annee3." avec texte intégral déposé dans HAL;";
-echo '<th scope="col" style="text-align:center;background-color:#E2EFDA;">'.$speTri.'&ordr='.$PavTiUrl.'">%</a></th>';
+//echo '<th scope="col" style="text-align:center;background-color:#E2EFDA;">'.$speTri.'&ordr='.$PavTiUrl.'">%</a></th>';
+echo '<th scope="col">%</th>';
 $chaine .= "%;";
 //echo '<th scope="col" style="text-align:center;background-color:#E2EFDA;">Rang</th>';
 //$chaine .= "Rang;";
-echo '<th scope="col" style="text-align:center;background-color:#FFF2CC;">'.$speTri.'&ordr='.$AavTiavOaUrl.'">Articles '.$annee3.' avec texte intégral déposé dans HAL ou librement accessible hors HAL</a></th>';
+//echo '<th scope="col" style="text-align:center;background-color:#FFF2CC;">'.$speTri.'&ordr='.$AavTiavOaUrl.'">Articles '.$annee3.' avec texte intégral déposé dans HAL ou librement accessible hors HAL</a></th>';
+echo '<th scope="col">Articles '.$annee3.' avec texte intégral déposé dans HAL ou librement accessible hors HAL</th>';
 $chaine .= "Articles ".$annee3." avec texte intégral déposé dans HAL ou librement accessible hors HAL;";
-echo '<th scope="col" style="text-align:center;background-color:#FFF2CC;">'.$speTri.'&ordr='.$PavTiavOaUrl.'">%</a></th>';
+//echo '<th scope="col" style="text-align:center;background-color:#FFF2CC;">'.$speTri.'&ordr='.$PavTiavOaUrl.'">%</a></th>';
+echo '<th scope="col">%</th>';
 $chaine .= "%;";
 //echo '<th scope="col" style="text-align:center;background-color:#FFF2CC;">Rang</th>';
 //$chaine .= "Rang;";
-echo '<th scope="col" style="text-align:center;background-color:#F4D9C7;">'.$speTri.'&ordr='.$AnoTiavOaUrl.'">Articles '.$annee3.' sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL</a></th>';
+//echo '<th scope="col" style="text-align:center;background-color:#F4D9C7;">'.$speTri.'&ordr='.$AnoTiavOaUrl.'">Articles '.$annee3.' sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL</a></th>';
+echo '<th scope="col">Articles '.$annee3.' sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL</th>';
 $chaine .= "Articles ".$annee3." sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL;";
-echo '<th scope="col" style="text-align:center;background-color:#F4D9C7;">'.$speTri.'&ordr='.$PnoTiavOaUrl.'">%</a></th>';
+//echo '<th scope="col" style="text-align:center;background-color:#F4D9C7;">'.$speTri.'&ordr='.$PnoTiavOaUrl.'">%</a></th>';
+echo '<th scope="col">%</th>';
 $chaine .= "%;";
 //echo '<th scope="col" style="text-align:center;background-color:#F4D9C7;">Rang</th>';
 //$chaine .= "Rang;";
@@ -269,7 +283,7 @@ echo '<tbody>';
 
 foreach ($tabPro as $code => $t) {
 	if ($code == $team) {
-		$evd = " class=\"warning\"";
+		$evd = " class=\"table-warning\"";
 		$evd1 = "";
 		$evd2 = "";
 		$evd3 = "";
@@ -321,5 +335,6 @@ foreach ($tabPro as $code => $t) {
 }
 echo '</tbody>';
 echo '</table></span>';
-echo '<a href=\'./csv/req3.csv\'>Exporter le tableau au format CSV</a><br><br>';
+
+echo '<a class="btn btn-secondary mt-2" href="./csv/req3.csv">Exporter le tableau au format CSV</a><br><br>';
 ?>

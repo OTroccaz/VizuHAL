@@ -1,12 +1,13 @@
 <?php
 //Intitulé
-echo '<br><strong>22. Collection : Collaborations internationales (institutions)</strong><br><br>';
+echo '<span class="btn btn-secondary mt-2"><strong>22. Collection : Collaborations internationales (institutions)</strong></span><br><br>';
 
 //Descriptif
-echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des institutions étrangères auxquelles sont affiliés des co-auteurs. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées. Les institutions dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> (<a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/browse?critere=-country_s%3A%5B%22%22+TO+*%5D&category=*">elles sont nombreuses</a>) sont classés sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
+echo '<div class="alert alert-secondary">Cette requête affiche, pour une collection, la liste des pays (ie. affiliation des co-auteurs) représentée sous forme de carte interactive. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées.  Les structures dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> (<a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/browse?critere=-country_s%3A%5B%22%22+TO+*%5D&category=*">elles sont nombreuses</a>) sont classées sous la rubrique « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 
 include('./VizuHAL_codes_pays.php');
 
+/*
 //Tri par défaut
 $payTri = "";
 $nbrTri = "SORT_DESC";
@@ -23,6 +24,7 @@ if ($ordr != "") {
 		if ($ordr == "nbrAsc") {$nbrTri = "SORT_ASC"; $nbrUrl = "nbrDes";}else{$nbrTri = "SORT_DESC"; $nbrUrl = "nbrAsc";}
 	}
 }
+*/
 
 //Export CSV
 $Fnm = "./csv/req22.csv";
@@ -177,102 +179,74 @@ if ($k != 0) {//Au moins 1 résultat
 	}
 	*/
 	
+	/*
 	//Initialement, classement du tableau par le nombre de publications ordre décroissant puis affichage
 	if ($payTri == "SORT_ASC") {array_multisort($resColl["pays"], SORT_ASC, SORT_STRING, $resColl["nombre"], $resColl["pcent"], $resColl["idhal"], $resColl["ART"], $resColl["COMM"], $resColl["POSTER"], $resColl["COUV"], $resColl["OUV"], $resColl["DOUV"]);}
 	if ($payTri == "SORT_DESC") {array_multisort($resColl["pays"], SORT_DESC, SORT_STRING, $resColl["nombre"], $resColl["pcent"], $resColl["idhal"], $resColl["ART"], $resColl["COMM"], $resColl["POSTER"], $resColl["COUV"], $resColl["OUV"], $resColl["DOUV"]);}
 	if ($nbrTri == "SORT_ASC") {array_multisort($resColl["nombre"], SORT_ASC, SORT_NUMERIC, $resColl["pcent"], $resColl["idhal"], $resColl["pays"], $resColl["ART"], $resColl["COMM"], $resColl["POSTER"], $resColl["COUV"], $resColl["OUV"], $resColl["DOUV"]);}
 	if ($nbrTri == "SORT_DESC") {array_multisort($resColl["nombre"], SORT_DESC, SORT_NUMERIC, $resColl["pcent"], $resColl["idhal"], $resColl["pays"], $resColl["ART"], $resColl["COMM"], $resColl["POSTER"], $resColl["COUV"], $resColl["OUV"], $resColl["DOUV"]);}
+	*/
 	
 	//echo $totColl;
 	//var_dump($resColl);
 	
 	//Carte mondiale
-	echo '<link href="./lib/JQVmaps/jqvmap.css" media="screen" rel="stylesheet" type="text/css">';
-	echo '<script type="text/javascript" src="./lib/JQVmaps/jquery.vmap.js"></script>';
-	echo '<script type="text/javascript" src="./lib/JQVmaps/maps/jquery.vmap.world.js" charset="utf-8"></script>';
+	echo '<link href="./assets/css/vendor/jquery-jvectormap-2.0.5.css" rel="stylesheet" type="text/css" />';
+	echo '<script src="./assets/js/vendor/jquery-jvectormap-2.0.5.min.js"></script>';
+  echo '<script src="./assets/js/vendor/jquery-jvectormap-world-mill.js"></script>';
+	
 	//Ajout des données
 	echo '<script>';
 	echo '    var gdpData = {';
 	for ($i=0; $i<count($resColl["pays"]); $i++) {
 		if ($resColl["pays"][$i] != "Structure(s) sans pays défini(s) dans HAL") {
-			$key = strtolower(array_search($resColl["pays"][$i], $countries));
+			$key = array_search($resColl["pays"][$i], $countries);
 			echo '"'.$key.'":'.$resColl["nombre"][$i].', ';
 		}
 	}
 	//echo '"fr":'.$totCollStr);
 	echo '	};';
+	//echo 'console.log(gdpData);';
 	echo '</script>';
-	echo '<script>';
-	echo '  var max = 0,';
-	echo '        min = Number.MAX_VALUE,';
-	echo '        cc,';
-	echo '        startColor = [200, 238, 255],';
-	echo '        endColor = [0, 100, 145],';
-	echo '        colors = {},';
-	echo '        hex;';
-	//find maximum and minimum values
-	echo '    for (cc in gdpData)';
-	echo '    {';
-	echo '        if (parseFloat(gdpData[cc]) > max)';
-	echo '        {';
-	echo '            max = parseFloat(gdpData[cc]);';
-	echo '        }';
-	echo '        if (parseFloat(gdpData[cc]) < min)';
-	echo '        {';
-	echo '            min = parseFloat(gdpData[cc]);';
-	echo '        }';
-	echo '    }';
-	//set colors according to values of GDP
-	echo '    for (cc in gdpData)';
-	echo '    {';
-	echo '        if (gdpData[cc] > 0)';
-	echo '        {';
-	echo '            colors[cc] = \'#\';';
-	echo '            for (var i = 0; i<3; i++)';
-	echo '            {';
-	echo '                hex = Math.round(startColor[i]';
-	echo '                    + (endColor[i]';
-	echo '                    - startColor[i])';
-	echo '                    * (gdpData[cc] / (max - min))).toString(16);';
-	echo '                if (hex.length == 1)';
-	echo '                {';
-	echo '                    hex = \'0\'+hex;';
-	echo '                }';
-	echo '                colors[cc] += (hex.length == 1 ? \'0\' : \'\') + hex;';
-	echo '            }';
-	echo '        }';
-	echo '    }';
-	echo '</script>';
-
-	//Appel de la carte
-	echo '<script type="text/javascript">';
-	echo 'jQuery(document).ready(function() {';
-	echo 'jQuery(\'#vmap\').vectorMap({ ';
-	echo '	onLabelShow: function (event, label, code) {';
-	echo '	if(gdpData[code] > 0)';
-	echo '  	label.append(\': \'+gdpData[code]);';
-	echo '	},';
-	echo '	map: \'world_en\',';
-	echo '	colors: colors,';
-	echo '	hoverOpacity: 0.7,';
-	echo '	hoverColor: false });';
-	echo '});';
-	echo '</script>';
+	
 	if ($anneedeb != $anneefin) {
 		$per = "sur la période ".$anneedeb." - ".$anneefin;
 	}else{
 		$per = "en ".$anneedeb;
 	}
-	echo '<center><h3>Carte interactive du nombre de publications par pays pour la collection '.$team.' '.$per.'</h3><br><div id="vmap" style="width: 800px; height: 530px;"></div><br><br></center>';
+	echo '<center><h4>Carte interactive du nombre de publications par pays pour la collection '.$team.' '.$per.'</h4><br><div id="world-map" style="width: 800px; height: 530px;"></div><br><br></center>';
+	
+	//Appel de la carte
+	echo '<script type="text/javascript">';
+	echo '	(function($) {';
+	echo '		\'use strict\';';
+	echo '		$(\'#world-map\').vectorMap({';
+	echo '			map: \'world_mill\',';
+	echo '			series: {';
+  echo '        regions: [{';
+  echo '          values: gdpData,';
+  echo '          scale: [\'#C8EEFF\', \'#0071A4\'],';
+  echo '          normalizeFunction: \'polynomial\'';
+  echo '        }]';
+  echo '      },';
+  echo '      onRegionTipShow: function(e, el, code){';
+	echo '				if(gdpData[code] > 0)';
+  echo '        	el.html(el.html()+\' : \'+gdpData[code]);';
+  echo '      }';
+	echo '		});';
+	echo '	})(window.jQuery)';
+  echo '</script>';
 	
 	//Affichage
-	$speTri = '<a href="?reqt=req22&team='.$team.'&anneedeb='.$anneedeb.'&anneefin='.$anneefin;
-	echo '<br>Poucentages calculés sur le nombre total de publications de la collection sur la période concernée';
-	echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">';
-	echo '<thead>';
+	//$speTri = '<a href="?reqt=req22&team='.$team.'&anneedeb='.$anneedeb.'&anneefin='.$anneefin;
+	echo '<br>Pourcentages calculés sur le nombre total de publications de la collection sur la période concernée';
+	echo '<br><br><table id="basic-datatable" class="table table-striped table-hover table-responsive table-bordered">';
+	echo '<thead class="thead-dark">';
 	echo '<tr>';
-	echo $cstTS1.$speTri.'&ordr='.$payUrl.'">'.$cstPay;
-	echo $cstTS1.$speTri.'&ordr='.$nbrUrl.'">'.$cstNbP;
+	//echo $cstTS1.$speTri.'&ordr='.$payUrl.'">'.$cstPay;
+	//echo $cstTS1.$speTri.'&ordr='.$nbrUrl.'">'.$cstNbP;
+	echo '<th scope="col" style="text-align:left"><strong>Pays</strong></th>';
+	echo '<th scope="col" style="text-align:left"><strong>Nombre de publications</strong></th>';
 	echo $cstTS2;
 	echo '<th scope="col" style="text-align:left"><strong>ART</strong></th>';
 	echo '<th scope="col" style="text-align:left"><strong>COMM</strong></th>';
@@ -389,7 +363,8 @@ if ($k != 0) {//Au moins 1 résultat
 	
 	echo '</tbody>';
 	echo '</table>';
-	echo '<a href=\'./csv/req22.csv\'>Exporter le tableau au format CSV</a><br><br>';
+	
+	echo '<a class="btn btn-secondary mt-2" href="./csv/req22.csv">Exporter le tableau au format CSV</a><br><br>';
 }else{
 	echo $cstNR;
 }

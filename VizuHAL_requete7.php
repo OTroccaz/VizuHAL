@@ -1,9 +1,9 @@
 <?php
 //Intitulé
-echo '<br><strong>7. Portail ou Collection : Nombre de publications (articles de revue) par revue</strong><br><br>';
+echo '<span class="btn btn-secondary mt-2"><strong>7. Portail ou Collection : Nombre de publications (articles de revue) par revue</strong></span><br><br>';
 
 //Descriptif
-echo '<div style="background-color:#f5f5f5">Cette requête présente le nombre d’articles présents dans le portail ou la collection, avec ou sans texte intégral, par revue. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
+echo '<div class="alert alert-secondary">Cette requête présente le nombre d’articles présents dans le portail ou la collection, avec ou sans texte intégral, par revue. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 
 //Export CSV
 $Fnm = "./csv/req7.csv";
@@ -26,8 +26,9 @@ $pivot = "journalTitle_s,journalPublisher_s,journalValid_s";
 //Affichage
 echo '<div id="cpt"></div>';
 echo '<strong>'.$nbTotArt.' publications :</strong>';
-echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">';
-echo '<thead>';
+echo '<br>';
+echo '<table id="basic-datatable" class="table table-hover table-striped table-bordered">';
+echo '<thead class="thead-dark">';
 echo '<tr>';
 echo '<th scope="col" style="text-align:left"><strong>Revues</strong></th>';
 echo $cstPUB;
@@ -83,5 +84,6 @@ echo '<script>';
 echo '  document.getElementById("cpt").style.display = "none";';
 echo '</script>';
 //echo $somme.'<br>';
-echo '<a href=\'./csv/req7.csv\'>Exporter le tableau au format CSV</a><br><br>';
+
+echo '<a class="btn btn-secondary mt-2" href="./csv/req7.csv">Exporter le tableau au format CSV</a><br><br>';
 ?>

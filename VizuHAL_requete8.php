@@ -1,9 +1,9 @@
 <?php
 //Intitulé
-echo '<br><strong>8. Portail : Pourcentage par secteur des articles de tel éditeur</strong><br><br>';
+echo '<span class="btn btn-secondary mt-2"><strong>8. Portail : Pourcentage par secteur des articles de tel éditeur</strong></span><br><br>';
 
 //Descriptif
-echo '<div style="background-color:#f5f5f5">Requête masquée : abandon car on dépasse les limites d’exécution du script.</div><br>';
+echo '<div class="alert alert-secondary">Requête masquée : abandon car on dépasse les limites d’exécution du script.</div><br>';
 
 //Export CSV
 $Fnm = "./csv/req8.csv";
@@ -15,8 +15,8 @@ fwrite($inF,$chaine);
 $year = $annee8;
 
 $chaine = "";
-echo '<table class="table table-striped table-hover table-responsive table-bordered">';
-echo '<thead>';
+echo '<table class="table table-hover table-bordered">';
+echo '<thead class="thead-dark">';
 echo '<tr>';
 echo '<th scope="col">Articles '.$year.' '.$LAB_SECT[0]['code_secteur'].' par regroupement éditorial</th>';
 $chaine .= 'Articles '.$year.' '.$LAB_SECT[0]['code_secteur'].' par regroupement éditorial;';
@@ -197,5 +197,6 @@ foreach ($resHAL as $key1 => $val1) {
 }
 
 echo '</table>';
-echo '<a href=\'./csv/'.$cstR08.'.csv\'>Exporter le tableau au format CSV</a><br><br>';
+
+echo '<a class="btn btn-secondary mt-2" href="./csv/'.$cstR08.'.csv">Exporter le tableau au format CSV</a><br><br>';
 ?>

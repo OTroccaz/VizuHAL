@@ -1,0 +1,1 @@
+<?php$SID_i = array("n°1" => "HAL","n°91" => "Univ-Rennes1");?>

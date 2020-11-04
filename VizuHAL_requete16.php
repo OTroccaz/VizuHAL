@@ -1,12 +1,13 @@
 <?php
 //Intitulé
-echo '<br><strong>16. Collection : Profil des contributeurs HAL</strong><br><br>';
+echo '<span class="btn btn-secondary mt-2"><strong>16. Collection : Profil des contributeurs HAL</strong></span><br><br>';
 
 //Descriptif
-echo '<div style="background-color:#f5f5f5">Cette requête affiche, pour une collection, la liste des contributeurs classée par nombre de dépôts (références, texte intégral, données de recherche), ainsi que le portail de dépôt. A noter que les contributions secondaires (ajout d’un fichier) ne sont pas créditées par HAL : c’est toujours le nom du premier contributeur qui est remonté. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
+echo '<div class="alert alert-secondary">Cette requête affiche, pour une collection et une période donnée (date de dépôt), la liste des contributeurs classée par nombre de dépôts (références, texte intégral, données de recherche), ainsi que le portail de dépôt. A noter que les contributions secondaires (ajout d’un fichier) ne sont pas créditées par HAL : c’est toujours le nom du premier contributeur qui est remonté. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 
-include("./Portails-SID.php");
+include("./VizuHAL_Portails-SID.php");
 
+/*
 //Tri par défaut
 $ntdTri = "SORT_DESC";
 $nomTri = "";
@@ -38,6 +39,7 @@ if ($ordr != "") {
 		if ($ordr == "nddAsc") {$nddTri = "SORT_ASC"; $ntdTri = ""; $nddUrl = "nddDes";}else{$nddTri = "SORT_DESC"; $ntdTri = ""; $nddUrl = "nddAsc";}
 	}
 }
+*/
 
 //Export CSV
 $Fnm = "./csv/req16.csv";
@@ -62,7 +64,7 @@ $col = 0;
 
 while (isset($LAB_SECT[$col]["code_collection"])) {
 	for ($year = $anneedeb; $year <= $anneefin; $year++) {
-		$urlHAL = $cstAPI.$LAB_SECT[$col]["code_collection"]."/?fq=producedDateY_i:".$year."&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s,sid_i&rows=10000&sort=contributorFullName_s%20desc";
+		$urlHAL = $cstAPI.$LAB_SECT[$col]["code_collection"]."/?fq=submittedDateY_i:".$year."&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s,sid_i&rows=10000&sort=contributorFullName_s%20desc";
 		askCurl($urlHAL, $arrayCtb, $cstCA);
 		$nbTotCtb += $arrayCtb["response"][$cstNuF];
 		for ($i=0; $i<$arrayCtb["response"][$cstNuF]; $i++) {
@@ -78,20 +80,29 @@ while (isset($LAB_SECT[$col]["code_collection"])) {
 	}
 	$col++;
 }
-//Classement du tableau par contributeur par ordre croissant
-array_multisort($ctbTot["nom"], SORT_ASC, $ctbTot["typ"], $ctbTot["sid"]);
+
+if ($nbTotCtb != 0) {//Au moins 1 résultat
+	//Classement du tableau par contributeur par ordre croissant
+	array_multisort($ctbTot["nom"], SORT_ASC, $ctbTot["typ"], $ctbTot["sid"]);
+}
 
 if ($nbTotCtb != 0) {//Au moins 1 résultat
 	//Affichage
-	$speCode = '<a href="?reqt=req16&port='.$port.'&team='.$team.'&anneedeb='.$anneedeb.'&anneefin='.$anneefin;
-	echo '<br><table class="table table-striped table-hover table-responsive table-bordered" style="width:100%;">';
-	echo '<thead>';
+	//$speCode = '<a href="?reqt=req16&port='.$port.'&team='.$team.'&anneedeb='.$anneedeb.'&anneefin='.$anneefin;
+	echo '<br>';
+	echo '<table id="basic-datatable" class="table table-hover table-striped table-bordered col-12">';
+	echo '<thead class="thead-dark">';
 	echo '<tr>';
-	echo $cstTS1.$speCode.'&ordr='.$nomUrl.'">Nom du contributeur</a></strong></th>';
-	echo $cstTS1.$speCode.'&ordr='.$ntdUrl.'">Nombre total de dépôts</a></strong></th>';
-	echo $cstTS1.$speCode.'&ordr='.$ndrUrl.'">Nombre de dépôts (références)</a></strong></th>';
-	echo $cstTS1.$speCode.'&ordr='.$ndtUrl.'">Nombre de dépôts (texte intégral)</a></strong></th>';
-	echo $cstTS1.$speCode.'&ordr='.$nddUrl.'">Nombre de dépôts (données de recherche)</a></strong></th>';
+	//echo $cstTS1.$speCode.'&ordr='.$nomUrl.'">Nom du contributeur</a></strong></th>';
+	echo $cstTS1.'Nom du contributeur</strong></th>';
+	//echo $cstTS1.$speCode.'&ordr='.$ntdUrl.'">Nombre total de dépôts</a></strong></th>';
+	echo $cstTS1.'Nombre total de dépôts</strong></th>';
+	//echo $cstTS1.$speCode.'&ordr='.$ndrUrl.'">Nombre de dépôts (références)</a></strong></th>';
+	echo $cstTS1.'Nombre total de dépôts (références)</strong></th>';
+	//echo $cstTS1.$speCode.'&ordr='.$ndtUrl.'">Nombre de dépôts (texte intégral)</a></strong></th>';
+	echo $cstTS1.'Nombre total de dépôts (texte intégral)</strong></th>';
+	//echo $cstTS1.$speCode.'&ordr='.$nddUrl.'">Nombre de dépôts (données de recherche)</a></strong></th>';
+	echo $cstTS1.'Nombre total de dépôts (données de recherche)</strong></th>';
 	echo '<th scope="col" style="text-align:left"><strong>Portail(s) de dépôt</strong></th>';
 	$chaine = "Nom du contributeur;Nombre total de dépôts;Nombre de dépôts (références);Nombre de dépôts (texte intégral);Nombre de dépôts (données de recherche);Portail(s) de dépôt;";
 	echo '</tr>';
@@ -144,6 +155,7 @@ if ($nbTotCtb != 0) {//Au moins 1 résultat
 		$ctbDep["ptl"][$i] = str_replace(array("~", "n°"), array("<br>", ""), $ctbDep["ptl"][$i]);
 	}
 
+	/*
 	//Initialement, classement du tableau par nombre total de dépôts ordre décroissant puis affichage
 	if ($ntdTri == "SORT_ASC") {array_multisort($ctbDep["tot"], SORT_ASC, SORT_NUMERIC, $ctbDep["nom"], $ctbDep["txt"], $ctbDep["ref"], $ctbDep["anx"], $ctbDep["ptl"]);}
 	if ($ntdTri == "SORT_DESC") {array_multisort($ctbDep["tot"], SORT_DESC, SORT_NUMERIC, $ctbDep["nom"], $ctbDep["txt"], $ctbDep["ref"], $ctbDep["anx"], $ctbDep["ptl"]);}
@@ -156,6 +168,7 @@ if ($nbTotCtb != 0) {//Au moins 1 résultat
 	if ($nddTri == "SORT_ASC") {array_multisort($ctbDep["anx"], SORT_ASC, SORT_NUMERIC, $ctbDep["tot"], $ctbDep["nom"], $ctbDep["txt"], $ctbDep["ref"], $ctbDep["ptl"]);}
 	if ($nddTri == "SORT_DESC") {array_multisort($ctbDep["anx"], SORT_DESC, SORT_NUMERIC, $ctbDep["tot"], $ctbDep["nom"], $ctbDep["txt"], $ctbDep["ref"], $ctbDep["ptl"]);}
 	//array_multisort($ctbDep["anx"], SORT_ASC, SORT_NUMERIC, $ctbDep["tot"], $ctbDep["nom"], $ctbDep["ref"], $ctbDep["txt"], $ctbDep["ptl"]);
+	*/
 
 	for ($i=0; $i<count($ctbDep["nom"]); $i++) {
 		echo '<tr>';
@@ -178,7 +191,8 @@ if ($nbTotCtb != 0) {//Au moins 1 résultat
 	
 	echo '</tbody>';
 	echo '</table>';
-	echo '<a href=\'./csv/req16.csv\'>Exporter le tableau au format CSV</a><br><br>';
+	
+	echo '<a class="btn btn-secondary mt-2" href="./csv/req16.csv">Exporter le tableau au format CSV</a><br><br>';
 }else{
 	echo $cstNR;
 }

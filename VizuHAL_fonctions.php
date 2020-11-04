@@ -153,7 +153,7 @@ function extractHALnbPubEd($team, $year, $type, $spefq, &$nbTotArt, &$nbPubEdRE,
 	$nbPubEd = array();
 	$nbPubEdRE = array();//Regroupement éditorial
 	$cstAPI = "https://api.archives-ouvertes.fr/search/";
-	include("./Prefixe_DOI.php");
+	include("./VizuHAL_Prefixe_DOI.php");
 	$i = 0;
 	//for ($i=0; $i<=10; $i++) {
 	for ($i=0; $i<count($Prefixe_DOI); $i++) {
