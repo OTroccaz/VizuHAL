@@ -151,7 +151,7 @@
 																								Portail HAL
 																								</label>
 																								
-																								<select class="form-control col-sm-4" id="port" name="port" onChange="document.getElementById('team').value = '';">
+																								<select class="custom-select col-sm-4" id="port" name="port" onChange="document.getElementById('team').value = '';">
 																										<option value="choix">Veuillez choisir parmi la liste</option>
 																										<?php
 																										$sel = array();
@@ -212,7 +212,7 @@
 																								Extraction souhaitée
 																								</label>
 																								
-																								<select class="form-control col-sm-6" id="reqt" name="reqt" onChange="freqt();">
+																								<select class="custom-select col-sm-6" id="reqt" name="reqt" onChange="freqt();">
 																										<!--<option value="tabg"<?php echo $itab;?>>Tableau de bord général</option>-->
 																										<option value="<?php echo $cstR01;?>"<?php echo $irq1;?>>1. Portail : production scientifique par secteur et par unité</option>
 																										<option value="<?php echo $cstR24;?>"<?php echo $irq24;?>>1A. Portail : production scientifique par secteur et par unité (Articles de revue)</option>
@@ -253,7 +253,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee1" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee1" class="form-control col-sm-1" name="annee1">
+																								<select id="annee1" class="custom-select col-sm-1" name="annee1">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -272,7 +272,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee24" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee24" class="form-control col-sm-1" name="annee24">
+																								<select id="annee24" class="custom-select col-sm-1" name="annee24">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -292,7 +292,7 @@
 																								<!--Paramètres :-->
 																								<label for="anneedeb2" class="col-12 col-md-3 col-form-label font-weight-bold">Période</label>
 																								<span class="mt-1">Depuis&nbsp;</span>
-																								<select id="anneedeb2" class="form-control col-sm-1" name="anneedeb2">
+																								<select id="anneedeb2" class="custom-select col-sm-1" name="anneedeb2">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -306,7 +306,7 @@
 																								
 																								<label for="anneefin2" class="col-12 col-md-1 col-form-label font-weight-bold"></label>
 																								<span class="mt-1">Jusqu'à&nbsp;</span>
-																								<select id="anneefin2" class="form-control col-sm-1" name="anneefin2">
+																								<select id="anneefin2" class="custom-select col-sm-1" name="anneefin2">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -328,7 +328,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee3" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee3" class="form-control col-sm-1" name="annee3">
+																								<select id="annee3" class="custom-select col-sm-1" name="annee3">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -347,7 +347,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee4" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee4" class="form-control col-sm-1" name="annee4">
+																								<select id="annee4" class="custom-select col-sm-1" name="annee4">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -366,7 +366,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee5" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee5" class="form-control col-sm-1" name="annee5">
+																								<select id="annee5" class="custom-select col-sm-1" name="annee5">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -385,7 +385,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee6" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee6" class="form-control col-sm-1" name="annee6">
+																								<select id="annee6" class="custom-select col-sm-1" name="annee6">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -404,7 +404,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee7" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee7" class="form-control col-sm-1" name="annee7">
+																								<select id="annee7" class="custom-select col-sm-1" name="annee7">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -423,7 +423,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee8" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee8" class="form-control col-sm-1" name="annee8">
+																								<select id="annee8" class="custom-select col-sm-1" name="annee8">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -442,7 +442,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee9" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee9" class="form-control col-sm-1" name="annee9">
+																								<select id="annee9" class="custom-select col-sm-1" name="annee9">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -461,7 +461,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee10" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee10" class="form-control col-sm-1" name="annee10">
+																								<select id="annee10" class="custom-select col-sm-1" name="annee10">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -480,7 +480,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee11" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee11" class="form-control col-sm-1" name="annee11">
+																								<select id="annee11" class="custom-select col-sm-1" name="annee11">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -499,7 +499,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee12" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee12" class="form-control col-sm-1" name="annee12">
+																								<select id="annee12" class="custom-select col-sm-1" name="annee12">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -518,7 +518,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee13" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee13" class="form-control col-sm-1" name="annee13">
+																								<select id="annee13" class="custom-select col-sm-1" name="annee13">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -538,7 +538,7 @@
 																								<!--Paramètres :-->
 																								<label for="anneedeb14" class="col-12 col-md-3 col-form-label font-weight-bold">Période</label>
 																								<span class="mt-1">Depuis&nbsp;</span>
-																								<select id="anneedeb14" class="form-control col-sm-1" name="anneedeb14">
+																								<select id="anneedeb14" class="custom-select col-sm-1" name="anneedeb14">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -552,7 +552,7 @@
 																								
 																								<label for="anneefin14" class="col-12 col-md-1 col-form-label font-weight-bold"></label>
 																								<span class="mt-1">Jusqu'à&nbsp;</span>
-																								<select id="anneefin14" class="form-control col-sm-1" name="anneefin14">
+																								<select id="anneefin14" class="custom-select col-sm-1" name="anneefin14">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -575,7 +575,7 @@
 																								<!--Paramètres :-->
 																								<label for="anneedeb15" class="col-12 col-md-3 col-form-label font-weight-bold">Période</label>
 																								<span class="mt-1">Depuis&nbsp;</span>
-																								<select id="anneedeb15" class="form-control col-sm-1" name="anneedeb15">
+																								<select id="anneedeb15" class="custom-select col-sm-1" name="anneedeb15">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -589,7 +589,7 @@
 																								
 																								<label for="anneefin15" class="col-12 col-md-1 col-form-label font-weight-bold"></label>
 																								<span class="mt-1">Jusqu'à&nbsp;</span>
-																								<select id="anneefin15" class="form-control col-sm-1" name="anneefin15">
+																								<select id="anneefin15" class="custom-select col-sm-1" name="anneefin15">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -612,7 +612,7 @@
 																								<!--Paramètres :-->
 																								<label for="anneedeb16" class="col-12 col-md-3 col-form-label font-weight-bold">Période</label>
 																								<span class="mt-1">Depuis&nbsp;</span>
-																								<select id="anneedeb16" class="form-control col-sm-1" name="anneedeb16">
+																								<select id="anneedeb16" class="custom-select col-sm-1" name="anneedeb16">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -626,7 +626,7 @@
 																								
 																								<label for="anneefin16" class="col-12 col-md-1 col-form-label font-weight-bold"></label>
 																								<span class="mt-1">Jusqu'à&nbsp;</span>
-																								<select id="anneefin16" class="form-control col-sm-1" name="anneefin16">
+																								<select id="anneefin16" class="custom-select col-sm-1" name="anneefin16">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -648,7 +648,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee17" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee17" class="form-control col-sm-1" name="annee17">
+																								<select id="annee17" class="custom-select col-sm-1" name="annee17">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -667,7 +667,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee18" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee18" class="form-control col-sm-1" name="annee18">
+																								<select id="annee18" class="custom-select col-sm-1" name="annee18">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -686,7 +686,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee19" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee19" class="form-control col-sm-1" name="annee19">
+																								<select id="annee19" class="custom-select col-sm-1" name="annee19">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -705,7 +705,7 @@
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
 																								<label for="annee20" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee20" class="form-control col-sm-1" name="annee20">
+																								<select id="annee20" class="custom-select col-sm-1" name="annee20">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -725,7 +725,7 @@
 																								<!--Paramètres :-->
 																								<label for="anneedeb21" class="col-12 col-md-3 col-form-label font-weight-bold">Période</label>
 																								<span class="mt-1">Depuis&nbsp;</span>
-																								<select id="anneedeb21" class="form-control col-sm-1" name="anneedeb21">
+																								<select id="anneedeb21" class="custom-select col-sm-1" name="anneedeb21">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -739,7 +739,7 @@
 																								
 																								<label for="anneefin21" class="col-12 col-md-1 col-form-label font-weight-bold"></label>
 																								<span class="mt-1">Jusqu'à&nbsp;</span>
-																								<select id="anneefin21" class="form-control col-sm-1" name="anneefin21">
+																								<select id="anneefin21" class="custom-select col-sm-1" name="anneefin21">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -762,7 +762,7 @@
 																								<!--Paramètres :-->
 																								<label for="anneedeb22" class="col-12 col-md-3 col-form-label font-weight-bold">Période</label>
 																								<span class="mt-1">Depuis&nbsp;</span>
-																								<select id="anneedeb22" class="form-control col-sm-1" name="anneedeb22">
+																								<select id="anneedeb22" class="custom-select col-sm-1" name="anneedeb22">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -776,7 +776,7 @@
 																								
 																								<label for="anneefin22" class="col-12 col-md-1 col-form-label font-weight-bold"></label>
 																								<span class="mt-1">Jusqu'à&nbsp;</span>
-																								<select id="anneefin22" class="form-control col-sm-1" name="anneefin22">
+																								<select id="anneefin22" class="custom-select col-sm-1" name="anneefin22">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -799,7 +799,7 @@
 																								<!--Paramètres :-->
 																								<label for="anneedeb23" class="col-12 col-md-3 col-form-label font-weight-bold">Période</label>
 																								<span class="mt-1">Depuis&nbsp;</span>
-																								<select id="anneedeb23" class="form-control col-sm-1" name="anneedeb23">
+																								<select id="anneedeb23" class="custom-select col-sm-1" name="anneedeb23">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
@@ -813,7 +813,7 @@
 																								
 																								<label for="anneefin23" class="col-12 col-md-1 col-form-label font-weight-bold"></label>
 																								<span class="mt-1">Jusqu'à&nbsp;</span>
-																								<select id="anneefin23" class="form-control col-sm-1" name="anneefin23">
+																								<select id="anneefin23" class="custom-select col-sm-1" name="anneefin23">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
