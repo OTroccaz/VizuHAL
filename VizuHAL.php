@@ -131,7 +131,7 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
                                         </h2>
                                         <h5 class="badge badge-primary badge-pill">Présentation</h5>
 																				
-																				<img src="./img/anders-ipsen-9XhgZmrvCEU-unsplash.png" alt="Accueil VizuHAL" class="img-fluid"><br>
+																				<img src="./img/anders-ipsen-9XhgZmrvCEU-unsplash.jpg" alt="Accueil VizuHAL" class="img-fluid"><br>
 																				<p class="font-italic">Photo : Anders Ipsen on Unsplash (détail)</p>
 
                                         <p class=" mb-2 text-justify">
