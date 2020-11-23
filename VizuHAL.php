@@ -348,6 +348,7 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 		<script src="assets/js/vendor/dataTables.bootstrap4.js"></script>
 		<script src="assets/js/vendor/dataTables.responsive.min.js"></script>
 		<script src="assets/js/vendor/responsive.bootstrap4.min.js"></script>
+		<script src="assets/js/vendor/dataTables.buttons.min.js"></script>
 
 		<!-- Datatable Init js -->
 		<script src="assets/js/pages/demo.datatable-init.js"></script>

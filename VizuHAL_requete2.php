@@ -12,7 +12,7 @@ fseek($inF, 0);
 $chaine = "\xEF\xBB\xBF";
 fwrite($inF,$chaine);
 
-echo '<table id="basic-datatable" class="table table-hover table-bordered table-responsive">';
+echo '<table id="scroll-horizontal-datatable" class="table table-hover table-bordered nowrap w-100">';
 echo '<thead class="thead-dark">';
 echo '<tr>';
 echo '<th scope="col">&nbsp;</th>';
@@ -69,15 +69,15 @@ $chaine = "Année;";
 for($ils=0; $ils<$is; $ils++) {
 	echo '<th scope="col" style="text-align:center">Productions</th>';
 	$chaine .= "Productions;";
-	echo '<th scope="col" style="text-align:center">Productions avec texte intégral déposé dans HAL</th>';
+	echo '<th scope="col" style="text-align:center">Productions<br>avec texte<br>intégral<br>déposé<br>dans HAL</th>';
 	$chaine .= "Productions avec texte intégral déposé dans HAL;";
-	echo '<th scope="col" style="text-align:center">Taux de texte intégral déposé dans HAL</th>';
+	echo '<th scope="col" style="text-align:center">Taux de<br>texte<br>intégral<br>déposé<br>dans<br>HAL</th>';
 	$chaine .= "Taux de texte intégral déposé dans HAL;";
-	echo '<th scope="col" style="text-align:center">Productions sans texte intégral déposé dans HAL</th>';
+	echo '<th scope="col" style="text-align:center">Productions<br>sans texte<br>intégral<br>déposé<br>dans HAL</th>';
 	$chaine .= "Productions sans texte intégral déposé dans HAL;";
-	echo '<th scope="col" style="text-align:center">Productions sans texte intégral déposé dans HAL mais avec texte intégral librement accessible hors HAL</th>';
+	echo '<th scope="col" style="text-align:center">Productions<br>sans texte<br>intégral<br>déposé<br>dans HAL<br>mais avec<br>texte<br>intégral<br>librement<br>accessible<br>hors HAL</th>';
 	$chaine .= "Productions sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL;";
-	echo '<th scope="col" style="text-align:center">Taux de productions sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL</th>';
+	echo '<th scope="col" style="text-align:center">Taux de<br>productions<br>sans texte<br>intégral<br>déposé<br>dans HAL<br>mais avec<br>texte<br>intégral<br>déposé<br>dans HAL<br>librement<br>accessible<br>hors HAL</th>';
 	$chaine .= "Taux de productions sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL;";
 }   
 echo '</tr>';
