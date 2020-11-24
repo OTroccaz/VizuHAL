@@ -42,8 +42,8 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 	<meta charset="utf-8" />
 	<title>VizuHAL - HAL - UR1</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta content="" name="description" />
-	<meta content="Coderthemes + Lizuka" name="author" />
+	<meta content="VizuHAL permet de générer des tableaux et graphes statistiques à partir de HAL (collection ou portail)" name="description" />
+	<meta content="Coderthemes + Lizuka + OTroccaz + LJonchere + TFournier" name="author" />
 	<!-- App favicon -->
 	<link rel="shortcut icon" href="favicon.ico">
 
