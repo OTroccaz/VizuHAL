@@ -29,6 +29,7 @@
 																														}else{
 																															if ($reqt == $cstR03) {
 																																$annee3 = htmlspecialchars($_POST["annee3"]);
+																																$limReq3 = htmlspecialchars($_POST["limReq3"]);
 																															}else{
 																																if ($reqt == $cstR04) {
 																																	$annee4 = htmlspecialchars($_POST["annee4"]);
@@ -339,6 +340,15 @@
 																								}
 																								?>
 																								</select>
+																							</div>
+																							<?php
+																							if (isset($limReq3) && $limReq3 == "oui") {$lim = " checked";}else{$lim = "";}
+																							?>
+																							<div class="form-group row mb-1">
+																								<div class="custom-control custom-checkbox ml-2">
+																									<input type="checkbox" class="custom-control-input" id="limReq3" name="limReq3" value="oui"<?php echo $lim;?>>
+																									<label for="limReq3" class="custom-control-label">Limiter aux portails ayant plus de 2000 articles</label>
+																								</div>
 																							</div>
 																						</div>
 																						

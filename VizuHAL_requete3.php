@@ -121,32 +121,57 @@ if (!isset($_SESSION['datPro'])) {
 	//while ($iHAL < 30) {
 		$code = $arrayHAL["response"]["docs"][$iHAL]["code"];
 		$name = $arrayHAL["response"]["docs"][$iHAL]["name"];
-		if (strtoupper($code) != $team && stripos($name, "université") !== false && strtoupper($code) != "UDL" && strtoupper($code) != "USJ" && strtoupper($code) != "UNIV-LILLE3") {//portail univ à intégrer + ignorer UDL, USJ et UNIV-LILLE3
+		if (strtoupper($code) != $team && stripos($name, "université") !== false && strtoupper($code) != "UDL" && strtoupper($code) != "USJ" && strtoupper($code) != "UNIV-LILLE3" && strtoupper($code) != "DESCARTES" && strtoupper($code) != "UNIV-DIDEROT") {//portail univ à intégrer + ignorer UDL, USJ, UNIV-LILLE3, DESCARTES et UNIV-DIDEROT 
 			$code = strtoupper($code);
 			//if (isset($LAB_SECT[$code])) {$code = $LAB_SECT[$code];}//Equivalence trouvée
 			$urlHALDep = $cstAPI.strtolower($code)."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111&rows=0";
 			//echo $name.' - '.$code.' : '.askCurlNF($urlHALDep, $cstCA).'<br>';
 			//if (askCurlNF($urlHALDep) == 0) {echo $urlHALDep.'<br>';}
 			if (askCurlNF($urlHALDep, $cstCA) != 0 && $code != "") {//Y-a-t-il des résultats pour l'extraction avec ce code et cette année ?
-				$sect[$is] = $code;
-				extractHAL(strtolower($code), $year, $reqt, $resHAL, $cstCA);
-				$tabPro[$code][$cstNfD] = intval($resHAL[$year][$code][$cstNfD]);
-				$tabPro[$code][$cstNoTI] = intval($resHAL[$year][$code][$cstNoTI]);
-				$tabPro[$code]["pCentnoTI"] = 0;
-				$tabPro[$code][$cstAvTI] = intval($resHAL[$year][$code][$cstAvTI]);
-				$tabPro[$code]["pCentavTI"] = 0;
-				$tabPro[$code][$cstAvTIAvOA] = intval($resHAL[$year][$code][$cstAvTIAvOA]);
-				$tabPro[$code]["pCentavTIavOA"] = 0;
-				$tabPro[$code][$cstNoTIAvOA] = intval($resHAL[$year][$code][$cstNoTIAvOA]);
-				$tabPro[$code]["pCentnoTIavOA"] = 0;
-				if ($tabPro[$code][$cstNfD] != 0) {
-					$tabPro[$code]["pCentnoTI"] = round($tabPro[$code][$cstNoTI]*100/$tabPro[$code][$cstNfD]);
-					$tabPro[$code]["pCentavTI"] = round($tabPro[$code][$cstAvTI]*100/$tabPro[$code][$cstNfD]);
-					$tabPro[$code]["pCentavTIavOA"] = round($tabPro[$code][$cstAvTIAvOA]*100/$tabPro[$code][$cstNfD]);
-					$tabPro[$code]["pCentnoTIavOA"] = round($tabPro[$code][$cstNoTIAvOA]*100/$tabPro[$code][$cstNfD]);
+				//Si limite demandée, ne pas prendre en compte les résultats dont le nombre est inféreur à la limite
+				if (isset($limReq3) && $limReq3 == "oui") {
+					if (askCurlNF($urlHALDep, $cstCA) > 2000) {
+						$sect[$is] = $code;
+						extractHAL(strtolower($code), $year, $reqt, $resHAL, $cstCA);
+						$tabPro[$code][$cstNfD] = intval($resHAL[$year][$code][$cstNfD]);
+						$tabPro[$code][$cstNoTI] = intval($resHAL[$year][$code][$cstNoTI]);
+						$tabPro[$code]["pCentnoTI"] = 0;
+						$tabPro[$code][$cstAvTI] = intval($resHAL[$year][$code][$cstAvTI]);
+						$tabPro[$code]["pCentavTI"] = 0;
+						$tabPro[$code][$cstAvTIAvOA] = intval($resHAL[$year][$code][$cstAvTIAvOA]);
+						$tabPro[$code]["pCentavTIavOA"] = 0;
+						$tabPro[$code][$cstNoTIAvOA] = intval($resHAL[$year][$code][$cstNoTIAvOA]);
+						$tabPro[$code]["pCentnoTIavOA"] = 0;
+						if ($tabPro[$code][$cstNfD] != 0) {
+							$tabPro[$code]["pCentnoTI"] = round($tabPro[$code][$cstNoTI]*100/$tabPro[$code][$cstNfD]);
+							$tabPro[$code]["pCentavTI"] = round($tabPro[$code][$cstAvTI]*100/$tabPro[$code][$cstNfD]);
+							$tabPro[$code]["pCentavTIavOA"] = round($tabPro[$code][$cstAvTIAvOA]*100/$tabPro[$code][$cstNfD]);
+							$tabPro[$code]["pCentnoTIavOA"] = round($tabPro[$code][$cstNoTIAvOA]*100/$tabPro[$code][$cstNfD]);
+						}
+						$is++;
+						//if ($is == 3) {break;}
+					}
+				}else{
+					$sect[$is] = $code;
+					extractHAL(strtolower($code), $year, $reqt, $resHAL, $cstCA);
+					$tabPro[$code][$cstNfD] = intval($resHAL[$year][$code][$cstNfD]);
+					$tabPro[$code][$cstNoTI] = intval($resHAL[$year][$code][$cstNoTI]);
+					$tabPro[$code]["pCentnoTI"] = 0;
+					$tabPro[$code][$cstAvTI] = intval($resHAL[$year][$code][$cstAvTI]);
+					$tabPro[$code]["pCentavTI"] = 0;
+					$tabPro[$code][$cstAvTIAvOA] = intval($resHAL[$year][$code][$cstAvTIAvOA]);
+					$tabPro[$code]["pCentavTIavOA"] = 0;
+					$tabPro[$code][$cstNoTIAvOA] = intval($resHAL[$year][$code][$cstNoTIAvOA]);
+					$tabPro[$code]["pCentnoTIavOA"] = 0;
+					if ($tabPro[$code][$cstNfD] != 0) {
+						$tabPro[$code]["pCentnoTI"] = round($tabPro[$code][$cstNoTI]*100/$tabPro[$code][$cstNfD]);
+						$tabPro[$code]["pCentavTI"] = round($tabPro[$code][$cstAvTI]*100/$tabPro[$code][$cstNfD]);
+						$tabPro[$code]["pCentavTIavOA"] = round($tabPro[$code][$cstAvTIAvOA]*100/$tabPro[$code][$cstNfD]);
+						$tabPro[$code]["pCentnoTIavOA"] = round($tabPro[$code][$cstNoTIAvOA]*100/$tabPro[$code][$cstNfD]);
+					}
+					$is++;
+					//if ($is == 3) {break;}
 				}
-				$is++;
-				//if ($is == 3) {break;}
 			}
 		}
 		$iHAL++;
