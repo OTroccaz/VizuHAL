@@ -149,6 +149,8 @@ echo '<div id="collapse5" class="collapse" aria-labelledby="heading5" data-paren
 echo '
 Ce chiffre n\'est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n\'est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d\'une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l\'appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs Dalloz et Lextenso qui n\'ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
 <br>
+Export CSV non disponible car la fonction retourne un tableau avec un comptage global et non une itération avec test sur chaque notice.<br>
+<br>
 Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
 <br>
 Requêtes API :<br>
@@ -168,6 +170,8 @@ echo '<div id="collapse6" class="collapse" aria-labelledby="heading6" data-paren
 echo '
 Ce chiffre n\'est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n\'est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d\'une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l\'appellation « Hors regroupement éditorial ».<br>
 <br>
+Export CSV non disponible car la fonction retourne un tableau avec un comptage global et non une itération avec test sur chaque notice.<br>
+<br>
 Requêtes API :<br>
 Communications 2017 (exemple pour préfixe 10.1016) : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:COMM">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:COMM</a><br>
 La ligne "Hors regroupement éditorial" est calculée en retranchant le nombre total d\'articles recensés chez les éditeurs principaux (liste abrégée) du nombre total d\'articles du portail pour 2017 : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:COMM&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:COMM&fq=-status_i=111</a><br>
@@ -181,6 +185,8 @@ echo '<div id="DTreq7" class="col-12 float-left bg-gray border border-gray-700 r
 echo '<div class="accordion d-inline" id="accordion7"><div class="card mb-0"><div class="card-header" id="heading7"><a class="custom-accordion-title d-block" data-toggle="collapse" href="#collapse7" aria-expanded="true" aria-controls="collapse7"><span class="font-weight-bold">Consultez la documentation technique&nbsp;</span><span style="color: #aaaaaa;"><em>(Cliquez)</em></span></a></div>';
 echo '<div id="collapse7" class="collapse" aria-labelledby="heading7" data-parent="#accordion7"><div class="card-body">';
 echo '
+Export CSV non disponible car la fonction retourne un tableau avec un comptage global et non une itération avec test sur chaque notice.<br>
+<br>
 Requête API (on additionne les valeurs des balises « count » du 1er niveau) :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*%3A*&rows=0&wt=xml&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=producedDateY_i:2017&facet.limit=10000">https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*%3A*&rows=0&wt=xml&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=producedDateY_i:2017&facet.limit=10000</a><br>
 La requête n\'est pas basée sur l\'ISSN car certaines revues du référentiel AuréHAL n\'ont pas d\'ISSN. C\'est donc le titre de la revue (journalTitle_s) qui est pris en compte.<br>
@@ -212,6 +218,8 @@ echo '<div id="collapse10" class="collapse" aria-labelledby="heading10" data-par
 echo '
 Ce chiffre n\'est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n\'est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d\'une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l\'appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs Dalloz et Lextenso qui n\'ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
 <br>
+Export CSV non disponible car la fonction retourne un tableau avec un comptage global et non une itération avec test sur chaque notice.<br>
+<br>
 Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
 <br>
 Requête API :<br>
@@ -228,6 +236,8 @@ echo '<div class="accordion d-inline" id="accordion11"><div class="card mb-0"><d
 echo '<div id="collapse11" class="collapse" aria-labelledby="heading11" data-parent="#accordion11"><div class="card-body">';
 echo '
 Ce chiffre n\'est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n\'est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d\'une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l\'appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs Dalloz et Lextenso qui n\'ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
+Export CSV non disponible car la fonction retourne un tableau avec un comptage global et non une itération avec test sur chaque notice.<br>
+<br>
 Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
 <br>
 Requête API :<br>
@@ -244,6 +254,8 @@ echo '<div class="accordion d-inline" id="accordion12"><div class="card mb-0"><d
 echo '<div id="collapse12" class="collapse" aria-labelledby="heading12" data-parent="#accordion12"><div class="card-body">';
 echo '
 Ce chiffre n\'est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n\'est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d\'une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l\'appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs Dalloz et Lextenso qui n\'ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
+Export CSV non disponible car la fonction retourne un tableau avec un comptage global et non une itération avec test sur chaque notice.<br>
+<br>
 Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
 <br>
 Requête API :<br>
@@ -367,7 +379,6 @@ echo '<div class="accordion d-inline" id="accordion21"><div class="card mb-0"><d
 echo '<div id="collapse21" class="collapse" aria-labelledby="heading21" data-parent="#accordion21"><div class="card-body">';
 echo '
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
-Liens XML/JSON : l\'export des références en csv n\'est malheureusement pas possible (même si théoriquement proposé par le CCSD).<br>
 Sont exclus des résultats les territoires français d\'outre-mer de la <a target="_blank" href="http://documentation.abes.fr/sudoc/formats/CodesPays.htm">liste ISO 3166</a> : "Martinique" MQ,"Guadeloupe" GP, etc.<br>
 <br>
 <span class="font-weight-bold">Note :</span> ces résultats sont à relativiser car beaucoup de structures étrangères non valides du référentiel AuréHAL ont un code pays = France. Par ailleurs, les co-auteurs étrangers ne sont pas systématiquement affiliés dans HAL, voire ont une affiliation erronée (attribuée automatiquement par HAL).<br>
@@ -380,7 +391,6 @@ echo '<div class="accordion d-inline" id="accordion22"><div class="card mb-0"><d
 echo '<div id="collapse22" class="collapse" aria-labelledby="heading22" data-parent="#accordion22"><div class="card-body">';
 echo '
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
-Liens XML/JSON : l\'export des références en csv n\'est malheureusement pas possible (même si théoriquement proposé par le CCSD).<br>
 Données utilisées pour le label « institution » :<br>
 structType_s = "institution", "regroupinstitution", "regrouplaboratory", "department"<br>
 Sont exclus des résultats les territoires français d\'outre-mer de la <a target="_blank" href="http://documentation.abes.fr/sudoc/formats/CodesPays.htm">liste ISO 3166</a> : "Martinique" MQ,"Guadeloupe" GP, etc.<br>
@@ -396,7 +406,6 @@ echo '<div class="accordion d-inline" id="accordion23"><div class="card mb-0"><d
 echo '<div id="collapse23" class="collapse" aria-labelledby="heading23" data-parent="#accordion23"><div class="card-body">';
 echo '
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
-Liens XML/JSON : l\'export des références en csv n\'est malheureusement pas possible (même si théoriquement proposé par le CCSD).<br>
 Sont exclus des résultats les territoires français d\'outre-mer de la <a target="_blank" href="http://documentation.abes.fr/sudoc/formats/CodesPays.htm">liste ISO 3166</a> : "Martinique" MQ,"Guadeloupe" GP, etc.<br>
 <br>
 <span class="font-weight-bold">Note :</span> ces résultats sont à relativiser car beaucoup de structures étrangères non valides du référentiel AuréHAL ont un code pays = France. Par ailleurs, les co-auteurs étrangers ne sont pas systématiquement affiliés dans HAL, voire ont une affiliation erronée (attribuée automatiquement par HAL).<br>
