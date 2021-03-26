@@ -207,6 +207,8 @@ if ($k != 0) {//Au moins 1 résultat
 			$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
 			$liens .= ' - ';
 			$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
+			$liens .= ' - ';
+			$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:['.$anneedeb.' TO '.$anneefin.']%20AND%20halId_s:'.$idhal.'&rows=10000&wt=csv">CSV</a>';
 			echo $liens;
 			echo '</td>';
 			$chaine = str_replace(';', '-', $resColl["nom"][$i]).";".$resColl["pays"][$i].";".$resColl["type"][$i].";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";
