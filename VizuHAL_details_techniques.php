@@ -151,7 +151,7 @@ Ce chiffre n\'est pas calculé à partir de la métadonnée « éditeur » (jour
 <br>
 Export CSV non disponible car la fonction retourne un tableau avec un comptage global et non une itération avec test sur chaque notice.<br>
 <br>
-Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
+Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/VizuHAL_Prefixe_DOI.php">Prefixe_DOI.php</a><br>
 <br>
 Requêtes API :<br>
 Articles 2017 (exemple pour préfixe 10.1016) : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:ART</a><br>
@@ -220,7 +220,7 @@ Ce chiffre n\'est pas calculé à partir de la métadonnée « éditeur » (jour
 <br>
 Export CSV non disponible car la fonction retourne un tableau avec un comptage global et non une itération avec test sur chaque notice.<br>
 <br>
-Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
+Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/VizuHAL_Prefixe_DOI.php">Prefixe_DOI.php</a><br>
 <br>
 Requête API :<br>
 Nombre de notices sans texte intégral :<br>
@@ -238,7 +238,7 @@ echo '
 Ce chiffre n\'est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n\'est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d\'une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l\'appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs Dalloz et Lextenso qui n\'ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
 Export CSV non disponible car la fonction retourne un tableau avec un comptage global et non une itération avec test sur chaque notice.<br>
 <br>
-Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
+Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/VizuHAL_Prefixe_DOI.php">Prefixe_DOI.php</a><br>
 <br>
 Requête API :<br>
 Nombre de notices avec texte intégral : <br>
@@ -256,7 +256,7 @@ echo '
 Ce chiffre n\'est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n\'est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d\'une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l\'appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs Dalloz et Lextenso qui n\'ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
 Export CSV non disponible car la fonction retourne un tableau avec un comptage global et non une itération avec test sur chaque notice.<br>
 <br>
-Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/Prefixe_DOI.php">Prefixe_DOI.php</a><br>
+Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/VizuHAL_Prefixe_DOI.php">Prefixe_DOI.php</a><br>
 <br>
 Requête API :<br>
 Nombre de notices avec texte intégral OU lien externe : <br>
