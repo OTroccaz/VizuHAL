@@ -225,4 +225,14 @@ function suppression($dossier, $age) {
   closedir($repertoire);
 }
 
+//Recherche par valeur dans un tableau multidimensionnel
+function searchForId($id, $array, $uid) {
+	foreach ($array as $key => $val) {
+		if ($val[$uid] === $id) {
+			return $key;
+		}
+	}
+	return null;
+}
+
 ?>

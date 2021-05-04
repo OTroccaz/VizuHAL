@@ -145,14 +145,14 @@ if ($nbTotCtb != 0) {//Au moins 1 résultat
 		}
 	}
 	
+	$arrayINS = array();
+	$urlINS = "http://api.archives-ouvertes.fr/ref/instance";
+	askCurl($urlINS, $arrayINS, $cstCA);
+	
 	for ($i=0; $i<count($ctbDep["ptl"]); $i++) {//Remplacement des SID portails par leur véritable intitulé
-		$tabPtl = explode("~", $ctbDep["ptl"][$i]);
-		for ($j=0; $j<count($tabPtl); $j++) {
-			if (array_key_exists(strval($tabPtl[$j]), $SID_i)) {
-				$ctbDep["ptl"][$i] = str_replace($tabPtl[$j], $SID_i[$tabPtl[$j]], $ctbDep["ptl"][$i]);
-			}
-		}
-		$ctbDep["ptl"][$i] = str_replace(array("~", "n°"), array("<br>", ""), $ctbDep["ptl"][$i]);
+		$sid = str_replace("n°", "", $ctbDep["ptl"][$i]);
+		$key = searchForId($sid, $arrayINS['response']['docs'], 'id');
+		$ctbDep["ptl"][$i] = $arrayINS['response']['docs'][$key]['name'];
 	}
 
 	/*
