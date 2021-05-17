@@ -65,7 +65,7 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 	<script src="./assets/js/app.min.js"></script>
 
 	<!-- third party js -->
-	<script src="./assets/js/vendor/Chart.bundle.min.js"></script>
+	<!-- <script src="./assets/js/vendor/Chart.bundle.min.js"></script> -->
 	<!-- third party js ends -->
 	<script src="./assets/js/pages/hal-ur1.chartjs.js"></script>
 	
@@ -313,7 +313,7 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
         <script src="./assets/js/app.min.js"></script>
 
         <!-- third party js -->
-        <script src="./assets/js/vendor/Chart.bundle.min.js"></script>
+        <!-- <script src="./assets/js/vendor/Chart.bundle.min.js"></script> -->
         <!-- third party js ends -->
         <script src="./assets/js/pages/hal-ur1.chartjs.js"></script>
 				
