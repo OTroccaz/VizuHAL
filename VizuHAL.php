@@ -57,7 +57,7 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 	<!-- <link href="./assets/css/app-creative-dark.min.css" rel="stylesheet" type="text/css" id="dark-style" /> -->
 	
 	<!-- third party js -->
-	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script> -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 	<!-- third party js end -->
 	
 	<!-- bundle -->
