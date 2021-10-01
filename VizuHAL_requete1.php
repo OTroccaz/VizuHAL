@@ -1,6 +1,6 @@
 <?php
 //Intitulé
-echo '<span class="btn btn-secondary mt-2"><strong>1. Portail : production scientifique par secteur et par unité</strong></span><br><br>';
+echo '<span class="btn btn-secondary mt-2"><strong>1. Portail : production scientifique par secteur ou pôle et par unité</strong></span><br><br>';
 
 //Descriptif
 echo '<div class="alert alert-secondary">Cette requête présente, pour une année donnée, le nombre de publications référencées dans le portail HAL institutionnel, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Les résultats sont déclinés par secteurs ou pôles (le cas échéant), et par unités ou structures de recherche. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
@@ -66,8 +66,8 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 				extractHAL(strtoupper($codeSI), $year, $reqt, $resHAL, $cstCA);
 				$chaine = "";
 				echo '<tr class="table-info">';
-				echo '<th scope="row"><em>Secteur '.$sectI.$cstETH;
-				$chaine .= "Secteur ".$sectI.";";
+				if ($year < 2020) {echo '<th scope="row"><em>Secteur '.$sectI.$cstETH;}else{echo '<th scope="row"><em>Pôle '.$sectI.$cstETH;}
+				if ($year < 2020) {$chaine .= "Secteur ".$sectI.";";}else{$chaine .= "Pôle ".$sectI.";";}
 				echo '<th scope="row"><em>'.$sectI.$cstETH;
 				$chaine .= $sectI.";";
 				
@@ -207,8 +207,8 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 		$chaine = "";
 		extractHAL(strtoupper($codeSF), $year, $reqt, $resHAL, $cstCA);
 		echo '<tr class="table-info">';
-		echo '<th scope="row"><em>Secteur '.$sectF.$cstETH;
-		$chaine .= "Secteur ".$sectF.";";
+		if ($year < 2020) {echo '<th scope="row"><em>Secteur '.$sectF.$cstETH;}else{echo '<th scope="row"><em>Pôle '.$sectF.$cstETH;}
+		if ($year < 2020) {$chaine .= "Secteur ".$sectF.";";}else{$chaine .= "Pôle ".$sectF.";";}
 		echo '<th scope="row"><em>'.$sectF.$cstETH;
 		$chaine .= $sectF.";";
 		

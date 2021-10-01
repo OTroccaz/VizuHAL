@@ -215,8 +215,8 @@
 																								
 																								<select class="custom-select col-sm-6" id="reqt" name="reqt" onChange="freqt();">
 																										<!--<option value="tabg"<?php echo $itab;?>>Tableau de bord général</option>-->
-																										<option value="<?php echo $cstR01;?>"<?php echo $irq1;?>>1. Portail : production scientifique par secteur et par unité</option>
-																										<option value="<?php echo $cstR24;?>"<?php echo $irq24;?>>1A. Portail : production scientifique par secteur et par unité (Articles de revue)</option>
+																										<option value="<?php echo $cstR01;?>"<?php echo $irq1;?>>1. Portail : production scientifique par secteur ou pôle et par unité</option>
+																										<option value="<?php echo $cstR24;?>"<?php echo $irq24;?>>1A. Portail : production scientifique par secteur ou pôle et par unité (Articles de revue)</option>
 																										<option value="<?php echo $cstR02;?>"<?php echo $irq2;?>>2. Portail ou collection : évolution sur une période</option>
 																										<option value="<?php echo $cstR03;?>"<?php echo $irq3;?>>3. Portail : Comparaison portails</option>
 																										<option value="<?php echo $cstR04;?>"<?php echo $irq4;?>>4. Portail : ESGBU (stocks et flux)</option>
@@ -224,8 +224,8 @@
 																										<option value="<?php echo $cstR06;?>"<?php echo $irq6;?>>6. Portail ou Collection : Nombre de publications de type communications par éditeur</option>
 																										<option value="<?php echo $cstR07;?>"<?php echo $irq7;?>>7. Portail ou Collection : Nombre de publications (articles de revue) par revue</option>
 																										<!--
-																										<option value="<?php echo $cstR08;?>"<?php echo $irq8;?>>8. Portail : Pourcentage par secteur des articles de tel éditeur</option>
-																										<option value="<?php echo $cstR09;?>"<?php echo $irq9;?>>9. Portail : Pourcentage par éditeur des articles de tel secteur</option>
+																										<option value="<?php echo $cstR08;?>"<?php echo $irq8;?>>8. Portail : Pourcentage par secteur ou pôle des articles de tel éditeur</option>
+																										<option value="<?php echo $cstR09;?>"<?php echo $irq9;?>>9. Portail : Pourcentage par éditeur ou pôle des articles de tel secteur</option>
 																										-->
 																										<option value="<?php echo $cstR10;?>"<?php echo $irq10;?>>10. Collection : Nombre d'articles sans texte intégral déposé dans HAL par éditeur</option>
 																										<option value="<?php echo $cstR11;?>"<?php echo $irq11;?>>11. Collection : Nombre d'articles avec texte intégral déposé dans HAL par éditeur</option>
