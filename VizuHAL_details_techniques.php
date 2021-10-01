@@ -7,7 +7,7 @@ echo '<div id="DTreq1" class="col-12 float-left bg-gray border border-gray-700 r
 echo '<div class="accordion d-inline" id="accordion1"><div class="card mb-0"><div class="card-header" id="heading1"><a class="custom-accordion-title d-block" data-toggle="collapse" href="#collapse1" aria-expanded="true" aria-controls="collapse1"><span class="font-weight-bold">Consultez la documentation technique&nbsp;</span><span style="color: #aaaaaa;"><em>(Cliquez)</em></span></a></div>';
 echo '<div id="collapse1" class="collapse" aria-labelledby="heading1" data-parent="#accordion1"><div class="card-body">';
 echo '
-<span class="font-weight-bold">Pour les utilisateurs hors Rennes 1</span> : pour exploiter cette requête, il faut au préalable compléter la liste des codes collections des secteurs et unités dans un tableau PortHAL-UNIV-XXXXX.php, sur le modèle du fichier PortHAL-RENNES1.php. En l\'absence de secteurs, il suffit de reporter le code collection (ex : UNIV-RENNES1) comme valeur des champs « secteurs » du tableau PHP.<br>
+<span class="font-weight-bold">Pour les utilisateurs hors Rennes 1</span> : pour exploiter cette requête, il faut au préalable compléter la liste des codes collections des secteurs ou pôles et unités dans un tableau PortHAL-UNIV-XXXXX.php, sur le modèle du fichier PortHAL-RENNES1.php. En l\'absence de secteurs ou pôles, il suffit de reporter le code collection (ex : UNIV-RENNES1) comme valeur des champs « secteurs » ou « pôles » du tableau PHP.<br>
 <br>
 # dépôts HAL-UR1 par année de publication (= colonne « <span class="font-weight-bold">Productions 2017</span> ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111</a><br>
@@ -26,7 +26,7 @@ echo '
 <br>
 <span class="font-weight-bold">Notes :</span><br>
 <ul>
-<li>Les données obtenues pour les secteurs ne sont pas la somme des données collections : certains dépôts sont en effet des co-publications et peuvent apparaître dans plusieurs collections à la fois au sein d\'un même secteur. En les additionnant, on fausserait les résultats.</li>
+<li>Les données obtenues pour les secteurs ou pôles ne sont pas la somme des données collections : certains dépôts sont en effet des co-publications et peuvent apparaître dans plusieurs collections à la fois au sein d\'un même secteur ou pôle. En les additionnant, on fausserait les résultats.</li>
 <li>Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c\'est-à-dire portant la mention d\'un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s\'écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).</li>
 <li>Dans les requêtes API portant sur le lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>), il faut exclure les liens ISTEX (uniquement accessibles aux membres ESR) : fq=-linkExtId_s:istex</li>
 </ul>
@@ -38,7 +38,7 @@ echo '<div id="DTreq24" class="col-12 float-left bg-gray border border-gray-700 
 echo '<div class="accordion d-inline" id="accordion24"><div class="card mb-0"><div class="card-header" id="heading24"><a class="custom-accordion-title d-block" data-toggle="collapse" href="#collapse24" aria-expanded="true" aria-controls="collapse24"><span class="font-weight-bold">Consultez la documentation technique&nbsp;</span><span style="color: #aaaaaa;"><em>(Cliquez)</em></span></a></div>';
 echo '<div id="collapse24" class="collapse" aria-labelledby="heading24" data-parent="#accordion24"><div class="card-body">';
 echo '
-<span class="font-weight-bold">Pour les utilisateurs hors Rennes 1</span> : pour exploiter cette requête, il faut au préalable compléter la liste des codes collections des secteurs et unités dans un tableau PortHAL-UNIV-XXXXX.php, sur le modèle du fichier PortHAL-RENNES1.php. En l\'absence de secteurs, il suffit de reporter le code collection (ex : UNIV-RENNES1) comme valeur des champs « secteurs » du tableau PHP.<br>
+<span class="font-weight-bold">Pour les utilisateurs hors Rennes 1</span> : pour exploiter cette requête, il faut au préalable compléter la liste des codes collections des secteurs ou pôles et unités dans un tableau PortHAL-UNIV-XXXXX.php, sur le modèle du fichier PortHAL-RENNES1.php. En l\'absence de secteurs ou pôles, il suffit de reporter le code collection (ex : UNIV-RENNES1) comme valeur des champs « secteurs » ou « pôles » du tableau PHP.<br>
 <br>
 # dépôts HAL-UR1 par année de publication (= colonne « <span class="font-weight-bold">Productions 2017</span> ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=docType_s:ART</a><br>
@@ -57,7 +57,7 @@ echo '
 <br>
 <span class="font-weight-bold">Notes :</span><br>
 <ul>
-<li>Les données obtenues pour les secteurs ne sont pas la somme des données collections : certains dépôts sont en effet des co-publications et peuvent apparaître dans plusieurs collections à la fois au sein d\'un même secteur. En les additionnant, on fausserait les résultats.</li>
+<li>Les données obtenues pour les secteurs ou pôles ne sont pas la somme des données collections : certains dépôts sont en effet des co-publications et peuvent apparaître dans plusieurs collections à la fois au sein d\'un même secteur ou pôle. En les additionnant, on fausserait les résultats.</li>
 <li>Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c\'est-à-dire portant la mention d\'un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s\'écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).</li>
 <li>Dans les requêtes API portant sur le lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>), il faut exclure les liens ISTEX (uniquement accessibles aux membres ESR) : fq=-linkExtId_s:istex</li>
 </ul>
@@ -69,7 +69,7 @@ echo '<div id="DTreq2" class="col-12 float-left bg-gray border border-gray-700 r
 echo '<div class="accordion d-inline" id="accordion2"><div class="card mb-0"><div class="card-header" id="heading2"><a class="custom-accordion-title d-block" data-toggle="collapse" href="#collapse2" aria-expanded="true" aria-controls="collapse2"><span class="font-weight-bold">Consultez la documentation technique&nbsp;</span><span style="color: #aaaaaa;"><em>(Cliquez)</em></span></a></div>';
 echo '<div id="collapse2" class="collapse" aria-labelledby="heading2" data-parent="#accordion2"><div class="card-body">';
 echo '
-<span class="font-weight-bold">Pour les utilisateurs hors Rennes 1</span> : pour exploiter la requête portail, il faut au préalable compléter la liste des codes collections des secteurs et unités dans un tableau PortHAL-UNIV-XXXXX.php, sur le modèle du fichier PortHAL-RENNES1.php. En l\'absence de secteurs, il suffit de reporter le code collection (ex : UNIV-RENNES1) comme valeur des champs « secteurs «  du tableau PHP.<br>
+<span class="font-weight-bold">Pour les utilisateurs hors Rennes 1</span> : pour exploiter la requête portail, il faut au préalable compléter la liste des codes collections des secteurs ou pôles et unités dans un tableau PortHAL-UNIV-XXXXX.php, sur le modèle du fichier PortHAL-RENNES1.php. En l\'absence de secteurs ou pôles, il suffit de reporter le code collection (ex : UNIV-RENNES1) comme valeur des champs « secteurs » ou « pôles » du tableau PHP.<br>
 <br>
 # notices et texte intégral HAL-UR1 (toutes les années de publication) :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*:*&wt=xml&rows=0&facet=true&facet.pivot=producedDateY_i,submitType_s">https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*:*&wt=xml&rows=0&facet=true&facet.pivot=producedDateY_i,submitType_s</a><br>

@@ -3,7 +3,7 @@
 echo '<span class="btn btn-secondary mt-2"><strong>1. Portail : production scientifique par secteur et par unité</strong></span><br><br>';
 
 //Descriptif
-echo '<div class="alert alert-secondary">Cette requête présente, pour une année donnée, le nombre de publications référencées dans le portail HAL institutionnel, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Les résultats sont déclinés par secteurs (le cas échéant), et par unités ou structures de recherche. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
+echo '<div class="alert alert-secondary">Cette requête présente, pour une année donnée, le nombre de publications référencées dans le portail HAL institutionnel, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Les résultats sont déclinés par secteurs ou pôles (le cas échéant), et par unités ou structures de recherche. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 
 //Export CSV
 $Fnm = "./csv/req1.csv";
@@ -15,7 +15,7 @@ fwrite($inF,$chaine);
 for($year = $anneedeb; $year <= $anneefin; $year++) {
 	//Export CSV
 	//Colonnes
-	$chaine = "Unité;Secteur;Productions ".$year.";;";
+	if ($year < 2020) {$chaine = "Unité;Secteur;Productions ".$year.";;";}else{$chaine = "Unité;Pôle;Productions ".$year.";;";}
 	$chaine .= "Productions ".$year." sans texte intégral déposé dans HAL;";
 	$chaine .= "Productions ".$year." avec texte intégral déposé dans HAL;";
 	$chaine .= "Productions ".$year." sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL;;";
@@ -25,11 +25,11 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 	
 	$ils = 0;
 	$chaine = "";
-	echo '<table class="table table-hover table-bordered">';
+	echo '<table id="basic-datatable" class="table table-hover table-bordered table-responsive">';
 	echo '<thead class="thead-dark">';
 	echo '<tr>';
 	echo '<th scope="col">Unité</th>';
-	echo '<th scope="col">Secteur</th>';
+	if ($year < 2020) {echo '<th scope="col">Secteur</th>';}else{echo '<th scope="col">Pôle</th>';}
 	echo '<th scope="col">Productions '.$year.'</th>';
 	echo '<th scope="col"></th>';
 	echo '<th scope="col">Productions '.$year.' sans texte intégral déposé dans HAL</th>';

@@ -1,6 +1,6 @@
 <?php
 //Intitulé
-echo '<span class="btn btn-secondary mt-2"><strong>8. Portail : Pourcentage par secteur des articles de tel éditeur</strong></span><br><br>';
+echo '<span class="btn btn-secondary mt-2"><strong>8. Portail : Pourcentage par secteur ou pôle des articles de tel éditeur</strong></span><br><br>';
 
 //Descriptif
 echo '<div class="alert alert-secondary">Requête masquée : abandon car on dépasse les limites d’exécution du script.</div><br>';

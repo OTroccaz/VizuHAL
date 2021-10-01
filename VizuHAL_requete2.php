@@ -3,7 +3,7 @@
 echo '<span class="btn btn-secondary mt-2"><strong>2. Portail ou collection : évolution sur une période</strong></span><br><br>';
 
 //Descriptif
-echo '<div class="alert alert-secondary">Cette requête présente, sur une période donnée, le nombre de publications référencées dans le portail HAL institutionnel (secteurs disciplinaires, le cas échéant) ou une collection, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Pour le portail, les résultats sont déclinés par secteurs (le cas échéant). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
+echo '<div class="alert alert-secondary">Cette requête présente, sur une période donnée, le nombre de publications référencées dans le portail HAL institutionnel (secteurs ou pôles disciplinaires, le cas échéant) ou une collection, avec ou sans texte intégral, avec ou sans lien vers un PDF librement disponible hors de HAL (via <a target="_blank" href="https://unpaywall.org/">Unpaywall</a>). Pour le portail, les résultats sont déclinés par secteurs (le cas échéant). <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
 
 //Export CSV
 $Fnm = "./csv/req2.csv";

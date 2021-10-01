@@ -160,7 +160,7 @@
 
 																										$dossier = opendir('./');
 																										while (false !== ($fichier = readdir($dossier))) {
-																											if($fichier != '.' && $fichier != '..' && strpos($fichier, 'VizuHAL_PortHAL') !== false) {
+																											if($fichier != '.' && $fichier != '..' && strpos($fichier, 'VizuHAL_PortHAL') !== false && $fichier != 'VizuHAL_PortHAL-RENNES1_av2020.php') {
 																												$qui = str_replace(array('VizuHAL_Port', '.php'), '', $fichier);
 																												if(isset($sel[$qui])) {
 																													echo '<option value='.$qui.' '.$sel[$qui].'>'.$qui.'</option>';
