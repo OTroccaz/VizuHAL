@@ -221,10 +221,14 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 																					$LAB_SECT = array();
 																					
 																					if (isset($port) && $port != "choix") {
-																						if (($reqt == $cstR01 || $reqt == "req24") && $annee1 < 2020) {
+																						if ($reqt == $cstR01 && $annee1 < 2020) {
 																							include('./VizuHAL_Port'.$port.'_av2020.php');
 																						}else{
-																							include('./VizuHAL_Port'.$port.'.php');
+																							if ($reqt == "req24" && $annee24 < 2020) {
+																								include('./VizuHAL_Port'.$port.'_av2020.php');
+																							}else{
+																								include('./VizuHAL_Port'.$port.'.php');
+																							}
 																						}
 																					}else{
 																						$LAB_SECT[0]["code_collection"] = $team;
