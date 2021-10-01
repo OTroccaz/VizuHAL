@@ -25,7 +25,7 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 	
 	$ils = 0;
 	$chaine = "";
-	echo '<table class="table table-hover table-bordered">';
+	echo '<table id="basic-datatable" class="table table-hover table-bordered table-responsive">';
 	echo '<thead class="thead-dark">';
 	echo '<tr>';
 	echo '<th scope="col">Unité</th>';
