@@ -74,7 +74,10 @@
 																																												if ($reqt == $cstR16) {
 																																													$anneedeb = htmlspecialchars($_POST["anneedeb16"]);
 																																													$anneefin = htmlspecialchars($_POST["anneefin16"]);
+																																													$asubmdeb = htmlspecialchars($_POST["asubmdeb16"]);
+																																													$asubmfin = htmlspecialchars($_POST["asubmfin16"]);
 																																													if ($anneefin < $anneedeb) {$anneetemp = $anneedeb; $anneedeb = $anneefin; $anneefin = $anneetemp;}
+																																													if ($asubmfin < $asubmdeb) {$asubmtemp = $asubmdeb; $asubmdeb = $asubmfin; $asubmfin = $asubmtemp;}
 																																												}else{
 																																													if ($reqt == $cstR17) {
 																																														$annee17 = htmlspecialchars($_POST[$cstA17]);
@@ -620,7 +623,7 @@
 																						<div class="form-group" id="<?php echo $cstR16;?>">
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
-																								<label for="anneedeb16" class="col-12 col-md-3 col-form-label font-weight-bold">Période</label>
+																								<label for="anneedeb16" class="col-12 col-md-3 col-form-label font-weight-bold">Période de dépôt</label>
 																								<span class="mt-1">Depuis&nbsp;</span>
 																								<select id="anneedeb16" class="custom-select col-sm-1" name="anneedeb16">
 																								<?php
@@ -642,6 +645,37 @@
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
 																								while ($i >= date('Y', time()) - 30) {
 																									if(isset($anneefin) && $anneefin == $i) {$txt = "selected";}else{$txt = "";}
+																									echo '<option value='.$i.' '.$txt.'>'.$i.'</option>' ;
+																									$i--;
+																								}
+																								?>
+																								</select>
+																							</div>
+																								
+																							<div class="form-group row mb-1">
+																								<!--Paramètres :-->
+																								<label for="asubmdeb16" class="col-12 col-md-3 col-form-label font-weight-bold">Période de publication</label>
+																								<span class="mt-1">Depuis&nbsp;</span>
+																								<select id="asubmdeb16" class="custom-select col-sm-1" name="asubmdeb16">
+																								<?php
+																								$moisactuel = date('n', time());
+																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
+																								while ($i >= date('Y', time()) - 30) {
+																									if(isset($asubmdeb) && $asubmdeb == $i) {$txt = "selected";}else{$txt = "";}
+																									echo '<option value='.$i.' '.$txt.'>'.$i.'</option>' ;
+																									$i--;
+																								}
+																								?>
+																								</select>
+																								
+																								<label for="asubmfin16" class="col-12 col-md-1 col-form-label font-weight-bold"></label>
+																								<span class="mt-1">Jusqu'à&nbsp;</span>
+																								<select id="asubmfin16" class="custom-select col-sm-1" name="asubmfin16">
+																								<?php
+																								$moisactuel = date('n', time());
+																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
+																								while ($i >= date('Y', time()) - 30) {
+																									if(isset($asubmfin) && $asubmfin == $i) {$txt = "selected";}else{$txt = "";}
 																									echo '<option value='.$i.' '.$txt.'>'.$i.'</option>' ;
 																									$i--;
 																								}

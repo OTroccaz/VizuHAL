@@ -64,7 +64,7 @@ $col = 0;
 
 while (isset($LAB_SECT[$col]["code_collection"])) {
 	for ($year = $anneedeb; $year <= $anneefin; $year++) {
-		$urlHAL = $cstAPI.$LAB_SECT[$col]["code_collection"]."/?fq=submittedDateY_i:".$year."&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s,sid_i&rows=10000&sort=contributorFullName_s%20desc";
+		$urlHAL = $cstAPI.$LAB_SECT[$col]["code_collection"]."/?fq=submittedDateY_i:".$year."&fq=producedDateY_i:[".$asubmdeb."%20TO%20".$asubmfin."]&fl=contributorFullName_s,submittedDate_s,submitType_s,halId_s,sid_i&rows=10000&sort=contributorFullName_s%20desc";
 		askCurl($urlHAL, $arrayCtb, $cstCA);
 		$nbTotCtb += $arrayCtb["response"][$cstNuF];
 		for ($i=0; $i<$arrayCtb["response"][$cstNuF]; $i++) {
@@ -152,7 +152,7 @@ if ($nbTotCtb != 0) {//Au moins 1 résultat
 	for ($i=0; $i<count($ctbDep["ptl"]); $i++) {//Remplacement des SID portails par leur véritable intitulé
 		$sid = str_replace("n°", "", $ctbDep["ptl"][$i]);
 		$key = searchForId($sid, $arrayINS['response']['docs'], 'id');
-		$ctbDep["ptl"][$i] = $arrayINS['response']['docs'][$key]['name'];
+		if (!empty($key)) {$ctbDep["ptl"][$i] = $arrayINS['response']['docs'][$key]['name'];}
 	}
 
 	/*
