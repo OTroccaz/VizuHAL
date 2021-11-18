@@ -77,8 +77,8 @@ for($ils=0; $ils<$is; $ils++) {
 	$chaine .= "Productions sans texte intégral déposé dans HAL;";
 	echo '<th scope="col" style="text-align:center">Productions<br>sans texte<br>intégral<br>déposé<br>dans HAL<br>mais avec<br>texte<br>intégral<br>librement<br>accessible<br>hors HAL</th>';
 	$chaine .= "Productions sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL;";
-	echo '<th scope="col" style="text-align:center">Taux de<br>productions<br>sans texte<br>intégral<br>déposé<br>dans HAL<br>mais avec<br>texte<br>intégral<br>déposé<br>dans HAL<br>librement<br>accessible<br>hors HAL</th>';
-	$chaine .= "Taux de productions sans texte intégral déposé dans HAL mais avec texte intégral déposé dans HAL librement accessible hors HAL;";
+	echo '<th scope="col" style="text-align:center">Taux de<br>texte<br>intégral<br>librement<br>accessible<br>hors HAL</th>';
+	$chaine .= "Taux de texte intégral librement accessible hors HAL;";
 }   
 echo '</tr>';
 echo '</thead>';
@@ -113,7 +113,7 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 			$tabPro[$year][$sect[$is]][$cstNoTIAvOA] = intval($resHAL[$year][$team][$cstNoTIAvOA]);
 			$tabPro[$year][$sect[$is]]["tauxnoTIavOA"] = 0;
 			if ($resHAL[$year][$team][$cstNoTI] != 0) {
-				$tabPro[$year][$sect[$is]]["tauxnoTIavOA"] = round($resHAL[$year][$team][$cstNoTIAvOA]*100/$resHAL[$year][$team][$cstNoTI]);
+				$tabPro[$year][$sect[$is]]["tauxnoTIavOA"] = round($resHAL[$year][$team][$cstNoTIAvOA]*100/$resHAL[$year][$team][$cstNfD]);
 			}
 			$is++;
 		}else{
@@ -131,7 +131,7 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 				$tabPro[$year][$sect[$is]][$cstNoTIAvOA] = intval($resHAL[$year][$team][$cstNoTIAvOA]);
 				$tabPro[$year][$sect[$is]]["tauxnoTIavOA"] = 0;
 				if ($resHAL[$year][$team][$cstNoTI] != 0) {
-					$tabPro[$year][$sect[$is]]["tauxnoTIavOA"] = round($resHAL[$year][$team][$cstNoTIAvOA]*100/$resHAL[$year][$team][$cstNoTI]);
+					$tabPro[$year][$sect[$is]]["tauxnoTIavOA"] = round($resHAL[$year][$team][$cstNoTIAvOA]*100/$resHAL[$year][$team][$cstNfD]);
 				}
 				$sectI = $sectF;
 				$codeSI = $codeSF;
