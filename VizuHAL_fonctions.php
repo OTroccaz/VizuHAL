@@ -117,7 +117,7 @@ function extractHAL($team, $year, $reqt, &$resHAL, $cstCA) {
 	$cstAvTI = "nfProavTI";
 	$cstNoTIAvOA = "nfPronoTIavOA";
 	$cstAvTIAvOA = "nfProavTIavOA";
-  if ($reqt == "req3" || $reqt == "req24") {
+  if ($reqt == "req3" || $reqt == "req24" || $reqt == "req25") {
     $dT = "&fq=docType_s:ART";
   }else{
     $dT = "";

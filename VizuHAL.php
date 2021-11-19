@@ -255,12 +255,12 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 																					  include("./VizuHAL_grf_cbert_req1.php");
 																					}
 																					
-																					if (isset($reqt) && $reqt == "req2") {
+																					if (isset($reqt) && ($reqt == $cstR02 || $reqt == $cstR25)) {
 																						include("./VizuHAL_grf_histo_req2.php");
 																						include("./VizuHAL_grf_cbert_req2.php");
 																					}
 																					
-																					if (isset($reqt) && ($reqt == $cstR01 || $reqt == "req2")) {
+																					if (isset($reqt) && ($reqt == $cstR01 || $reqt == $cstR02 || $reqt == $cstR25)) {
 																						if (isset($port) && $port != "choix") {
 																							$is = 0;
 																							while (isset($sect[$is]) && $sect[$is] != "") {
