@@ -126,7 +126,7 @@ function extractHAL($team, $year, $reqt, &$resHAL, $cstCA) {
   }
   
   //Dépôts par année de publication
-  $urlHALDep = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice OR file)".$dT."&fq=-status_i=111&rows=0";
+  $urlHALDep = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year.$dT."&facet=true&facet.pivot=producedDateY_i,submitType_s&rows=0";
   $qte = askCurlNF($urlHALDep, $cstCA);
   $resHAL[$year][strtoupper($team)][$cstNfD] = $qte;
   
