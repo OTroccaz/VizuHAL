@@ -92,8 +92,8 @@ echo '
 echo '<br></div></div></div></div></div>';
 
 //Requête 25 (>2A)
-echo '<div id="DTreq2" class="col-12 float-left bg-gray border border-gray-700 rounded mb-1">';
-echo '<div class="accordion d-inline" id="accordion2"><div class="card mb-0"><div class="card-header" id="heading2"><a class="custom-accordion-title d-block" data-toggle="collapse" href="#collapse2" aria-expanded="true" aria-controls="collapse2"><span class="font-weight-bold">Consultez la documentation technique&nbsp;</span><span style="color: #aaaaaa;"><em>(Cliquez)</em></span></a></div>';
+echo '<div id="DTreq25" class="col-12 float-left bg-gray border border-gray-700 rounded mb-1">';
+echo '<div class="accordion d-inline" id="accordion2"><div class="card mb-0"><div class="card-header" id="heading25"><a class="custom-accordion-title d-block" data-toggle="collapse" href="#collapse2" aria-expanded="true" aria-controls="collapse2"><span class="font-weight-bold">Consultez la documentation technique&nbsp;</span><span style="color: #aaaaaa;"><em>(Cliquez)</em></span></a></div>';
 echo '<div id="collapse2" class="collapse" aria-labelledby="heading2" data-parent="#accordion2"><div class="card-body">';
 echo '
 <span class="font-weight-bold">Pour les utilisateurs hors Rennes 1</span> : pour exploiter la requête portail, il faut au préalable compléter la liste des codes collections des secteurs ou pôles et unités dans un tableau PortHAL-UNIV-XXXXX.php, sur le modèle du fichier PortHAL-RENNES1.php. En l\'absence de secteurs ou pôles, il suffit de reporter le code collection (ex : UNIV-RENNES1) comme valeur des champs « secteurs » ou « pôles » du tableau PHP.<br>
@@ -446,7 +446,7 @@ if (!isset($_POST["valider"]) && !isset($_GET["reqt"])) {
 		}
 	</script>';
 }else{
-	for ($i=1; $i<=24; $i++) { 
+	for ($i=1; $i<=25; $i++) { 
 		if ($reqt == "req".$i) {
 			echo '<script>document.getElementById("DTreq'.$i.'").className = "col-12 float-left bg-gray border border-gray-700 rounded mb-1";</script>';
 		}else{
