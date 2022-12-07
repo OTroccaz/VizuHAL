@@ -121,7 +121,7 @@ if (!isset($_SESSION['datPro'])) {
 	//while ($iHAL < 30) {
 		$code = $arrayHAL["response"]["docs"][$iHAL]["code"];
 		$name = $arrayHAL["response"]["docs"][$iHAL]["name"];
-		if (strtoupper($code) != $team && stripos($name, "université") !== false && strtoupper($code) != "UDL" && strtoupper($code) != "USJ" && strtoupper($code) != "UNIV-LILLE3" && strtoupper($code) != "DESCARTES" && strtoupper($code) != "UNIV-DIDEROT") {//portail univ à intégrer + ignorer UDL, USJ, UNIV-LILLE3, DESCARTES et UNIV-DIDEROT 
+		if (strtoupper($code) != $team && stripos($name, "université") !== false && strtoupper($code) != "UDL" && strtoupper($code) != "USJ" && strtoupper($code) != "UNIV-LILLE3" && strtoupper($code) != "DESCARTES" && strtoupper($code) != "UNIV-DIDEROT" && strtoupper($code) != "UNIV-NANTES") {//portail univ à intégrer + ignorer UDL, USJ, UNIV-LILLE3, DESCARTES, UNIV-DIDEROT et UNIV-NANTES
 			$code = strtoupper($code);
 			//if (isset($LAB_SECT[$code])) {$code = $LAB_SECT[$code];}//Equivalence trouvée
 			$urlHALDep = $cstAPI.strtolower($code)."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice OR file)&fq=docType_s:ART&fq=-status_i=111&rows=0";
