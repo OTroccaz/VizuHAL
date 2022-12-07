@@ -142,12 +142,51 @@ function extractHAL($team, $year, $reqt, &$resHAL, $cstCA) {
   
   //notices avec lien open access, sans TI déposé dans HAL mais avec TI librement accessible hors HAL
   $urlHALPronoTIavOA = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=linkExtId_s:*&fq=-linkExtId_s:istex".$dT."&fq=-status_i=111&fq=-submitType_s:file&rows=0";
-  $qte = askCurlNF($urlHALPronoTIavOA, $cstCA);
+	$qte = askCurlNF($urlHALPronoTIavOA, $cstCA);
   $resHAL[$year][strtoupper($team)][$cstNoTIAvOA] = $qte;
   
   //Manuscrits et lien open access avec TI déposé dans HAL ou librement accessible hors HAL
   $urlHALProavTIavOA = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=(submitType_s:file OR linkExtId_s:*)&fq=-linkExtId_s:istex".$dT."&fq=-status_i=111&rows=0";
-  $qte = askCurlNF($urlHALProavTIavOA, $cstCA);
+	$qte = askCurlNF($urlHALProavTIavOA, $cstCA);
+  $resHAL[$year][strtoupper($team)][$cstAvTIAvOA] = $qte;
+}
+
+function extractHAL1($team, $year, $reqt, &$resHAL, $cstCA) {
+	$cstAPI = "https://api.archives-ouvertes.fr/search/";
+	$cstNfD = "nfDep";
+	$cstNoTI = "nfPronoTI";
+	$cstAvTI = "nfProavTI";
+	$cstNoTIAvOA = "nfPronoTIavOA";
+	$cstAvTIAvOA = "nfProavTIavOA";
+  if ($reqt == "req3" || $reqt == "req24" || $reqt == "req25") {
+    $dT = "&fq=docType_s:ART";
+  }else{
+    $dT = "";
+  }
+  
+  //Dépôts par année de publication
+  $urlHALDep = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:(notice OR file)".$dT."&fq=-status_i=111&rows=0";
+  $qte = askCurlNF($urlHALDep, $cstCA);
+  $resHAL[$year][strtoupper($team)][$cstNfD] = $qte;
+  
+  //notices sans TI
+  $urlHALPronoTI = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:notice".$dT."&fq=-status_i=111&rows=0";
+  $qte = askCurlNF($urlHALPronoTI, $cstCA);
+  $resHAL[$year][strtoupper($team)][$cstNoTI] = $qte;
+  
+  //Manuscrits plein texte avec TI
+  $urlHALProavTI = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=submitType_s:file".$dT."&fq=-status_i=111&rows=0";
+  $qte = askCurlNF($urlHALProavTI, $cstCA);
+  $resHAL[$year][strtoupper($team)][$cstAvTI] = $qte;
+  
+  //notices avec lien open access, sans TI déposé dans HAL mais avec TI librement accessible hors HAL
+  $urlHALPronoTIavOA = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=linkExtId_s:*&fq=-linkExtId_s:istex".$dT."&fq=-status_i=111&fq=-submitType_s:file&rows=0";
+	$qte = askCurlNF($urlHALPronoTIavOA, $cstCA);
+  $resHAL[$year][strtoupper($team)][$cstNoTIAvOA] = $qte;
+  
+  //Manuscrits et lien open access avec TI déposé dans HAL ou librement accessible hors HAL
+  $urlHALProavTIavOA = $cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fq=(submitType_s:file OR linkExtId_s:*)&fq=-linkExtId_s:istex".$dT."&fq=-status_i=111&rows=0";
+	$qte = askCurlNF($urlHALProavTIavOA, $cstCA);
   $resHAL[$year][strtoupper($team)][$cstAvTIAvOA] = $qte;
 }
 

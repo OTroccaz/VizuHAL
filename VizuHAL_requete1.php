@@ -63,7 +63,7 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 			$sectF = $LAB_SECT[$ils]["secteur"];
 			$codeSF = $LAB_SECT[$ils]["code_secteur"];
 			if ($sectI != $sectF && isset($port) && $port != "choix") {//Total secteur à inclure
-				extractHAL(strtoupper($codeSI), $year, $reqt, $resHAL, $cstCA);
+				extractHAL1(strtoupper($codeSI), $year, $reqt, $resHAL, $cstCA);
 				$chaine = "";
 				echo '<tr class="table-info">';
 				if ($year < 2020) {echo '<th scope="row"><em>Secteur '.$sectI.$cstETH;}else{echo '<th scope="row"><em>Pôle '.$sectI.$cstETH;}
@@ -122,7 +122,7 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 			}
 		}
 		$chaine = "";
-		extractHAL($team, $year, $reqt, $resHAL, $cstCA);
+		extractHAL1($team, $year, $reqt, $resHAL, $cstCA);
 		if ($ils == 0) {
 			echo '<tr class="table-warning">';
 			if (isset($port) && $port != "choix") {
@@ -168,7 +168,7 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 		if ($ils != 0) {$totPronoTI = $resHAL[$year][$team][$cstNoTI];}
 		$chaine .= $resHAL[$year][$team][$cstNoTI].";";
 		$pcent = 0;
-		if ($resHAL[$year][$team][$cstNoTI] != 0) {$pcent = round($resHAL[$year][$team][$cstNoTI]*100/$resHAL[$year][$team][$cstNfD]);}
+		if ($resHAL[$year][$team][$cstNfD] != 0) {$pcent = round($resHAL[$year][$team][$cstNoTI]*100/$resHAL[$year][$team][$cstNfD]);}
 		echo '<th scope="row" style="text-align:center">'.$pcent.'%</th>';
 		$chaine .= $pcent."%;";
 		
@@ -176,7 +176,7 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 		if ($ils != 0) {$totProavTI = $resHAL[$year][$team][$cstAvTI];}
 		$chaine .= $resHAL[$year][$team][$cstAvTI].";";
 		$pcent = 0;
-		if ($resHAL[$year][$team][$cstAvTI] != 0) {$pcent = round($resHAL[$year][$team][$cstAvTI]*100/$resHAL[$year][$team][$cstNfD]);}
+		if ($resHAL[$year][$team][$cstNfD] != 0) {$pcent = round($resHAL[$year][$team][$cstAvTI]*100/$resHAL[$year][$team][$cstNfD]);}
 		echo '<th scope="row" style="text-align:center">'.$pcent.'%</th>';
 		$chaine .= $pcent."%;";
 		
@@ -184,7 +184,7 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 		if ($ils != 0) {$totPronoTIavOA = $resHAL[$year][$team][$cstNoTIAvOA];}
 		$chaine .= $resHAL[$year][$team][$cstNoTIAvOA].";";
 		$pcent = 0;
-		if ($resHAL[$year][$team][$cstNoTIAvOA] != 0) {$pcent = round($resHAL[$year][$team][$cstNoTIAvOA]*100/$resHAL[$year][$team][$cstNfD]);}
+		if ($resHAL[$year][$team][$cstNfD] != 0) {$pcent = round($resHAL[$year][$team][$cstNoTIAvOA]*100/$resHAL[$year][$team][$cstNfD]);}
 		echo '<th scope="row" style="text-align:center">'.$pcent.'%</th>';
 		$chaine .= $pcent."%;";
 		
@@ -192,7 +192,7 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 		if ($ils != 0) {$totProavTIavOA = $resHAL[$year][$team][$cstAvTIAvOA];}
 		$chaine .= $resHAL[$year][$team][$cstAvTIAvOA].";";
 		$pcent = 0;
-		if ($resHAL[$year][$team][$cstAvTIAvOA] != 0) {$pcent = round($resHAL[$year][$team][$cstAvTIAvOA]*100/$resHAL[$year][$team][$cstNfD]);}
+		if ($resHAL[$year][$team][$cstNfD] != 0) {$pcent = round($resHAL[$year][$team][$cstAvTIAvOA]*100/$resHAL[$year][$team][$cstNfD]);}
 		echo '<th scope="row" style="text-align:center">'.$pcent.'%</th>';
 		$chaine .= $pcent."%;";
 		
@@ -205,7 +205,7 @@ for($year = $anneedeb; $year <= $anneefin; $year++) {
 	//Total dernier secteur à inclure
 	if (isset($port) && $port != "choix") {
 		$chaine = "";
-		extractHAL(strtoupper($codeSF), $year, $reqt, $resHAL, $cstCA);
+		extractHAL1(strtoupper($codeSF), $year, $reqt, $resHAL, $cstCA);
 		echo '<tr class="table-info">';
 		if ($year < 2020) {echo '<th scope="row"><em>Secteur '.$sectF.$cstETH;}else{echo '<th scope="row"><em>Pôle '.$sectF.$cstETH;}
 		if ($year < 2020) {$chaine .= "Secteur ".$sectF.";";}else{$chaine .= "Pôle ".$sectF.";";}
