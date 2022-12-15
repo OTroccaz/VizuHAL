@@ -85,6 +85,8 @@ while (isset($LAB_SECT[$ils]["code_secteur"])) {
 	if (isset ($_SERVER[$cstHTS]) && $_SERVER[$cstHTS] == "on")	{
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
 		curl_setopt($ch, CURLOPT_CAINFO, $cstCA);
+	}else{
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	}
 	$json = curl_exec($ch);
 	curl_close($ch);
