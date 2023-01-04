@@ -418,13 +418,10 @@ echo '<div class="accordion d-inline" id="accordion22"><div class="card mb-0"><d
 echo '<div id="collapse22" class="collapse" aria-labelledby="heading22" data-parent="#accordion22"><div class="card-body">';
 echo '
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
-Données utilisées pour le label « institution » :<br>
-structType_s = "institution", "regroupinstitution", "regrouplaboratory", "department"<br>
 Sont exclus des résultats les territoires français d\'outre-mer de la <a target="_blank" href="http://documentation.abes.fr/sudoc/formats/CodesPays.htm">liste ISO 3166</a> : "Martinique" MQ,"Guadeloupe" GP, etc.<br>
 <br>
 <span class="font-weight-bold">Note :</span> ces résultats sont à relativiser car beaucoup de structures étrangères non valides du référentiel AuréHAL ont un code pays = France. Par ailleurs, les co-auteurs étrangers ne sont pas systématiquement affiliés dans HAL, voire ont une affiliation erronée (attribuée automatiquement par HAL).<br>
 ';
-echo 'Vous pouvez générer différents types de cartes en exportant ces données dans l\'outil open source <a target="_blank" href="https://www.sciencespo.fr/cartographie/khartis/">Khartis</a> (voir <a target="_blank" href="https://www.sciencespo.fr/cartographie/khartis/docs/premiers-pas-avec-Khartis-(1)/">documentation</a>)';
 echo '<br></div></div></div></div></div>';
 
 //Requête 23
@@ -433,10 +430,13 @@ echo '<div class="accordion d-inline" id="accordion23"><div class="card mb-0"><d
 echo '<div id="collapse23" class="collapse" aria-labelledby="heading23" data-parent="#accordion23"><div class="card-body">';
 echo '
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2018&fl=docType_s,structName_s,structType_s,halId_s,structCountry_s&rows=10000</a><br> 
+Données utilisées pour le label « institution » :<br>
+structType_s = "institution", "regroupinstitution", "regrouplaboratory", "department"<br>
 Sont exclus des résultats les territoires français d\'outre-mer de la <a target="_blank" href="http://documentation.abes.fr/sudoc/formats/CodesPays.htm">liste ISO 3166</a> : "Martinique" MQ,"Guadeloupe" GP, etc.<br>
 <br>
 <span class="font-weight-bold">Note :</span> ces résultats sont à relativiser car beaucoup de structures étrangères non valides du référentiel AuréHAL ont un code pays = France. Par ailleurs, les co-auteurs étrangers ne sont pas systématiquement affiliés dans HAL, voire ont une affiliation erronée (attribuée automatiquement par HAL).<br>
 ';
+echo 'Vous pouvez générer différents types de cartes en exportant ces données dans l\'outil open source <a target="_blank" href="https://www.sciencespo.fr/cartographie/khartis/">Khartis</a> (voir <a target="_blank" href="https://www.sciencespo.fr/cartographie/khartis/docs/premiers-pas-avec-Khartis-(1)/">documentation</a>)';
 echo '<br></div></div></div></div></div>';
 
 if (!isset($_POST["valider"]) && !isset($_GET["reqt"])) {
