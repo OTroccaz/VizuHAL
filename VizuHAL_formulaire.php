@@ -251,7 +251,7 @@
 																										<option value="<?php echo $cstR20;?>"<?php echo $irq20;?>>20. Collection : Collaborations nationales (autres)</option>
 																										<option value="<?php echo $cstR21;?>"<?php echo $irq21;?>>21. Collection : Collaborations internationales (toutes structures)</option>
 																										<option value="<?php echo $cstR22;?>"<?php echo $irq22;?>>22. Collection : Collaborations internationales (pays)</option>
-																										<option value="<?php echo $cstR23;?>"<?php echo $irq23;?>>23. Collection : Collaborations internationales (structures)</option>
+																										<option value="<?php echo $cstR23;?>"<?php echo $irq23;?>>23. Collection : Collaborations internationales (institutions)</option>
 																								</select>
 																						</div>
 																						

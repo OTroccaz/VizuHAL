@@ -1,6 +1,6 @@
 <?php
 //Intitulé
-echo '<span class="btn btn-secondary mt-2"><strong>23. Collection : Collaborations internationales (structures)</strong></span><br><br>';
+echo '<span class="btn btn-secondary mt-2"><strong>23. Collection : Collaborations internationales (institutions)</strong></span><br><br>';
 
 //Descriptif
 echo '<div class="alert alert-secondary">Cette requête affiche, pour une collection, la liste des institutions étrangères auxquelles sont affiliés des co-auteurs. La requête est basée sur le pays de l’affiliation (structCountry_s). Cliquez sur le lien XML / JSON pour afficher les références concernées. Les institutions dont le pays n’est pas renseigné dans le <a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/index">référentiel AuréHAL</a> (<a target="_blank" href="https://aurehal.archives-ouvertes.fr/structure/browse?critere=-country_s%3A%5B%22%22+TO+*%5D&category=*">elles sont nombreuses</a>) sont classés sous la rubriques « Structure(s) sans pays défini(s) dans HAL » en fin de tableau. <a href="#DT">Voir détails techniques en bas de page</a>.</div><br>';
