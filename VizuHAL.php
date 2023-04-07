@@ -135,7 +135,7 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 																				<p class="font-italic">Photo : Anders Ipsen on Unsplash (détail)</p>
 
                                         <p class=" mb-2 text-justify">
-                                           VizuHAL permet de générer des tableaux et graphes statistiques à partir de HAL (collection ou portail). Il a été créé par Olivier Troccaz (conception-développement), Laurent Jonchère (conception) et Thierry Fournier (conception).
+                                           VizuHAL permet de générer des tableaux et graphes statistiques à partir de HAL (collection ou portail). Il a été créé par Olivier Troccaz (conception-développement), Laurent Jonchère (conception) et Thierry Fournier (conception). Son code est disponible <a target='_blank' rel='noopener noreferrer' href="https://github.com/OTroccaz/VizuHAL">sur GitHub</a> sous licence <a target='_blank' rel='noopener noreferrer' href="https://www.gnu.org/licenses/gpl-3.0.fr.html">GPLv3</a>.
                                        </p>
 																			 
 																			 <p class="mb-4">
