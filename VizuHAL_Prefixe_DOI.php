@@ -1,4 +1,13 @@
 <?php
+/*
+ * VizuHAL - Générez des stats HAL - Generate HAL stats
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Préfixe DOI d'éditeurs - Publisher DOI prefix
+ */
+ 
 $Prefixe_DOI = array(
 0 => array("editeur_ng"=>"ACM", "editeur"=>"Association for Computing Machinery", "prefixe"=>"10.1145"),
 1 => array("editeur_ng"=>"ACS", "editeur"=>"American Chemical Society", "prefixe"=>"10.1021"),

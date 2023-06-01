@@ -1,9 +1,19 @@
+									<?php
+									/*
+									 * VizuHAL - Générez des stats HAL - Generate HAL stats
+									 *
+									 * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+									 * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+									 *
+									 * Entête - Header
+									 */
+									?>
 									<!-- Header Start -->
 									<div class="topnav shadow-sm">
                         <div class="container-fluid d-flex justify-content-between  ">
                             <nav class="navbar navbar-light navbar-expand-lg topnav-menu">
                                 <div class="brand-name mr-4">
-                                    <h1 class="h2"><a href="https://halur1.univ-rennes1.fr/" class=" text-gray-700"><span class="text-primary">HAL</span><span class="font-weight-light">UR1</span></a></h1>
+                                    <h1 class="h2"><a href="https://halur1.univ-rennes1.fr/" class=" text-gray-700"><span class="text-primary">HAL</span><span class="font-weight-light">UR</span></a></h1>
                                 </div>
                                 <a class="navbar-toggle"  data-toggle="collapse" data-target="#topnav-menu-content">
                                     <div class="lines">
@@ -61,7 +71,7 @@
                             </nav>
 
                             <div class="brand-logo mt-2 ml-4">
-                                    <img src="./assets/images/logo_UR1_gris_petit.jpg" alt="" height="32">
+                                    <img src="./assets/images/logo_UR_gris_petit.png" alt="" height="32">
 
                             </div>
                         </div>

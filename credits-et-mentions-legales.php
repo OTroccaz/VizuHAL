@@ -1,9 +1,19 @@
+<?php
+/*
+ * VizuHAL - Générez des stats HAL - Generate HAL stats
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Crédits et mentions légales - Credits and legal information
+ */
+ ?>
 <!DOCTYPE html>
     <html lang="en">
 
     <head>
         <meta charset="utf-8" />
-        <title>HAL - UR1</title>
+        <title>HAL - UR</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="" name="description" />
         <meta content="Coderthemes + Lizuka" name="author" />

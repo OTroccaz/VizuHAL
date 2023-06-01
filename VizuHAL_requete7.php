@@ -1,4 +1,13 @@
 <?php
+/*
+ * VizuHAL - Générez des stats HAL - Generate HAL stats
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Requête 7 - Request 7
+ */
+ 
 //Intitulé
 echo '<span class="btn btn-secondary mt-2"><strong>7. Portail ou Collection : Nombre de publications (articles de revue) par revue</strong></span><br><br>';
 
@@ -22,6 +31,7 @@ $urlHAL = $cstAPI.$team."/?q=*%3A*&rows=0&indent=true&facet=true&facet.pivot=jou
 askCurl($urlHAL, $arrayCurl, $cstCA);
 $nbTotArt = $arrayCurl["response"][$cstNuF];
 $pivot = "journalTitle_s,journalPublisher_s,journalValid_s";
+//echo $urlHAL;
 
 //Affichage
 echo '<div id="cpt"></div>';

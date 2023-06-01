@@ -1,4 +1,13 @@
 <?php
+/*
+ * VizuHAL - Générez des stats HAL - Generate HAL stats
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Requête 21 - Request 21
+ */
+ 
 //Intitulé
 echo '<span class="btn btn-secondary mt-2"><strong>21. Collection : Collaborations internationales (toutes structures)</strong></span><br><br>';
 

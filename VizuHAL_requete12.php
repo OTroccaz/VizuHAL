@@ -1,4 +1,13 @@
 <?php
+/*
+ * VizuHAL - Générez des stats HAL - Generate HAL stats
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Requête 12 - Request 12
+ */
+ 
 //Intitulé
 echo '<span class="btn btn-secondary mt-2"><strong>12. Collection : Nombre d\'articles avec texte intégral déposé dans HAL OU lien externe vers PDF en open access par éditeur</strong></span><br><br>';
 

@@ -1,5 +1,14 @@
 <!DOCTYPE html>
 <?php
+/*
+ * VizuHAL - Générez des stats HAL - Generate HAL stats
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Page d'acueil - Home page
+ */
+ 
 session_start();
 include "./VizuHAL_constantes.php";
 include "./VizuHAL_fonctions.php";
@@ -40,7 +49,7 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 <html lang="fr">
 <head>
 	<meta charset="utf-8" />
-	<title>VizuHAL - HAL - UR1</title>
+	<title>VizuHAL - HAL - UR</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta content="VizuHAL permet de générer des tableaux et graphes statistiques à partir de HAL (collection ou portail)" name="description" />
 	<meta content="Coderthemes + Lizuka + OTroccaz + LJonchere + TFournier" name="author" />

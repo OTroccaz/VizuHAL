@@ -1,4 +1,13 @@
 <?php
+/*
+ * VizuHAL - Générez des stats HAL - Generate HAL stats
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Requête 1A - Request 1A
+ */
+ 
 //Intitulé
 echo '<span class="btn btn-secondary mt-2"><strong>1A. Portail : production scientifique par secteur ou pôle et par unité (Articles de revue)</strong></span><br><br>';
 

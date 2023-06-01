@@ -1,3 +1,13 @@
+																				<?php
+																				/*
+																				 * VizuHAL - Générez des stats HAL - Generate HAL stats
+																				 *
+																				 * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+																				 * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+																				 *
+																				 * Formulaire de la page d'accueil - Home page form
+																				 */
+																				?>
 																				<form method="POST" accept-charset="utf-8" name="troli" action="VizuHAL.php" class="form-horizontal" onsubmit="freqt();">
 																						<div class="form-group row mb-1">
                                                 <label for="team" class="col-12 col-md-3 col-form-label font-weight-bold">

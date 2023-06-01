@@ -1,4 +1,13 @@
 <?php
+/*
+ * VizuHAL - Générez des stats HAL - Generate HAL stats
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Requête 5 - Request 5
+ */
+ 
 //Intitulé
 echo '<span class="btn btn-secondary mt-2"><strong>5. Portail ou Collection : Nombre de publications de type articles par éditeur</strong></span><br><br>';
 
