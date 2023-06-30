@@ -8,7 +8,7 @@
  *
  * Page d'acueil - Home page
  */
- 
+
 session_start();
 include "./VizuHAL_constantes.php";
 include "./VizuHAL_fonctions.php";
@@ -49,7 +49,7 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 <html lang="fr">
 <head>
 	<meta charset="utf-8" />
-	<title>VizuHAL - HAL - UR</title>
+	<title>VizuHAL - HALUR</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta content="VizuHAL permet de générer des tableaux et graphes statistiques à partir de HAL (collection ou portail)" name="description" />
 	<meta content="Coderthemes + Lizuka + OTroccaz + LJonchere + TFournier" name="author" />
@@ -148,7 +148,7 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
                                        </p>
 																			 
 																			 <p class="mb-4">
-                                            Contacts : <a target='_blank' rel='noopener noreferrer' href="https://openaccess.univ-rennes1.fr/interlocuteurs/laurent-jonchere">Laurent Jonchère</a> (Université de Rennes 1) / <a target='_blank' rel='noopener noreferrer' href="https://openaccess.univ-rennes1.fr/interlocuteurs/olivier-troccaz">Olivier Troccaz</a> (CNRS CReAAH/OSUR).
+                                            Contacts : <a target='_blank' rel='noopener noreferrer' href="https://scienceouverte.univ-rennes.fr/interlocuteurs/laurent-jonchere">Laurent Jonchère</a> (Université de Rennes 1) / <a target='_blank' rel='noopener noreferrer' href="https://scienceouverte.univ-rennes.fr/interlocuteurs/olivier-troccaz">Olivier Troccaz</a> (CNRS CReAAH/OSUR).
                                         </p>
 																				
                                        <p class=" mb-2">
