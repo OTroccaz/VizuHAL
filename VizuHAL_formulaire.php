@@ -119,9 +119,15 @@
 																																																					$anneefin = htmlspecialchars($_POST["anneefin25"]);
 																																																					if ($anneefin < $anneedeb) {$anneetemp = $anneedeb; $anneedeb = $anneefin; $anneefin = $anneetemp;}
 																																																				}else{
-																																																					$anneedeb = htmlspecialchars($_POST["anneedeb23"]);
-																																																					$anneefin = htmlspecialchars($_POST["anneefin23"]);
-																																																					if ($anneefin < $anneedeb) {$anneetemp = $anneedeb; $anneedeb = $anneefin; $anneefin = $anneetemp;}
+																																																					if ($reqt == $cstR26) {
+																																																						$anneedeb = htmlspecialchars($_POST["anneedeb26"]);
+																																																						$anneefin = htmlspecialchars($_POST["anneefin26"]);
+																																																						if ($anneefin < $anneedeb) {$anneetemp = $anneedeb; $anneedeb = $anneefin; $anneefin = $anneetemp;}
+																																																					}else{
+																																																						$anneedeb = htmlspecialchars($_POST["anneedeb23"]);
+																																																						$anneefin = htmlspecialchars($_POST["anneefin23"]);
+																																																						if ($anneefin < $anneedeb) {$anneetemp = $anneedeb; $anneedeb = $anneefin; $anneefin = $anneetemp;}
+																																																					}
 																																																				}
 																																																			}
 																																																		}
@@ -225,6 +231,7 @@
 																						if (isset($reqt) && $reqt == $cstR21) {$irq21 = $cstSel;}else{$irq21 = "";}
 																						if (isset($reqt) && $reqt == $cstR22) {$irq22 = $cstSel;}else{$irq22 = "";}
 																						if (isset($reqt) && $reqt == $cstR23) {$irq23 = $cstSel;}else{$irq23 = "";}
+																						if (isset($reqt) && $reqt == $cstR26) {$irq26 = $cstSel;}else{$irq26 = "";}
 																						?>
 																						
 																						<!---Extraction-->
@@ -262,6 +269,7 @@
 																										<option value="<?php echo $cstR21;?>"<?php echo $irq21;?>>21. Collection : Collaborations internationales (toutes structures)</option>
 																										<option value="<?php echo $cstR22;?>"<?php echo $irq22;?>>22. Collection : Collaborations internationales (pays)</option>
 																										<option value="<?php echo $cstR23;?>"<?php echo $irq23;?>>23. Collection : Collaborations internationales (institutions)</option>
+																										<option value="<?php echo $cstR26;?>"<?php echo $irq26;?>>26. Croisement structures/collections</option>
 																								</select>
 																						</div>
 																						
@@ -926,6 +934,40 @@
 																							</div>
 																							<div class="form-group row mb-1 text-primary ml-1">
 																								Attention : l'extraction sur plusieurs années peut demander beaucoup de temps et il est préférable de se limiter à une période raisonnable.
+																							</div>
+																						</div>
+																						
+																						<!--Requête 26-->
+																						<div class="form-group" id="<?php echo $cstR26;?>">
+																							<div class="form-group row mb-1">
+																								<!--Paramètres :-->
+																								<label for="anneedeb26" class="col-12 col-md-3 col-form-label font-weight-bold">Période</label>
+																								<span class="mt-1">Depuis&nbsp;</span>
+																								<select id="anneedeb26" class="custom-select col-sm-1" name="anneedeb26">
+																								<?php
+																								$moisactuel = date('n', time());
+																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
+																								while ($i >= date('Y', time()) - 30) {
+																									if(isset($anneedeb) && $anneedeb == $i) {$txt = "selected";}else{$txt = "";}
+																									echo '<option value='.$i.' '.$txt.'>'.$i.'</option>' ;
+																									$i--;
+																								}
+																								?>
+																								</select>
+																								
+																								<label for="anneefin26" class="col-12 col-md-1 col-form-label font-weight-bold"></label>
+																								<span class="mt-1">Jusqu'à&nbsp;</span>
+																								<select id="anneefin26" class="custom-select col-sm-1" name="anneefin26">
+																								<?php
+																								$moisactuel = date('n', time());
+																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
+																								while ($i >= date('Y', time()) - 30) {
+																									if(isset($anneefin) && $anneefin == $i) {$txt = "selected";}else{$txt = "";}
+																									echo '<option value='.$i.' '.$txt.'>'.$i.'</option>' ;
+																									$i--;
+																								}
+																								?>
+																								</select>
 																							</div>
 																						</div>
 

@@ -9,7 +9,7 @@
  
 document.getElementById("tabg").className = "form-group d-none";
 
-var imax = 25;//Nombre total de requêtes
+var imax = 26;//Nombre total de requêtes
 
 for(let i=1; i<=imax; i++) {
 	document.getElementById("req"+i).className = "form-group d-none";

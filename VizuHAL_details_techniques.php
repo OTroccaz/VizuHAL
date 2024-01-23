@@ -448,6 +448,13 @@ Sont exclus des résultats les territoires français d\'outre-mer de la <a targe
 echo 'Vous pouvez générer différents types de cartes en exportant ces données dans l\'outil open source <a target="_blank" href="https://www.sciencespo.fr/cartographie/khartis/">Khartis</a> (voir <a target="_blank" href="https://www.sciencespo.fr/cartographie/khartis/docs/premiers-pas-avec-Khartis-(1)/">documentation</a>)';
 echo '<br></div></div></div></div></div>';
 
+//Requête 26
+echo '<div id="DTreq26" class="col-12 float-left bg-gray border border-gray-700 rounded mb-1">';
+echo '<div class="accordion d-inline" id="accordion26"><div class="card mb-0"><div class="card-header" id="heading26"><a class="custom-accordion-title d-block" data-toggle="collapse" href="#collapse26" aria-expanded="true" aria-controls="collapse26"><span class="font-weight-bold">Consultez la documentation technique&nbsp;</span><span style="color: #aaaaaa;"><em>(Cliquez)</em></span></a></div>';
+echo '<div id="collapse26" class="collapse" aria-labelledby="heading26" data-parent="#accordion26"><div class="card-body">';
+echo 'A détailer ...';
+echo '<br></div></div></div></div></div>';
+
 if (!isset($_POST["valider"]) && !isset($_GET["reqt"])) {
 	echo '<script>
 		for(let i=1; i<=imax; i++) {
@@ -455,7 +462,7 @@ if (!isset($_POST["valider"]) && !isset($_GET["reqt"])) {
 		}
 	</script>';
 }else{
-	for ($i=1; $i<=25; $i++) { 
+	for ($i=1; $i<=26; $i++) { 
 		if ($reqt == "req".$i) {
 			echo '<script>document.getElementById("DTreq'.$i.'").className = "col-12 float-left bg-gray border border-gray-700 rounded mb-1";</script>';
 		}else{

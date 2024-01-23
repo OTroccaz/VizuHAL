@@ -8,7 +8,8 @@
  *
  * Page d'acueil - Home page
  */
-
+$httphost = $_SERVER['HTTP_HOST'];
+if (strpos($httphost, 'ccsdrennesvip.ccsd.cnrs.fr') !== false) {ini_set('session.save_path', '/var/lib/php/sessions/');}
 session_start();
 include "./VizuHAL_constantes.php";
 include "./VizuHAL_fonctions.php";
@@ -24,6 +25,7 @@ if (isset($_GET["reqt"])) {
 	if ($_GET["reqt"] == $cstR21) {$reqt = $cstR21;$irq21 = $cstSel;}
 	if ($_GET["reqt"] == $cstR22) {$reqt = $cstR22;$irq22 = $cstSel;}
 	if ($_GET["reqt"] == $cstR23) {$reqt = $cstR23;$irq23 = $cstSel;}
+	if ($_GET["reqt"] == $cstR26) {$reqt = $cstR26;$irq26 = $cstSel;}
 	if (isset($_GET["team"])) {$team = $_GET["team"];}
 	if (isset($_GET["port"])) {$port = $_GET["port"];}
 	if (isset($_GET["ordr"])) {$ordr = $_GET["ordr"];}
@@ -219,8 +221,8 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 																						die;
 																					}
 																					
-																					//Bloquer interrogation portail avec requête 10, 11, 12, 14, 15, 17, 18, 19, 20 ou 21
-																					if (($reqt == $cstR10 || $reqt == $cstR11 || $reqt == $cstR12 || $reqt == $cstR14 || $reqt == $cstR15 || $reqt == $cstR17 || $reqt == $cstR18 || $reqt == $cstR19 || $reqt == $cstR20 || $reqt == $cstR21) && isset($port) && $port != "choix") {
+																					//Bloquer interrogation portail avec requête 10, 11, 12, 14, 15, 17, 18, 19, 20, 21 ou 26
+																					if (($reqt == $cstR10 || $reqt == $cstR11 || $reqt == $cstR12 || $reqt == $cstR14 || $reqt == $cstR15 || $reqt == $cstR17 || $reqt == $cstR18 || $reqt == $cstR19 || $reqt == $cstR20 || $reqt == $cstR21 || $reqt == $cstR26) && isset($port) && $port != "choix") {
 																						echo "<br><br><center><font face='Corbel'><strong>";
 																						echo "Cette requête n'est pas applicable à portail mais uniquement à un code collection.";
 																						echo "</strong></font></center>";
