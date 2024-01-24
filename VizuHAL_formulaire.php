@@ -153,13 +153,13 @@
 																														}
 																													}
 																												}
-																												if (isset($team) && $team != "") {$team1 = $team; $team2 = $team;}else{$team1 = "Entrez le code de votre collection"; $team2 = "";}
+																												if (isset($team) && $team != "") {$team1 = $team; $team2 = $team;}else{$team1 = "Entrez le code de votre collection ou de votre structure"; $team2 = "";}
 																												if (isset($port) && $port != "choix") {$team1 = "";}
 																												?>
 																												<!--Code collection HAL-->
 																												
 																												<input type="text" id="team" name="team" class="form-control" value="<?php echo $team1;?>" onclick="this.value='<?php echo $team2;?>';" onkeydown="document.getElementById('port').value = 'choix';">
-																												<a class="ml-2 small" target="_blank" rel="noopener noreferrer" href="https://univ-rennes.hal.science/page/codes-collections">Trouver le code<br>de mon équipe / labo</a>
+																												<span class="ml-2 small"><a target="_blank" rel="noopener noreferrer" href="https://univ-rennes.hal.science/page/codes-collections">Trouver le code de mon équipe / labo</a> <br>ou <a target="_blank" rel="noopener noreferrer" href="https://aurehal.archives-ouvertes.fr/structure">d'une structure</a></span>
                                                     </div>
 																										
 																								</div>

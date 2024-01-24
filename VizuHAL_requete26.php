@@ -29,8 +29,9 @@ $tabTeam = explode(';', $team);
 echo '<table id="basic-datatable" class="table table-hover table-striped table-bordered table-responsive">';
 echo '<thead class="thead-dark">';
 echo '<tr>';
+echo '<th scope="col">Secteur</th>';
 echo '<th scope="col">Unité</th>';
-$chaine .= 'Unité;';
+$chaine .= 'Secteur;Unité;';
 foreach($tabTeam as $team) {
 	echo '<th scope="col">Structure '.$team.'</th>';
 	$chaine .= 'Structure '.$team.';';
@@ -46,27 +47,27 @@ echo '<tbody>';
 
 $ils = 0;
 while (isset($LAB_SECT[$ils]["code_collection"])) {
-	if ($ils != 0) {
-		$tot = 0;
-		echo '<tr>';
-		echo '<th scope="row">'.$LAB_SECT[$ils]["code_collection"].'</th>';
-		$chaine .= $LAB_SECT[$ils]["code_collection"].';';
-		foreach($tabTeam as $team) {
-			//echo $LAB_SECT[$ils]["code_collection"].'<br>';
-			//echo 'https://api.archives-ouvertes.fr/search/univ-rennes/?fq=producedDateY_i:['.$anneedeb.'%20TO%20'.$anneefin.']&fq=collCode_s:'.$LAB_SECT[$ils]["code_collection"].'&fq=structId_i:'.$team.'&fq=-status_i=111<br>';
-			$url = 'https://api.archives-ouvertes.fr/search/univ-rennes/?wt=xml&fq=producedDateY_i:['.$anneedeb.'%20TO%20'.$anneefin.']&fq=collCode_s:'.$LAB_SECT[$ils]["code_collection"].'&fq=structId_i:'.$team.'&fq=-status_i=111<br>';
-			$qte = askCurlNF($url, $cstCA);
-			echo '<th scope="row">'.$qte.'</th>';
-			$chaine .= $qte.';';
-			$tot += $qte;
-		}
-		echo '<th scope="row">'.$tot.'</th>';
-		$chaine .= $tot.';';
-		echo '</tr>';
-		$chaine .= chr(13).chr(10);
-		fwrite($inF,$chaine);
-		$chaine = '';
+	$tot = 0;
+	echo '<tr>';
+	echo '<th scope="row">'.$LAB_SECT[$ils]["secteur"].'</th>';
+	echo '<th scope="row">'.$LAB_SECT[$ils]["code_collection"].'</th>';
+	$chaine .= $LAB_SECT[$ils]["secteur"].';';
+	$chaine .= $LAB_SECT[$ils]["code_collection"].';';
+	foreach($tabTeam as $team) {
+		//echo $LAB_SECT[$ils]["code_collection"].'<br>';
+		//echo 'https://api.archives-ouvertes.fr/search/univ-rennes/?fq=producedDateY_i:['.$anneedeb.'%20TO%20'.$anneefin.']&fq=collCode_s:'.$LAB_SECT[$ils]["code_collection"].'&fq=structId_i:'.$team.'&fq=-status_i=111<br>';
+		$url = 'https://api.archives-ouvertes.fr/search/univ-rennes/?wt=xml&fq=producedDateY_i:['.$anneedeb.'%20TO%20'.$anneefin.']&fq=collCode_s:'.$LAB_SECT[$ils]["code_collection"].'&fq=structId_i:'.$team.'&fq=-status_i=111<br>';
+		$qte = askCurlNF($url, $cstCA);
+		echo '<th scope="row">'.$qte.'</th>';
+		$chaine .= $qte.';';
+		$tot += $qte;
 	}
+	echo '<th scope="row">'.$tot.'</th>';
+	$chaine .= $tot.';';
+	echo '</tr>';
+	$chaine .= chr(13).chr(10);
+	fwrite($inF,$chaine);
+	$chaine = '';
 	$ils++;
 }
 
