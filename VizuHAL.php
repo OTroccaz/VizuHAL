@@ -87,6 +87,13 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 					
 </head>
 
+<?php
+//Stats Google
+if (strpos($_SERVER['HTTP_HOST'], '127.0.0.1') === false) {
+	include("./Glob_gstats.php");
+}
+?>
+
 <body class="loading" data-layout="topnav" onload="freqt();">
 
 <noscript>
