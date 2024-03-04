@@ -52,35 +52,37 @@ fwrite($inF,$chaine);
 
 $resColl = array();
 $resColl["code"] = array();
-$year = $annee17;
-$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
-//echo $url;
-$totColl = askCurlNF($cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
-askCurl($url, $arrayCurl, $cstCA);
-//var_dump($arrayCurl);
 
-$i = 0;
-$k = 0;
-while (isset($arrayCurl["response"]["docs"][$i]["collCode_s"])) {
-	for ($j=0; $j<count($arrayCurl["response"]["docs"][$i]["collCode_s"]); $j++) {
-		if ($arrayCurl["response"]["docs"][$i]["collCategory_s"][$j] != "AUTRE" && strpos($arrayCurl["response"]["docs"][$i]["collCode_s"][$j], "-TEST") === false && strpos($arrayCurl["response"]["docs"][$i]["collCode_s"][$j], "TEST-") === false && strpos($arrayCurl["response"]["docs"][$i]["collCode_s"][$j], "_TEST") === false && strpos($arrayCurl["response"]["docs"][$i]["collCode_s"][$j], "TEST_") === false) {
-			if (array_search($arrayCurl["response"]["docs"][$i]["collCode_s"][$j], $resColl["code"]) === false) {
-				$resColl["code"][$k] = strtoupper(trim($arrayCurl["response"]["docs"][$i]["collCode_s"][$j]));
-				$resColl["nombre"][$k] = 1;
-				$resColl["nom"][$k] = ucfirst(trim($arrayCurl["response"]["docs"][$i]["collName_s"][$j]));
-				$resColl["type"][$k] = strtoupper(trim($arrayCurl["response"]["docs"][$i]["collCategory_s"][$j]));
-				$resColl["idhal"][$k] = $arrayCurl["response"]["docs"][$i]["halId_s"];
-				$k++;
-			}else{
-				$key = array_search($arrayCurl["response"]["docs"][$i]["collCode_s"][$j], $resColl["code"]);
-				if (strpos($resColl["idhal"][$key], $arrayCurl["response"]["docs"][$i]["halId_s"]) === false) {
-					$resColl["nombre"][$key] += 1;
-					$resColl["idhal"][$key] .= "~".$arrayCurl["response"]["docs"][$i]["halId_s"];
+for ($year = $anneedeb; $year <= $anneefin; $year++) {
+	$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
+	//echo $url;
+	$totColl = askCurlNF($cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
+	askCurl($url, $arrayCurl, $cstCA);
+	//var_dump($arrayCurl);
+
+	$i = 0;
+	$k = 0;
+	while (isset($arrayCurl["response"]["docs"][$i]["collCode_s"])) {
+		for ($j=0; $j<count($arrayCurl["response"]["docs"][$i]["collCode_s"]); $j++) {
+			if ($arrayCurl["response"]["docs"][$i]["collCategory_s"][$j] != "AUTRE" && strpos($arrayCurl["response"]["docs"][$i]["collCode_s"][$j], "-TEST") === false && strpos($arrayCurl["response"]["docs"][$i]["collCode_s"][$j], "TEST-") === false && strpos($arrayCurl["response"]["docs"][$i]["collCode_s"][$j], "_TEST") === false && strpos($arrayCurl["response"]["docs"][$i]["collCode_s"][$j], "TEST_") === false) {
+				if (array_search($arrayCurl["response"]["docs"][$i]["collCode_s"][$j], $resColl["code"]) === false) {
+					$resColl["code"][$k] = strtoupper(trim($arrayCurl["response"]["docs"][$i]["collCode_s"][$j]));
+					$resColl["nombre"][$k] = 1;
+					$resColl["nom"][$k] = ucfirst(trim($arrayCurl["response"]["docs"][$i]["collName_s"][$j]));
+					$resColl["type"][$k] = strtoupper(trim($arrayCurl["response"]["docs"][$i]["collCategory_s"][$j]));
+					$resColl["idhal"][$k] = $arrayCurl["response"]["docs"][$i]["halId_s"];
+					$k++;
+				}else{
+					$key = array_search($arrayCurl["response"]["docs"][$i]["collCode_s"][$j], $resColl["code"]);
+					if (strpos($resColl["idhal"][$key], $arrayCurl["response"]["docs"][$i]["halId_s"]) === false) {
+						$resColl["nombre"][$key] += 1;
+						$resColl["idhal"][$key] .= "~".$arrayCurl["response"]["docs"][$i]["halId_s"];
+					}
 				}
 			}
 		}
+		$i++;
 	}
-	$i++;
 }
 
 if ($totColl != 0) {//Au moins 1 résultat

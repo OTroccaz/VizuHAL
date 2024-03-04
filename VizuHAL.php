@@ -32,7 +32,6 @@ if (isset($_GET["reqt"])) {
 	if (isset($_GET["anneedeb"])) {$anneedeb = $_GET["anneedeb"];}
 	if (isset($_GET["anneefin"])) {$anneefin = $_GET["anneefin"];}
 	if (isset($_GET["annee3"])) {$annee3 = $_GET["annee3"];}
-	if (isset($_GET[$cstA17])) {$annee17 = $_GET[$cstA17];}
 	if (isset($_GET[$cstA18])) {$annee18 = $_GET[$cstA18];}
 	if (isset($_GET[$cstA19])) {$annee19 = $_GET[$cstA19];}
 	if (isset($_GET[$cstA20])) {$annee20 = $_GET[$cstA20];}

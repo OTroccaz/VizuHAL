@@ -90,7 +90,8 @@
 																																													if ($asubmfin < $asubmdeb) {$asubmtemp = $asubmdeb; $asubmdeb = $asubmfin; $asubmfin = $asubmtemp;}
 																																												}else{
 																																													if ($reqt == $cstR17) {
-																																														$annee17 = htmlspecialchars($_POST[$cstA17]);
+																																														$anneedeb = htmlspecialchars($_POST["anneedeb17"]);
+																																														$anneefin = htmlspecialchars($_POST["anneefin17"]);
 																																													}else{
 																																														if ($reqt == $cstR18) {
 																																															$annee18 = htmlspecialchars($_POST[$cstA18]);
@@ -754,18 +755,36 @@
 																						<div class="form-group" id="<?php echo $cstR17;?>">
 																							<div class="form-group row mb-1">
 																								<!--Paramètres :-->
-																								<label for="annee17" class="col-12 col-md-3 col-form-label font-weight-bold">Année</label>
-																								<select id="annee17" class="custom-select col-sm-1" name="annee17">
+																								<label for="anneedeb17" class="col-12 col-md-3 col-form-label font-weight-bold">Période</label>
+																								<span class="mt-1">Depuis&nbsp;</span>
+																								<select id="anneedeb17" class="custom-select col-sm-1" name="anneedeb17">
 																								<?php
 																								$moisactuel = date('n', time());
 																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
 																								while ($i >= date('Y', time()) - 30) {
-																									if(isset($annee17) && $annee17 == $i) {$txt = "selected";}else{$txt = "";}
+																									if(isset($anneedeb) && $anneedeb == $i) {$txt = "selected";}else{$txt = "";}
 																									echo '<option value='.$i.' '.$txt.'>'.$i.'</option>' ;
 																									$i--;
 																								}
 																								?>
 																								</select>
+																								
+																								<label for="anneefin17" class="col-12 col-md-1 col-form-label font-weight-bold"></label>
+																								<span class="mt-1">Jusqu'à&nbsp;</span>
+																								<select id="anneefin17" class="custom-select col-sm-1" name="anneefin17">
+																								<?php
+																								$moisactuel = date('n', time());
+																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
+																								while ($i >= date('Y', time()) - 30) {
+																									if(isset($anneefin) && $anneefin == $i) {$txt = "selected";}else{$txt = "";}
+																									echo '<option value='.$i.' '.$txt.'>'.$i.'</option>' ;
+																									$i--;
+																								}
+																								?>
+																								</select>
+																							</div>
+																							<div class="form-group row mb-1 text-primary ml-1">
+																								Attention : l'extraction sur plusieurs années peut demander beaucoup de temps et il est préférable de se limiter à une période raisonnable.
 																							</div>
 																						</div>
 																						
