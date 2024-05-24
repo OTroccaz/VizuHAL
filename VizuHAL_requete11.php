@@ -23,8 +23,8 @@ fwrite($inF,$chaine);
 
 $year = $annee11;
 
-$spefq = "&fq=submitType_s:file";
-extractHALnbPubEd($team, $year, "ART", $spefq, $nbTotArt, $nbPubEdRE, $cstCA);
+$spefq = "&fq=submitType_s:file&fq=-submitType_s:annex";
+extractHALnbPubEd_nv($team, $year, "ART", $spefq, $nbTotArt, $nbPubEdRE, $cstCA);
 //var_dump($nbPubEdRE);
 //Affichage
 echo '<br>';

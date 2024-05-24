@@ -203,6 +203,52 @@ function extractHAL1($team, $year, $reqt, &$resHAL, $cstCA) {
   $resHAL[$year][strtoupper($team)][$cstAvTIAvOA] = $qte;
 }
 
+function var_dump_pre($mixed = null) {
+  echo '<pre>';
+  var_dump($mixed);
+  echo '</pre>';
+  return null;
+}
+
+function extractHALnbPubEd_nv($team, $year, $type, $spefq, &$nbTotArt, &$nbPubEdRE, $cstCA) {
+	$nbPubEdRE = array();//Regroupement éditorial
+	$cstAPI = "https://api.archives-ouvertes.fr/search/";
+	
+	$urlHAL = $cstAPI.$team."/?fq=producedDateY_i:".$year.$spefq."&fq=-status_i=111&fq=docType_s:".$type."&fl=label_s,doiId_s,journalPublisher_s&rows=100000";
+	askCurl($urlHAL, $arrayCurl, $cstCA);
+	
+	$nbTotArt = $arrayCurl["response"]["numFound"];
+	$i = 0;
+	$j = 0;
+	while (isset($arrayCurl["response"]["docs"][$i])) {
+		if (isset($arrayCurl["response"]["docs"][$i]["journalPublisher_s"])) {
+			$eds = array_column($nbPubEdRE, "editeur_ng");
+			$found_key = array_search($arrayCurl["response"]["docs"][$i]["journalPublisher_s"], $eds);
+			//L'éditeur est-il déjà présent dans le tableau ?
+			if ($found_key != '') {
+				$nbPubEdRE[$found_key]["nbArt"] += 1;
+			}else{
+				$nbPubEdRE[$j]["editeur_ng"] = $arrayCurl["response"]["docs"][$i]["journalPublisher_s"];
+				$nbPubEdRE[$j]["nbArt"] = 1;
+				$j++;
+			}
+		}else{
+			$eds = array_column($nbPubEdRE, "editeur_ng");
+			$found_key = array_search("Publications sans indication d'éditeur", $eds);
+			if ($found_key != '') {
+				$nbPubEdRE[$found_key]["nbArt"] += 1;
+			}else{
+				$nbPubEdRE[$j]["editeur_ng"] = "Publications sans indication d'éditeur";
+				$nbPubEdRE[$j]["nbArt"] = 1;
+				$j++;
+			}
+		}
+		$i++;
+	}
+	//var_dump_pre($nbPubEdRE);
+	$nbPubEdRE = array_orderby($nbPubEdRE, 'nbArt', SORT_DESC);
+}
+	
 function extractHALnbPubEd($team, $year, $type, $spefq, &$nbTotArt, &$nbPubEdRE, $cstCA) {
 	$nbPubEd = array();
 	$nbPubEdRE = array();//Regroupement éditorial

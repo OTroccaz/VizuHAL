@@ -24,7 +24,7 @@ fwrite($inF,$chaine);
 $year = $annee12;
 
 $spefq = "&fq=(submitType_s:file%20OR%20linkExtId_s:*)";
-extractHALnbPubEd($team, $year, "ART", $spefq, $nbTotArt, $nbPubEdRE, $cstCA);
+extractHALnbPubEd_nv($team, $year, "ART", $spefq, $nbTotArt, $nbPubEdRE, $cstCA);
 //var_dump($nbPubEdRE);
 //Affichage
 echo '<br>';

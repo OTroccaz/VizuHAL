@@ -26,7 +26,7 @@ if (isset($port) && $port != "choix") {
 	$team = strtolower($LAB_SECT[0]["secteur"]);
 }
 $spefq = "&fq=-submitType_s:annex";
-extractHALnbPubEd($team, $year, "ART", $spefq, $nbTotArt, $nbPubEdRE, $cstCA);
+extractHALnbPubEd_nv($team, $year, "ART", $spefq, $nbTotArt, $nbPubEdRE, $cstCA);
 //var_dump($nbPubEdRE);
 //Affichage
 echo '<br>';
@@ -44,7 +44,7 @@ echo '</thead>';
 echo '<tbody>';
 for ($i=0; $i<count($nbPubEdRE); $i++) {
 	echo '<tr>';
-	if ($nbPubEdRE[$i]["editeur_ng"] == "Hors regroupement éditorial") {
+	if ($nbPubEdRE[$i]["editeur_ng"] == "Publications sans indication d'éditeur") {
 		$deb = "<em>";
 		$fin = "</em>";
 	}else{

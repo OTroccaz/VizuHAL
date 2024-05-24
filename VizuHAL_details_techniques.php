@@ -132,7 +132,7 @@ echo '<div id="DTreq3" class="col-12 float-left bg-gray border border-gray-700 r
 echo '<div class="accordion d-inline" id="accordion3"><div class="card mb-0"><div class="card-header" id="heading3"><a class="custom-accordion-title d-block" data-toggle="collapse" href="#collapse3" aria-expanded="true" aria-controls="collapse3"><span class="font-weight-bold">Consultez la documentation technique&nbsp;</span><span style="color: #aaaaaa;"><em>(Cliquez)</em></span></a></div>';
 echo '<div id="collapse3" class="collapse" aria-labelledby="heading3" data-parent="#accordion3"><div class="card-body">';
 echo '
-Liste des portails : <a target="_blank" href="https://api.archives-ouvertes.fr/ref/instance/?wt=xml">https://api.archives-ouvertes.fr/ref/instance/?wt=xml</a><br> (un filtre interne au programme est appliqué pour n\'extraire que les portails université : « université » doit figurer dans le champ « name »).<br>
+Liste des portails : <a target="_blank" href="https://api.archives-ouvertes.fr/ref/instance/">https://api.archives-ouvertes.fr/ref/instance/</a><br> (un filtre interne au programme est appliqué pour n\'extraire que les portails université : « université » doit figurer dans le champ « name »).<br>
 <br>
 # articles HAL-UR1 par année de publication (= colonne « <span class="font-weight-bold">Articles</span> ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:ART&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:ART&fq=-status_i=111</a><br>
@@ -162,6 +162,8 @@ echo '<div id="DTreq4" class="col-12 float-left bg-gray border border-gray-700 r
 echo '<div class="accordion d-inline" id="accordion4"><div class="card mb-0"><div class="card-header" id="heading4"><a class="custom-accordion-title d-block" data-toggle="collapse" href="#collapse4" aria-expanded="true" aria-controls="collapse4"><span class="font-weight-bold">Consultez la documentation technique&nbsp;</span><span style="color: #aaaaaa;"><em>(Cliquez)</em></span></a></div>';
 echo '<div id="collapse4" class="collapse" aria-labelledby="heading4" data-parent="#accordion4"><div class="card-body">';
 echo '
+Il est désormais recommandé d\'utiliser les dashboards <a target="_blank" href="https://halstats.archives-ouvertes.fr/app/kibana#/home">Kibana</a> pour ce type de requête ESGBU.<br>
+<br>
 <span class="font-weight-bold">Stocks :</span><br>
 AO1 = nombre de notices au 31/12/XXXX (remplacer par année renseignée par l\'utilisateur)<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:notice&fq=-status_i=111&fq=submittedDate_s:%5B1600-01-01-%20TO%202017-12-31/HOUR%5D">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=submitType_s:notice&fq=-status_i=111&fq=submittedDate_s:[1600-01-01-%20TO%202017-12-31/HOUR]</a><br>
@@ -183,17 +185,12 @@ echo '<div id="DTreq5" class="col-12 float-left bg-gray border border-gray-700 r
 echo '<div class="accordion d-inline" id="accordion5"><div class="card mb-0"><div class="card-header" id="heading5"><a class="custom-accordion-title d-block" data-toggle="collapse" href="#collapse5" aria-expanded="true" aria-controls="collapse5"><span class="font-weight-bold">Consultez la documentation technique&nbsp;</span><span style="color: #aaaaaa;"><em>(Cliquez)</em></span></a></div>';
 echo '<div id="collapse5" class="collapse" aria-labelledby="heading5" data-parent="#accordion5"><div class="card-body">';
 echo '
-Ce chiffre n\'est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n\'est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d\'une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l\'appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs qui n\'ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
+Ce chiffre est calculé à partir de la métadonnée « éditeur » (journalPublisher_s), présente dans la majorité des dépôts HAL.<br>
 <br>
-Export CSV non disponible car la fonction retourne un tableau avec un comptage global et non une itération avec test sur chaque notice.<br>
+Requête API :<br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes/?fq=producedDateY_i:2024&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:ART&fl=label_s,doiId_s,journalPublisher_s&rows=10000">https://api.archives-ouvertes.fr/search/univ-rennes/?fq=producedDateY_i:2024&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:ART&fl=label_s,doiId_s,journalPublisher_s&rows=10000</a><br>
 <br>
-Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/VizuHAL_Prefixe_DOI.php">Prefixe_DOI.php</a><br>
-<br>
-Requêtes API :<br>
-Articles 2017 (exemple pour préfixe 10.1016) : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=doiId_s:10.1016*&fq=docType_s:ART</a><br>
-La ligne "Hors regroupement éditorial" est calculée en retranchant le nombre total d\'articles recensés chez les éditeurs principaux (liste abrégée) du nombre total d\'articles du portail pour 2017 : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:ART&fq=-status_i=111">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=submitType_s:(notice%20OR%20file)&fq=docType_s:ART&fq=-status_i=111</a><br>
-Lextenso : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:lextenso&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:lextenso&fq=docType_s:ART</a><br>
-Dalloz : <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:dalloz&fq=docType_s:ART">https://api.archives-ouvertes.fr/search/univ-rennes1/?fq=producedDateY_i:2017&fq=-submitType_s:annex&fq=-status_i=111&fq=journalPublisher_t:dalloz&fq=docType_s:ART</a><br>
+La ligne "Publications sans indication d\'éditeur" indique les dépôts où la métadonnée éditeur (journalPublisher_s) est manquante, dans le champ "revue". La revue n\'est pas valide (statut INCOMING) dans le référentiel des revues. Il est possible de corriger ce problème dans l\'application CrossHAL, avec la fonctionnalité "Compléter et corriger les métadonnées HAL" : CrossHAL repère et remplace les formes INCOMING des revues par les formes VALID.<br>
 <br>
 <span class="font-weight-bold">Note :</span> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c\'est-à-dire portant la mention d\'un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s\'écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
 ';
@@ -221,8 +218,6 @@ echo '<div id="DTreq7" class="col-12 float-left bg-gray border border-gray-700 r
 echo '<div class="accordion d-inline" id="accordion7"><div class="card mb-0"><div class="card-header" id="heading7"><a class="custom-accordion-title d-block" data-toggle="collapse" href="#collapse7" aria-expanded="true" aria-controls="collapse7"><span class="font-weight-bold">Consultez la documentation technique&nbsp;</span><span style="color: #aaaaaa;"><em>(Cliquez)</em></span></a></div>';
 echo '<div id="collapse7" class="collapse" aria-labelledby="heading7" data-parent="#accordion7"><div class="card-body">';
 echo '
-Export CSV non disponible car la fonction retourne un tableau avec un comptage global et non une itération avec test sur chaque notice.<br>
-<br>
 Requête API (on additionne les valeurs des balises « count » du 1er niveau) :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*%3A*&rows=0&wt=xml&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=producedDateY_i:2017&facet.limit=10000">https://api.archives-ouvertes.fr/search/univ-rennes1/?q=*%3A*&rows=0&wt=xml&indent=true&facet=true&facet.pivot=journalTitle_s,journalPublisher_s,journalValid_s&fq=-status_i=111&fq=docType_s:ART&fq=producedDateY_i:2017&facet.limit=10000</a><br>
 La requête n\'est pas basée sur l\'ISSN car certaines revues du référentiel AuréHAL n\'ont pas d\'ISSN. C\'est donc le titre de la revue (journalTitle_s) qui est pris en compte.<br>
@@ -252,15 +247,12 @@ echo '<div id="DTreq10" class="col-12 float-left bg-gray border border-gray-700 
 echo '<div class="accordion d-inline" id="accordion10"><div class="card mb-0"><div class="card-header" id="heading10"><a class="custom-accordion-title d-block" data-toggle="collapse" href="#collapse10" aria-expanded="true" aria-controls="collapse10"><span class="font-weight-bold">Consultez la documentation technique&nbsp;</span><span style="color: #aaaaaa;"><em>(Cliquez)</em></span></a></div>';
 echo '<div id="collapse10" class="collapse" aria-labelledby="heading10" data-parent="#accordion10"><div class="card-body">';
 echo '
-Ce chiffre n\'est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n\'est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d\'une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l\'appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs qui n\'ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
-<br>
-Export CSV non disponible car la fonction retourne un tableau avec un comptage global et non une itération avec test sur chaque notice.<br>
-<br>
-Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/VizuHAL_Prefixe_DOI.php">Prefixe_DOI.php</a><br>
+Ce chiffre est calculé à partir de la métadonnée « éditeur » (journalPublisher_s), présente dans la majorité des dépôts HAL.<br>
 <br>
 Requête API :<br>
-Nombre de notices sans texte intégral :<br>
- <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:notice&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2023&fq=submitType_s:notice&fq=docType_s:ART&fq=-status_i=111&fl=label_s,doiId_s,journalPublisher_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2023&fq=submitType_s:notice&fq=docType_s:ART&fq=-status_i=111&fl=label_s,doiId_s,journalPublisher_s&rows=10000</a><br>
+<br>
+La ligne "Publications sans indication d\'éditeur" indique les dépôts où la métadonnée éditeur (journalPublisher_s) est manquante, dans le champ "revue". La revue n\'est pas valide (statut INCOMING) dans le référentiel des revues. Il est possible de corriger ce problème dans l\'application CrossHAL, avec la fonctionnalité "Compléter et corriger les métadonnées HAL" : CrossHAL repère et remplace les formes INCOMING des revues par les formes VALID.<br>
 <br>
 <span class="font-weight-bold">Note :</span> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c\'est-à-dire portant la mention d\'un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s\'écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
 ';
@@ -271,14 +263,12 @@ echo '<div id="DTreq11" class="col-12 float-left bg-gray border border-gray-700 
 echo '<div class="accordion d-inline" id="accordion11"><div class="card mb-0"><div class="card-header" id="heading11"><a class="custom-accordion-title d-block" data-toggle="collapse" href="#collapse11" aria-expanded="true" aria-controls="collapse11"><span class="font-weight-bold">Consultez la documentation technique&nbsp;</span><span style="color: #aaaaaa;"><em>(Cliquez)</em></span></a></div>';
 echo '<div id="collapse11" class="collapse" aria-labelledby="heading11" data-parent="#accordion11"><div class="card-body">';
 echo '
-Ce chiffre n\'est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n\'est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d\'une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l\'appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs qui n\'ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
-Export CSV non disponible car la fonction retourne un tableau avec un comptage global et non une itération avec test sur chaque notice.<br>
-<br>
-Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/VizuHAL_Prefixe_DOI.php">Prefixe_DOI.php</a><br>
+Ce chiffre est calculé à partir de la métadonnée « éditeur » (journalPublisher_s), présente dans la majorité des dépôts HAL.<br>
 <br>
 Requête API :<br>
-Nombre de notices avec texte intégral : <br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:file&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=submitType_s:file&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2023&fq=submitType_s:file&fq=-submitType_s:annex&fq=docType_s:ART&fq=-status_i=111&fl=label_s,doiId_s,journalPublisher_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2023&fq=submitType_s:file&fq=-submitType_s:annex&fq=docType_s:ART&fq=-status_i=111&fl=label_s,doiId_s,journalPublisher_s&rows=10000</a><br>
+<br>
+La ligne "Publications sans indication d\'éditeur" indique les dépôts où la métadonnée éditeur (journalPublisher_s) est manquante, dans le champ "revue". La revue n\'est pas valide (statut INCOMING) dans le référentiel des revues. Il est possible de corriger ce problème dans l\'application CrossHAL, avec la fonctionnalité "Compléter et corriger les métadonnées HAL" : CrossHAL repère et remplace les formes INCOMING des revues par les formes VALID.<br>
 <br>
 <span class="font-weight-bold">Note :</span> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c\'est-à-dire portant la mention d\'un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s\'écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
 ';
@@ -289,20 +279,14 @@ echo '<div id="DTreq12" class="col-12 float-left bg-gray border border-gray-700 
 echo '<div class="accordion d-inline" id="accordion12"><div class="card mb-0"><div class="card-header" id="heading12"><a class="custom-accordion-title d-block" data-toggle="collapse" href="#collapse12" aria-expanded="true" aria-controls="collapse12"><span class="font-weight-bold">Consultez la documentation technique&nbsp;</span><span style="color: #aaaaaa;"><em>(Cliquez)</em></span></a></div>';
 echo '<div id="collapse12" class="collapse" aria-labelledby="heading12" data-parent="#accordion12"><div class="card-body">';
 echo '
-Ce chiffre n\'est pas calculé à partir de la métadonnée « éditeur » (journalPublisher_s) car elle n\'est pas présente dans tous les dépôts HAL. La requête est basée sur le préfixe du DOI des principaux éditeurs, extrait d\'une version interne abrégée de la <a target="_blank" href="https://www.crossref.org/06members/50go-live.html">liste à jour des préfixes DOI de CrossRef</a>. Les éditeurs non répertoriées dans la liste interne sont rassemblés sous l\'appellation « Hors regroupement éditorial ». Une exception est faite pour les éditeurs qui n\'ont pas de DOI (interrogation du champ « journalPublisher_s »).<br>
-Export CSV non disponible car la fonction retourne un tableau avec un comptage global et non une itération avec test sur chaque notice.<br>
-<br>
-Liste restreinte des préfixes de DOI : <a target="_blank" href="https://github.com/OTroccaz/VizuHAL/blob/master/VizuHAL_Prefixe_DOI.php">Prefixe_DOI.php</a><br>
+Ce chiffre est calculé à partir de la métadonnée « éditeur » (journalPublisher_s), présente dans la majorité des dépôts HAL.<br>
 <br>
 Requête API :<br>
-Nombre de notices avec texte intégral OU lien externe : <br>
-<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111</a><br>
+<a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=docType_s:ART&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111&fl=label_s,doiId_s,journalPublisher_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fq=docType_s:ART&fq=(submitType_s:file%20OR%20linkExtId_s:*)&fq=-linkExtId_s:istex&fq=-status_i=111&fl=label_s,doiId_s,journalPublisher_s&rows=10000</a><br>
 <br>
-<span class="font-weight-bold">Notes :</span><br>
-<ul>
-<li>Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c\'est-à-dire portant la mention d\'un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s\'écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).</li>
-<li>Dans les requêtes API portant sur le lien vers un PDF librement disponible hors de HAL (via Unpaywall), il faut exclure les liens ISTEX (uniquement accessibles aux membres ESR) : fq=-linkExtId_s:istex</li>
-</ul>
+La ligne "Publications sans indication d\'éditeur" indique les dépôts où la métadonnée éditeur (journalPublisher_s) est manquante, dans le champ "revue". La revue n\'est pas valide (statut INCOMING) dans le référentiel des revues. Il est possible de corriger ce problème dans l\'application CrossHAL, avec la fonctionnalité "Compléter et corriger les métadonnées HAL" : CrossHAL repère et remplace les formes INCOMING des revues par les formes VALID.<br>
+<br>
+<span class="font-weight-bold">Note :</span> Dans les requêtes API, il faut éliminer les dépôts ayant le statut 111, c\'est-à-dire portant la mention d\'un numéro de version (versions 2, 3 etc.). Voir ticket HAL #60428. Dans la requête API, cela peut s\'écrire fq=-status_i=111 (avec signe - devant le champ « status_i »).<br>
 ';
 echo '<br></div></div></div></div></div>';
 
@@ -346,6 +330,8 @@ echo '<div id="collapse15" class="collapse" aria-labelledby="heading15" data-par
 echo '
 Nombre de références HAL dans la collection LTSI pour 2019 ayant un projet européen (incluant le champ « financement ») :<br>
 <a target="_blank" href="https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fl=europeanProjectId_i,europeanProjectAcronym_s,funding_s,europeanProjectId_i,europeanProjectReference_s&rows=10000">https://api.archives-ouvertes.fr/search/LTSI/?fq=producedDateY_i:2019&fl=europeanProjectId_i,europeanProjectAcronym_s,funding_s,europeanProjectId_i,europeanProjectReference_s&rows=10000</a><br>
+<br>
+Les lignes sans acronyme et/ou référence de projets ne sont pas des formes valides du référentiel (INCOMING, créées par le déposant). Elles sont néanmoins reportées dans les autres lignes du tableau.<br>
 ';
 echo '<br></div></div></div></div></div>';
 
