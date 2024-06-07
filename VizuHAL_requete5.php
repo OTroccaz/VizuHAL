@@ -21,7 +21,7 @@ fseek($inF, 0);
 $chaine = "\xEF\xBB\xBF";
 fwrite($inF,$chaine);
 
-$year = $annee5;
+$year = '['.$anneedeb.'%20TO%20'.$anneefin.']';
 if (isset($port) && $port != "choix") {
 	$team = strtolower($LAB_SECT[0]["secteur"]);
 }
