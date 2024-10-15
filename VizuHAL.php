@@ -156,7 +156,7 @@ if (strpos($_SERVER['HTTP_HOST'], '127.0.0.1') === false) {
                                        </p>
 																			 
 																			 <p class="mb-4">
-                                            Contacts : <a target='_blank' rel='noopener noreferrer' href="https://scienceouverte.univ-rennes.fr/interlocuteurs/laurent-jonchere">Laurent Jonchère</a> (Université de Rennes 1) / <a target='_blank' rel='noopener noreferrer' href="https://scienceouverte.univ-rennes.fr/interlocuteurs/olivier-troccaz">Olivier Troccaz</a> (CNRS CReAAH/OSUR).
+                                            Contacts : <a target='_blank' rel='noopener noreferrer' href="https://scienceouverte.univ-rennes.fr/interlocuteurs/laurent-jonchere">Laurent Jonchère</a> (Université de Rennes) / <a target='_blank' rel='noopener noreferrer' href="https://scienceouverte.univ-rennes.fr/interlocuteurs/olivier-troccaz">Olivier Troccaz</a> (CNRS CReAAH/OSUR).
                                         </p>
 																				
                                        <p class=" mb-2">
@@ -177,7 +177,7 @@ if (strpos($_SERVER['HTTP_HOST'], '127.0.0.1') === false) {
 																				<div class=" mb-2">
                                             <ul class="list-group">
                                                 <li class="list-group-item">
-                                                    En préparation
+                                                    <a target="_blank" rel="noopener noreferrer" href="https://halur.univ-rennes.fr/VizuHAL_Tutoriel.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Prise en main rapide</a><br>
                                                 </li>
                                             </ul> 
                                         </div>
