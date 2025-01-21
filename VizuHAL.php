@@ -82,16 +82,14 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 	<!-- Datatables css -->
 	<link href="./assets/css/vendor/dataTables.bootstrap4.css" rel="stylesheet" type="text/css" />
 	<link href="./assets/css/vendor/responsive.bootstrap4.css" rel="stylesheet" type="text/css" />
-                                                
-					
+	
+	<?php
+	//Stats Google
+	if (strpos($_SERVER['HTTP_HOST'], '127.0.0.1') === false) {
+		include("./Glob_gstats.php");
+	}
+	?>
 </head>
-
-<?php
-//Stats Google
-if (strpos($_SERVER['HTTP_HOST'], '127.0.0.1') === false) {
-	include("./Glob_gstats.php");
-}
-?>
 
 <body class="loading" data-layout="topnav" onload="freqt();">
 
