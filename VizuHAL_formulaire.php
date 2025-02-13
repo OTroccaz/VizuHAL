@@ -276,7 +276,7 @@
 																										<option value="<?php echo $cstR21;?>"<?php echo $irq21;?>>21. Collection : Collaborations internationales (toutes structures)</option>
 																										<option value="<?php echo $cstR22;?>"<?php echo $irq22;?>>22. Collection : Collaborations internationales (pays)</option>
 																										<option value="<?php echo $cstR23;?>"<?php echo $irq23;?>>23. Collection : Collaborations internationales (institutions)</option>
-																										<!--<option value="<?php echo $cstR26;?>"<?php echo $irq26;?>>26. Croisement structures/collections</option>-->
+																										<option value="<?php echo $cstR26;?>"<?php echo $irq26;?>>26. Croisement structures/collections</option>
 																								</select>
 																						</div>
 																						
