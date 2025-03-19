@@ -175,7 +175,7 @@ suppression("./csv", 3600);//Suppression des exports du dossier csv créés il y
 																				<div class=" mb-2">
                                             <ul class="list-group">
                                                 <li class="list-group-item">
-                                                    <a target="_blank" rel="noopener noreferrer" href="https://halur.univ-rennes.fr/VizuHAL_Tutoriel.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Prise en main rapide</a><br>
+                                                    <a target="_blank" rel="noopener noreferrer" href="./VizuHAL_Tutoriel.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Prise en main rapide</a><br>
                                                 </li>
                                             </ul> 
                                         </div>

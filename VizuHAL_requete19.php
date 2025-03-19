@@ -53,9 +53,15 @@ fwrite($inF,$chaine);
 $resColl = array();
 $resColl["code"] = array();
 $year = $annee19;
-$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
+if (stripos($team, 'IDHAL:') !== false) {
+	$idHAL = strtolower(str_replace('IDHAL:', '', $team));
+	$url = $cstAPI."?fq=authIdHal_s:".$idHAL."&producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
+	$totColl = askCurlNF($cstAPI."?wt=xml&fq=authIdHal_s:".$idHAL."&producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
+}else{
+	$url = $cstAPI.$team."/?fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s&rows=10000";
+	$totColl = askCurlNF($cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
+}
 //echo $url;
-$totColl = askCurlNF($cstAPI.$team."/?wt=xml&fq=producedDateY_i:".$year."&fl=collName_s,collCategory_s,collCode_s,halId_s", $cstCA);
 askCurl($url, $arrayCurl, $cstCA);
 //var_dump($arrayCurl);
 
@@ -147,11 +153,19 @@ if ($totColl != 0) {//Au moins 1 résultat
 		echo '<td>';
 		$idhal = $resColl["idhal"][$i];
 		$idhal = "(".str_replace("~", "%20OR%20", $idhal).")";
-		$liens = '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
-		$liens .= ' - ';
-		$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
-		$liens .= ' - ';
-		$liens .= '<a target="_blank" href="https://api.archives-ouvertes.fr/search/'.$team.'/?fq=producedDateY_i:'.$year.'%20AND%20halId_s:'.$idhal.'&rows=10000&wt=csv">CSV</a>';
+		if (stripos($team, 'IDHAL:') !== false) {
+			$liens = '<a target="_blank" href="'.$cstAPI.'?fq=authIdHal_s:'.$idHAL.'%20AND%20halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
+			$liens .= ' - ';
+			$liens .= '<a target="_blank" href="'.$cstAPI.'?fq=authIdHal_s:'.$idHAL.'%20AND%20halId_s:'.$idhal.'&rows=10000">JSON</a>';
+			$liens .= ' - ';
+			$liens .= '<a target="_blank" href="'.$cstAPI.'?fq=authIdHal_s:'.$idHAL.'%20AND%20halId_s:'.$idhal.'&rows=10000&wt=csv">CSV</a>';
+		}else{
+			$liens = '<a target="_blank" href="'.$cstAPI.$team.'/?fq=halId_s:'.$idhal.'&rows=10000&wt=xml">XML</a>';
+			$liens .= ' - ';
+			$liens .= '<a target="_blank" href="'.$cstAPI.$team.'/?fq=halId_s:'.$idhal.'&rows=10000">JSON</a>';
+			$liens .= ' - ';
+			$liens .= '<a target="_blank" href="'.$cstAPI.$team.'/?fq=halId_s:'.$idhal.'&rows=10000&wt=csv">CSV</a>';
+		}
 		echo $liens;
 		echo '</td>';
 		$chaine = $resColl["nom"][$i].";".$resColl["type"][$i].";".$resColl["code"][$i].";".$resColl["nombre"][$i].";".$resColl["pcent"][$i].";".$liens.";";

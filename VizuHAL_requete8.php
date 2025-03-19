@@ -89,8 +89,7 @@ while (isset($LAB_SECT[$ils]["code_secteur"])) {
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_HEADER, 0);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
-	curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
+	curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur.univ-rennes.fr)');
 	if (isset ($_SERVER[$cstHTS]) && $_SERVER[$cstHTS] == "on")	{
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
 		curl_setopt($ch, CURLOPT_CAINFO, $cstCA);
